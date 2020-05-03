@@ -17,4 +17,4 @@
 
 Route::get('/', 'TwitterFormController@showForm');
 
-Route::post('/', 'Tweet@postTweet');
+Route::post('post', 'TwitterFormController@postTweet');

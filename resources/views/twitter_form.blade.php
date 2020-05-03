@@ -2,9 +2,12 @@
 
 @section('child')
   <p>{{ $data['name'] }}さん</p>
-  <textarea class="form-control" rows="5"></textarea>
-  <br>
-  <button type="button" class="btn btn-primary tweet">ツイート</button>
+  <form method="post">
+    <!-- @csrf -->
+    <textarea id="text_area" class="form-control" rows="5" placeholder="いまどうしてる？"></textarea>
+    <br>
+    <button type="button" class="btn btn-primary tweet">ツイート</button>
+  </form>
   <br>
   <br>
   @foreach ($data['rank'] as $num => $rank)

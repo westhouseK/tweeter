@@ -19,4 +19,10 @@ class TwitterFormController extends Controller
     return view('twitter_form', compact('data'));
   }
 
+  // ajax
+  public function postTweet()
+  {
+    $data = ['response' => 'ツイートに成功しました！'];
+    return json_encode($data);
+  }
 }
