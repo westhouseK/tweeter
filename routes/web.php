@@ -11,6 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('twitter_from');
-});
+// Route::get('/', function () {
+//     return view('twitter_form');
+// });
+
+Route::get('/', 'TwitterFormController@showForm');
+
+Route::post('/', 'Tweet@postTweet');
