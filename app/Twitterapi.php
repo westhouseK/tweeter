@@ -29,6 +29,13 @@ class Twitterapi extends Model
     return $twitter_info;
   }
 
+  public function sendTweet($tweet)
+  {
+    $twitter = $this->authenticateAccount();
+    $result = $this->postTweet($tweet, $twitter);
+    return $result;
+  }
+
   private function authenticateAccount ()
   {
 
@@ -67,9 +74,17 @@ class Twitterapi extends Model
     // ハッシュタグを集計
     $count_hashtags = array_count_values($hashtags);
     arsort($count_hashtags);
+    var_dump($count_hashtags);
 
     // 上位3つまでを抽出
     $rank_hashtags = array_slice($count_hashtags, 0, $rank);
     return array_keys($rank_hashtags);
+  }
+
+  private function postTweet($tweet, $twitter)
+  {
+    $result = $twitter->post('statuses/update', ['status' => $tweet]);
+    var_dump($result);
+    return $result;
   }
 }
