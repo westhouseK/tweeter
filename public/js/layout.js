@@ -1,21 +1,24 @@
 $(function(){
+  // ajax
   $('#tweet').on('click', function(){
     let tweet = $('#text_area').val()
 
-    // alert(tweet)
     $.ajax({
       type: 'POST',
       url: '/post',
       data: {
         tweet
       }
-    }).done(function(data, textStatus, textStatus){
+    }).done(function(data, textStatus, jqXHR){
       // const result = JSON.parse(data)
       console.log(textStatus);
-      console.log(textStatus);
+      console.log(jqXHR);
+      console.log(jqXHR.status);
 
       alert(data)
+      applicationCache
     }).fail(function(){
+      alert('ツイートに失敗しました')
     })
   })
 
@@ -28,13 +31,15 @@ $(function(){
 
   // アイコンがクリックされた時にappend
   $('.copy').on('click', function(){
-    $(this).css('color', 'red')
+    // $(this).css('color', 'red')
     let hash = $(this).prev().find('#hash').text()
     console.log($(this).prev().find('#hash').text())
 
-    let text = String($('#text_area').val())
+    let text = String($('#text_area').val()) + hash
     console.log(text)
-    $('#text_area').val(text + hash)
+    $('#text_area').val(text)
 
+    let count = Array.from(text).length
+    $('#length').text(count)
   })
 })
