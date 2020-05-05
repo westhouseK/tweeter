@@ -27,6 +27,7 @@ class TwitterFormController extends Controller
 
     $twitter = new Twitterapi;
     $result = $twitter->sendTweet($tweet);
+    var_dump($result);
     if (!empty($result)) $data = ['response' => 'ツイートに成功しました！'];
     return json_encode($data);
   }

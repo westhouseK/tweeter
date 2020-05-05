@@ -12,6 +12,15 @@
   <br>
   <br>
   @foreach ($data['rank'] as $num => $rank)
-    <p class='text-left'>{{ $num +1 }}位　#{{ $rank }}<i class="fas fa-clipboard"></i></p>
+  <div class="container-fluid">
+    <div class="row">
+      <span class="text col-3 text-left">
+        <span>{{ $num +1 }}位 </span>
+        <span id="hash">#{{ $rank }}</span>
+      </span>
+      <span id="{{ $num }}" class="copy col-3"><i class="fas fa-lg fa-clipboard"></i></span>
+      <br>
+    </div>
+  </div>
   @endforeach
 @endsection
