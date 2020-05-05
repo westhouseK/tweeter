@@ -10,20 +10,23 @@ $(function(){
         tweet
       }
     }).done(function(data, textStatus, jqXHR){
-      // const result = JSON.parse(data)
       console.log(textStatus);
       console.log(jqXHR);
       console.log(jqXHR.status);
 
-      alert(data)
-      applicationCache
+      if (jqXHR.status !== 200) {
+        alert('ツイートに失敗しました')
+        return
+      }
+      alert('ツイートに成功しました')
+      $('#text_area').val('')
     }).fail(function(){
       alert('ツイートに失敗しました')
     })
   })
 
-  // テキストエリアの文字数を数える
-  $('#text_area').keyup(function(){
+  // テキストエリアの文字数を常にカウント
+  $('#text_area').on('input', function(){
     let texts = $(this).val()
     let count = Array.from(texts).length
     $('#length').text(count)
@@ -33,13 +36,8 @@ $(function(){
   $('.copy').on('click', function(){
     // $(this).css('color', 'red')
     let hash = $(this).prev().find('#hash').text()
-    console.log($(this).prev().find('#hash').text())
-
     let text = String($('#text_area').val()) + hash
     console.log(text)
     $('#text_area').val(text)
-
-    let count = Array.from(text).length
-    $('#length').text(count)
   })
 })
