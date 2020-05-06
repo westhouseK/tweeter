@@ -23,12 +23,13 @@ class TwitterFormController extends Controller
   public function postTweet()
   {
     $tweet = $_POST['tweet'];
-    var_dump($tweet);
-
     $twitter = new Twitterapi;
     $result = $twitter->sendTweet($tweet);
-    var_dump($result);
-    if (!empty($result)) $data = ['response' => 'ツイートに成功しました！'];
-    return json_encode($data);
+    if (!empty($result->errors)) {
+      $msg = $result->errors[0]->message;
+    } else {
+      $msg = 'OK';
+    }
+    return $msg;
   }
 }

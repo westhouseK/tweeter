@@ -84,7 +84,6 @@ class Twitterapi extends Model
   private function postTweet($tweet, $twitter)
   {
     $result = $twitter->post('statuses/update', ['status' => $tweet]);
-    var_dump($result);
     return $result;
   }
 }

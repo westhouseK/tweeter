@@ -10,16 +10,17 @@ $(function(){
         tweet
       }
     }).done(function(data, textStatus, jqXHR){
-      console.log(textStatus);
-      console.log(jqXHR);
-      console.log(jqXHR.status);
+      console.log(data)
 
-      if (jqXHR.status !== 200) {
-        alert('ツイートに失敗しました')
+      if (jqXHR.status === 200 && data !== 'OK') {
+        alert(data)
         return
       }
       alert('ツイートに成功しました')
       $('#text_area').val('')
+      // 関数を切る
+      let count = Array.from(tweet).length
+      $('#length').text(count)
     }).fail(function(){
       alert('ツイートに失敗しました')
     })
@@ -37,7 +38,8 @@ $(function(){
     // $(this).css('color', 'red')
     let hash = $(this).prev().find('#hash').text()
     let text = String($('#text_area').val()) + hash
-    console.log(text)
     $('#text_area').val(text)
+    let count = Array.from(text).length
+    $('#length').text(count)
   })
 })
