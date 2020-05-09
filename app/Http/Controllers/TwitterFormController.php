@@ -10,7 +10,6 @@ use App\Twitterapi;
 
 class TwitterFormController extends Controller
 {
-
   public function showForm()
   {
     $twitter = new Twitterapi;
