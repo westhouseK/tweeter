@@ -17,6 +17,7 @@ $(function(){
         return
       }
       alert('ツイートに成功しました')
+      $('#text_area').text('')
       set_word_count()
     }).fail(function(){
       alert('ツイートに失敗しました')
