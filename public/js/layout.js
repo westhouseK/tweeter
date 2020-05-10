@@ -31,13 +31,14 @@ $(function(){
   // アイコンがクリックされた時にappend
   $('.copy').on('click', function(){
     $(this).css('color', 'red')
-    let hash = $(this).prev().find('#hash').text()
+    console.log($(this).prev().prev().find('#hash').text())
+    let hash = $(this).prev().prev().find('#hash').text()
     let text = String($('#text_area').val()) + hash
     $('#text_area').val(text)
-
     set_word_count()
   })
 
+  // 文字数を数える
   function set_word_count() {
     let texts = $('#text_area').val()
     let count = Array.from(texts).length

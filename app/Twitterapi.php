@@ -74,7 +74,6 @@ class Twitterapi extends Model
     // ハッシュタグを集計
     $count_hashtags = array_count_values($hashtags);
     arsort($count_hashtags);
-    var_dump($count_hashtags);
 
     // 上位3つまでを抽出
     $rank_hashtags = array_slice($count_hashtags, 0, $rank);
