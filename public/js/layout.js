@@ -16,9 +16,9 @@ $(function(){
         alert(data)
         return
       }
-      alert('ツイートに成功しました')
-      $('#text_area').text('')
+      $('#text_area').val('')
       set_word_count()
+      alert('ツイートに成功しました')
     }).fail(function(){
       alert('ツイートに失敗しました')
     })
