@@ -15,6 +15,9 @@
 //     return view('twitter_form');
 // });
 
-Route::get('/', 'TwitterFormController@showForm');
+Route::get('/', 'AuthController@login');
+Route::get('/callback', 'AuthController@callback');
+Route::get('showform', 'TwitterFormController@showForm');
 
+// ajax
 Route::post('post', 'TwitterFormController@postTweet');

@@ -16,12 +16,12 @@ class Twitterapi extends Model
     $this->access_token_secret = config('Consts.twitterauth.access_token_secret');
   }
 
-  public function getTwitterInfo()
+  public function getTwitterInfo($outh)
   {
     $twitter_info = [];
     $twitter_info['name'] = 'うえすと';
 
-    $twitter = $this->authenticateAccount();
+    $twitter = $this->authenticateAccount($outh);
     $tweets = $this->getTweet($twitter);
     $hashtags = $this->filterHashtags($tweets);
     $twitter_info['rank'] = $this->getTopHashtags($hashtags);
@@ -36,13 +36,13 @@ class Twitterapi extends Model
     return $result;
   }
 
-  private function authenticateAccount ()
+  private function authenticateAccount ($outh)
   {
 
     $twitter = new TwitterOAuth($this->api_key, 
                                 $this->api_secret_key, 
-                                $this->access_token, 
-                                $this->access_token_secret);
+                                $outh->session()->get('twAccessToken')['oauth_token'], 
+                                $outh->session()->get('twAccessToken')['oauth_token_secret']);
     return $twitter;
   }
 
