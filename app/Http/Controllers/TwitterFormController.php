@@ -12,15 +12,7 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 
 class TwitterFormController extends Controller
 {
-  public function callback(Request $request)
-  {
-    $objTwitterConection = new TwitterOAuth(config('Consts.twitterauth.api_key'), config('Consts.twitterauth.api_secret_key'), $request->session()->get('twOauthToken'), $request->session()->get('twOauthTokenSecret'));
 
-    $request->session()->put('twAccessToken',$objTwitterConection->oauth("oauth/access_token", array("oauth_verifier" => $_REQUEST['oauth_verifier'])));
-
-    return redirect('showform');
-
-  }
   public function showForm(Request $request)
   {
     var_dump($request->session()->get('twAccessToken'));
