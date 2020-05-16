@@ -16,8 +16,10 @@ class Twitterapi extends Model
   public function getTwitterInfo($connection)
   {
     $twitter_info = [];
-    $twitter_info['name'] = $connection->get("account/verify_credentials")->name;
-    $twitter_info['profile'] = $connection->get('account/verify_credentials', ['tweet_mode' => 'extended', 'include_entities' => 'true'])->profile_image_url_https;
+
+    $account_info = $this->getAccountInfo($connection);
+    $twitter_info['name'] = $account_info->name;
+    $twitter_info['profile'] = $account_info->profile_image_url_https;
 
     $tweets   = $this->getTweet($connection);
     $hashtags = $this->filterHashtags($tweets);
@@ -31,9 +33,19 @@ class Twitterapi extends Model
     return $this->postTweet($conection, $tweet); 
   }
 
+  private function getAccountInfo($connection)
+  {
+    return $connection->get("account/verify_credentials");
+  }
+
   private function getTweet($connection)
   {
     return $connection->get('statuses/user_timeline', ['count' => 200]);
+  }
+
+  private function postTweet($conection, $tweet)
+  {
+    return $conection->post('statuses/update', ['status' => $tweet]);
   }
 
   private function filterHashtags($tweets) {
@@ -52,7 +64,6 @@ class Twitterapi extends Model
     return $hashtags;
   }
 
-
   private function getTopHashtags($hashtags, $rank = 3) {
     if (empty($hashtags)) return null;
 
@@ -63,10 +74,5 @@ class Twitterapi extends Model
     // 上位3つまでを抽出
     $rank_hashtags = array_slice($count_hashtags, 0, $rank);
     return array_keys($rank_hashtags);
-  }
-
-  private function postTweet($conection, $tweet)
-  {
-    return $conection->post('statuses/update', ['status' => $tweet]);
   }
 }
