@@ -10,19 +10,16 @@ class Twitterapi extends Model
 {
   public function __construct()
   {
-    $this->api_key             = config('Consts.twitterauth.api_key');
-    $this->api_secret_key      = config('Consts.twitterauth.api_secret_key');
-    $this->access_token        = config('Consts.twitterauth.access_token');
-    $this->access_token_secret = config('Consts.twitterauth.access_token_secret');
+    $this->api_key         = config('Consts.twitterauth.api_key');
+    $this->api_secret_key  = config('Consts.twitterauth.api_secret_key');
   }
 
-  public function getTwitterInfo($outh)
+  public function getTwitterInfo($connection)
   {
     $twitter_info = [];
-    $twitter_info['name'] = 'うえすと';
+    $twitter_info['name'] = $connection->get("account/verify_credentials")->name;
 
-    $twitter = $this->authenticateAccount($outh);
-    $tweets = $this->getTweet($twitter);
+    $tweets   = $this->getTweet($connection);
     $hashtags = $this->filterHashtags($tweets);
     $twitter_info['rank'] = $this->getTopHashtags($hashtags);
 
@@ -36,7 +33,7 @@ class Twitterapi extends Model
     return $result;
   }
 
-  private function authenticateAccount ($outh)
+  private function authenticateAccount($outh)
   {
 
     $twitter = new TwitterOAuth($this->api_key, 
@@ -46,9 +43,9 @@ class Twitterapi extends Model
     return $twitter;
   }
 
-  private function getTweet($twitter)
+  private function getTweet($connection)
   {
-    return $twitter->get('statuses/user_timeline', ['count' => 200]);
+    return $connection->get('statuses/user_timeline', ['count' => 200]);
   }
 
   private function filterHashtags($tweets) {

@@ -12,14 +12,19 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 
 class TwitterFormController extends Controller
 {
+  public function __construct()
+  {
+    $this->api_key         = config('Consts.twitterauth.api_key');
+    $this->api_secret_key  = config('Consts.twitterauth.api_secret_key');
+  }
 
   public function showForm(Request $request)
   {
-    var_dump($request->session()->get('twAccessToken'));
-    var_export($request->session()->all());
+    $access_token = $request->session()->get('twAccessToken');
+    $conection = $this->authenticateAccount($access_token);
 
     $twitter = new Twitterapi;
-    $data = $twitter->getTwitterInfo($request);
+    $data = $twitter->getTwitterInfo($conection);
 
     return view('twitter_form', compact('data'));
   }
@@ -36,5 +41,14 @@ class TwitterFormController extends Controller
       $msg = 'OK';
     }
     return $msg;
+  }
+
+  private function authenticateAccount($access_token)
+  {
+    $conection = new TwitterOAuth($this->api_key, 
+                                  $this->api_secret_key, 
+                                  $access_token['oauth_token'], 
+                                  $access_token['oauth_token_secret']);
+    return $conection;
   }
 }

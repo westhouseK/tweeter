@@ -1,7 +1,7 @@
 @extends('common.layout')
 
 @section('child')
-  <p>{{ $data['name'] }}さん</p>
+  <p><span class="h4">{{ $data['name'] }}</span>さん</p>
   <form method="post">
     <!-- @csrf -->
     <textarea id="text_area" class="form-control" rows="10" cols="60" placeholder="いまどうしてる？"></textarea>
