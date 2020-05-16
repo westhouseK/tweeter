@@ -4,7 +4,6 @@ namespace App;
 require base_path('vendor/autoload.php');
 
 use Illuminate\Database\Eloquent\Model;
-use Abraham\TwitterOAuth\TwitterOAuth;
 
 class Twitterapi extends Model
 {
@@ -18,6 +17,7 @@ class Twitterapi extends Model
   {
     $twitter_info = [];
     $twitter_info['name'] = $connection->get("account/verify_credentials")->name;
+    $twitter_info['profile'] = $connection->get('account/verify_credentials', ['tweet_mode' => 'extended', 'include_entities' => 'true'])->profile_image_url_https;
 
     $tweets   = $this->getTweet($connection);
     $hashtags = $this->filterHashtags($tweets);
@@ -26,21 +26,9 @@ class Twitterapi extends Model
     return $twitter_info;
   }
 
-  public function sendTweet($tweet)
+  public function sendTweet($conection, $tweet)
   {
-    $twitter = $this->authenticateAccount();
-    $result = $this->postTweet($tweet, $twitter);
-    return $result;
-  }
-
-  private function authenticateAccount($outh)
-  {
-
-    $twitter = new TwitterOAuth($this->api_key, 
-                                $this->api_secret_key, 
-                                $outh->session()->get('twAccessToken')['oauth_token'], 
-                                $outh->session()->get('twAccessToken')['oauth_token_secret']);
-    return $twitter;
+    return $this->postTweet($conection, $tweet); 
   }
 
   private function getTweet($connection)
@@ -77,9 +65,8 @@ class Twitterapi extends Model
     return array_keys($rank_hashtags);
   }
 
-  private function postTweet($tweet, $twitter)
+  private function postTweet($conection, $tweet)
   {
-    $result = $twitter->post('statuses/update', ['status' => $tweet]);
-    return $result;
+    return $conection->post('statuses/update', ['status' => $tweet]);
   }
 }

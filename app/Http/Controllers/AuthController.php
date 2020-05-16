@@ -14,6 +14,7 @@ class AuthController extends Controller
     $this->api_secret_key = config('Consts.twitterauth.api_secret_key');
     $this->callback_url   = config('Consts.twitterinfo.callback_url');
   }
+  
   public function login(Request $request)
   {
     // TwitterOAuthクラスをインスタンス化

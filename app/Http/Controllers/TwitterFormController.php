@@ -18,6 +18,7 @@ class TwitterFormController extends Controller
     $this->api_secret_key  = config('Consts.twitterauth.api_secret_key');
   }
 
+  // main display
   public function showForm(Request $request)
   {
     $access_token = $request->session()->get('twAccessToken');
@@ -30,11 +31,14 @@ class TwitterFormController extends Controller
   }
 
   // ajax
-  public function postTweet()
+  public function postTweet(Request $request)
   {
     $tweet = $_POST['tweet'];
+    $access_token = $request->session()->get('twAccessToken');
+    $conection = $this->authenticateAccount($access_token);
+
     $twitter = new Twitterapi;
-    $result = $twitter->sendTweet($tweet);
+    $result = $twitter->sendTweet($conection, $tweet);
     if (!empty($result->errors)) {
       $msg = $result->errors[0]->message;
     } else {
@@ -43,6 +47,7 @@ class TwitterFormController extends Controller
     return $msg;
   }
 
+  // authentication
   private function authenticateAccount($access_token)
   {
     $conection = new TwitterOAuth($this->api_key, 

@@ -1,8 +1,11 @@
 @extends('common.layout')
 
 @section('child')
-  <p><span class="h4">{{ $data['name'] }}</span>さん</p>
-  <form method="post">
+  <p>
+    <span class="h4">{{ $data['name'] }}</span>さん  
+    <span><img class="rounded-circle" src="{{ $data['profile'] }}" /></span>
+  </p>
+    <form method="post">
     <!-- @csrf -->
     <textarea id="text_area" class="form-control" rows="10" cols="60" placeholder="いまどうしてる？"></textarea>
     <div class="text-right"><span id="length" class="h3">0</span> /140</div>
