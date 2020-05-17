@@ -5,19 +5,12 @@ require base_path('vendor/autoload.php');
 
 use Illuminate\Http\Request;
 use App\Twitterapi;
-use Abraham\TwitterOAuth\TwitterOAuth;
 
 // View::makeができるようになる
 // use Illuminate\Support\Facades\View;
 
 class TwitterFormController extends Controller
 {
-  public function __construct()
-  {
-    $this->api_key         = config('Consts.twitterauth.api_key');
-    $this->api_secret_key  = config('Consts.twitterauth.api_secret_key');
-  }
-
   // main display
   public function showForm(Request $request)
   {
@@ -45,15 +38,5 @@ class TwitterFormController extends Controller
       $msg = 'OK';
     }
     return $msg;
-  }
-
-  // authentication
-  private function authenticateAccount($access_token)
-  {
-    $conection = new TwitterOAuth($this->api_key, 
-                                  $this->api_secret_key, 
-                                  $access_token['oauth_token'], 
-                                  $access_token['oauth_token_secret']);
-    return $conection;
   }
 }

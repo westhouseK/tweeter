@@ -10,15 +10,14 @@ class AuthController extends Controller
 {
   public function __construct()
   {
-    $this->api_key        = config('Consts.twitterauth.api_key');
-    $this->api_secret_key = config('Consts.twitterauth.api_secret_key');
-    $this->callback_url   = config('Consts.twitterinfo.callback_url');
+    parent::__construct();
+    $this->callback_url = config('Consts.twitterinfo.callback_url');
   }
-  
+
   public function login(Request $request)
   {
     // TwitterOAuthクラスをインスタンス化
-    $conection = new TwitterOAuth($this->api_key, $this->api_secret_key);
+    $conection = $this->authenticateAccount();
     
     // oauthリクエストトークンの取得
     $request_token = $conection->oauth('oauth/request_token', ['oauth_callback' => $this->callback_url]);
@@ -37,10 +36,13 @@ class AuthController extends Controller
   
   public function callback(Request $request)
   {
-    $conection = new TwitterOAuth($this->api_key, 
-                                  $this->api_secret_key, 
-                                  $request->session()->get('twOauthToken'), 
-                                  $request->session()->get('twOauthTokenSecret'));
+    // session output
+    $access_token = [
+      'oauth_token'        => $request->session()->get('twOauthToken'),
+      'oauth_token_secret' => $request->session()->get('twOauthTokenSecret')
+    ];
+
+    $conection = $this->authenticateAccount($access_token);
 
     $request->session()->put('twAccessToken',$conection->oauth("oauth/access_token", ["oauth_verifier" => $_REQUEST['oauth_verifier']]));
 
