@@ -10,6 +10,7 @@ class TwitterFormController extends Controller
 {
   public function __construct()
   {
+    parent::__construct();
     $this->twitter = new Twitterapi;
   }
   // main display
