@@ -2,6 +2,10 @@ $(function(){
   // ajax
   $('#tweet').on('click', function(){
     let tweet = $('#text_area').val()
+    if (!judge_tweet(tweet)) {
+      alert('長いよ〜')
+      return
+    }
 
     $.ajax({
       type: 'POST',
@@ -42,7 +46,22 @@ $(function(){
   // 文字数を数える
   function set_word_count() {
     let texts = $('#text_area').val()
-    let count = Array.from(texts).length
-    $('#length').text(count)
+    let { weightedLength, valid } = twitter['default'].parseTweet(texts);
+    let lengths = Math.floor(weightedLength / 2)
+    $('#length').text(lengths)
+
+    // 色変え
+    if (weightedLength > 280 ) {
+      $('#length').css('color', 'red')
+      console.log(valid)
+    } else {
+      $('#length').css('color', 'black')
+    }
+  }
+
+  // valid判定関数
+  function judge_tweet(tweet) {
+    let { valid } = twitter['default'].parseTweet(tweet)
+    return valid
   }
 })

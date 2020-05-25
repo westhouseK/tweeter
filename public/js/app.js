@@ -86,6 +86,32 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/@babel/runtime/helpers/defineProperty.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/defineProperty.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+module.exports = _defineProperty;
+
+/***/ }),
+
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -6325,6 +6351,3154 @@ module.exports = {
 
 })));
 //# sourceMappingURL=bootstrap.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_a-function.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/modules/_a-function.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function (it) {
+  if (typeof it != 'function') throw TypeError(it + ' is not a function!');
+  return it;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_add-to-unscopables.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/core-js/modules/_add-to-unscopables.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 22.1.3.31 Array.prototype[@@unscopables]
+var UNSCOPABLES = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('unscopables');
+var ArrayProto = Array.prototype;
+if (ArrayProto[UNSCOPABLES] == undefined) __webpack_require__(/*! ./_hide */ "./node_modules/core-js/modules/_hide.js")(ArrayProto, UNSCOPABLES, {});
+module.exports = function (key) {
+  ArrayProto[UNSCOPABLES][key] = true;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_advance-string-index.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/core-js/modules/_advance-string-index.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var at = __webpack_require__(/*! ./_string-at */ "./node_modules/core-js/modules/_string-at.js")(true);
+
+ // `AdvanceStringIndex` abstract operation
+// https://tc39.github.io/ecma262/#sec-advancestringindex
+module.exports = function (S, index, unicode) {
+  return index + (unicode ? at(S, index).length : 1);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_an-object.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_an-object.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__(/*! ./_is-object */ "./node_modules/core-js/modules/_is-object.js");
+module.exports = function (it) {
+  if (!isObject(it)) throw TypeError(it + ' is not an object!');
+  return it;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_array-includes.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/core-js/modules/_array-includes.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// false -> Array#indexOf
+// true  -> Array#includes
+var toIObject = __webpack_require__(/*! ./_to-iobject */ "./node_modules/core-js/modules/_to-iobject.js");
+var toLength = __webpack_require__(/*! ./_to-length */ "./node_modules/core-js/modules/_to-length.js");
+var toAbsoluteIndex = __webpack_require__(/*! ./_to-absolute-index */ "./node_modules/core-js/modules/_to-absolute-index.js");
+module.exports = function (IS_INCLUDES) {
+  return function ($this, el, fromIndex) {
+    var O = toIObject($this);
+    var length = toLength(O.length);
+    var index = toAbsoluteIndex(fromIndex, length);
+    var value;
+    // Array#includes uses SameValueZero equality algorithm
+    // eslint-disable-next-line no-self-compare
+    if (IS_INCLUDES && el != el) while (length > index) {
+      value = O[index++];
+      // eslint-disable-next-line no-self-compare
+      if (value != value) return true;
+    // Array#indexOf ignores holes, Array#includes - not
+    } else for (;length > index; index++) if (IS_INCLUDES || index in O) {
+      if (O[index] === el) return IS_INCLUDES || index || 0;
+    } return !IS_INCLUDES && -1;
+  };
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_array-methods.js":
+/*!********************************************************!*\
+  !*** ./node_modules/core-js/modules/_array-methods.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 0 -> Array#forEach
+// 1 -> Array#map
+// 2 -> Array#filter
+// 3 -> Array#some
+// 4 -> Array#every
+// 5 -> Array#find
+// 6 -> Array#findIndex
+var ctx = __webpack_require__(/*! ./_ctx */ "./node_modules/core-js/modules/_ctx.js");
+var IObject = __webpack_require__(/*! ./_iobject */ "./node_modules/core-js/modules/_iobject.js");
+var toObject = __webpack_require__(/*! ./_to-object */ "./node_modules/core-js/modules/_to-object.js");
+var toLength = __webpack_require__(/*! ./_to-length */ "./node_modules/core-js/modules/_to-length.js");
+var asc = __webpack_require__(/*! ./_array-species-create */ "./node_modules/core-js/modules/_array-species-create.js");
+module.exports = function (TYPE, $create) {
+  var IS_MAP = TYPE == 1;
+  var IS_FILTER = TYPE == 2;
+  var IS_SOME = TYPE == 3;
+  var IS_EVERY = TYPE == 4;
+  var IS_FIND_INDEX = TYPE == 6;
+  var NO_HOLES = TYPE == 5 || IS_FIND_INDEX;
+  var create = $create || asc;
+  return function ($this, callbackfn, that) {
+    var O = toObject($this);
+    var self = IObject(O);
+    var f = ctx(callbackfn, that, 3);
+    var length = toLength(self.length);
+    var index = 0;
+    var result = IS_MAP ? create($this, length) : IS_FILTER ? create($this, 0) : undefined;
+    var val, res;
+    for (;length > index; index++) if (NO_HOLES || index in self) {
+      val = self[index];
+      res = f(val, index, O);
+      if (TYPE) {
+        if (IS_MAP) result[index] = res;   // map
+        else if (res) switch (TYPE) {
+          case 3: return true;             // some
+          case 5: return val;              // find
+          case 6: return index;            // findIndex
+          case 2: result.push(val);        // filter
+        } else if (IS_EVERY) return false; // every
+      }
+    }
+    return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : result;
+  };
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_array-reduce.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/core-js/modules/_array-reduce.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var aFunction = __webpack_require__(/*! ./_a-function */ "./node_modules/core-js/modules/_a-function.js");
+var toObject = __webpack_require__(/*! ./_to-object */ "./node_modules/core-js/modules/_to-object.js");
+var IObject = __webpack_require__(/*! ./_iobject */ "./node_modules/core-js/modules/_iobject.js");
+var toLength = __webpack_require__(/*! ./_to-length */ "./node_modules/core-js/modules/_to-length.js");
+
+module.exports = function (that, callbackfn, aLen, memo, isRight) {
+  aFunction(callbackfn);
+  var O = toObject(that);
+  var self = IObject(O);
+  var length = toLength(O.length);
+  var index = isRight ? length - 1 : 0;
+  var i = isRight ? -1 : 1;
+  if (aLen < 2) for (;;) {
+    if (index in self) {
+      memo = self[index];
+      index += i;
+      break;
+    }
+    index += i;
+    if (isRight ? index < 0 : length <= index) {
+      throw TypeError('Reduce of empty array with no initial value');
+    }
+  }
+  for (;isRight ? index >= 0 : length > index; index += i) if (index in self) {
+    memo = callbackfn(memo, self[index], index, O);
+  }
+  return memo;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_array-species-constructor.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/core-js/modules/_array-species-constructor.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__(/*! ./_is-object */ "./node_modules/core-js/modules/_is-object.js");
+var isArray = __webpack_require__(/*! ./_is-array */ "./node_modules/core-js/modules/_is-array.js");
+var SPECIES = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('species');
+
+module.exports = function (original) {
+  var C;
+  if (isArray(original)) {
+    C = original.constructor;
+    // cross-realm fallback
+    if (typeof C == 'function' && (C === Array || isArray(C.prototype))) C = undefined;
+    if (isObject(C)) {
+      C = C[SPECIES];
+      if (C === null) C = undefined;
+    }
+  } return C === undefined ? Array : C;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_array-species-create.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/core-js/modules/_array-species-create.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 9.4.2.3 ArraySpeciesCreate(originalArray, length)
+var speciesConstructor = __webpack_require__(/*! ./_array-species-constructor */ "./node_modules/core-js/modules/_array-species-constructor.js");
+
+module.exports = function (original, length) {
+  return new (speciesConstructor(original))(length);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_classof.js":
+/*!**************************************************!*\
+  !*** ./node_modules/core-js/modules/_classof.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// getting tag from 19.1.3.6 Object.prototype.toString()
+var cof = __webpack_require__(/*! ./_cof */ "./node_modules/core-js/modules/_cof.js");
+var TAG = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('toStringTag');
+// ES3 wrong here
+var ARG = cof(function () { return arguments; }()) == 'Arguments';
+
+// fallback for IE11 Script Access Denied error
+var tryGet = function (it, key) {
+  try {
+    return it[key];
+  } catch (e) { /* empty */ }
+};
+
+module.exports = function (it) {
+  var O, T, B;
+  return it === undefined ? 'Undefined' : it === null ? 'Null'
+    // @@toStringTag case
+    : typeof (T = tryGet(O = Object(it), TAG)) == 'string' ? T
+    // builtinTag case
+    : ARG ? cof(O)
+    // ES3 arguments fallback
+    : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_cof.js":
+/*!**********************************************!*\
+  !*** ./node_modules/core-js/modules/_cof.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var toString = {}.toString;
+
+module.exports = function (it) {
+  return toString.call(it).slice(8, -1);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_core.js":
+/*!***********************************************!*\
+  !*** ./node_modules/core-js/modules/_core.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var core = module.exports = { version: '2.6.11' };
+if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_create-property.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/core-js/modules/_create-property.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $defineProperty = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js");
+var createDesc = __webpack_require__(/*! ./_property-desc */ "./node_modules/core-js/modules/_property-desc.js");
+
+module.exports = function (object, index, value) {
+  if (index in object) $defineProperty.f(object, index, createDesc(0, value));
+  else object[index] = value;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_ctx.js":
+/*!**********************************************!*\
+  !*** ./node_modules/core-js/modules/_ctx.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// optional / simple context binding
+var aFunction = __webpack_require__(/*! ./_a-function */ "./node_modules/core-js/modules/_a-function.js");
+module.exports = function (fn, that, length) {
+  aFunction(fn);
+  if (that === undefined) return fn;
+  switch (length) {
+    case 1: return function (a) {
+      return fn.call(that, a);
+    };
+    case 2: return function (a, b) {
+      return fn.call(that, a, b);
+    };
+    case 3: return function (a, b, c) {
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function (/* ...args */) {
+    return fn.apply(that, arguments);
+  };
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_defined.js":
+/*!**************************************************!*\
+  !*** ./node_modules/core-js/modules/_defined.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// 7.2.1 RequireObjectCoercible(argument)
+module.exports = function (it) {
+  if (it == undefined) throw TypeError("Can't call method on  " + it);
+  return it;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_descriptors.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/_descriptors.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Thank's IE8 for his funny defineProperty
+module.exports = !__webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js")(function () {
+  return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_dom-create.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/modules/_dom-create.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__(/*! ./_is-object */ "./node_modules/core-js/modules/_is-object.js");
+var document = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js").document;
+// typeof document.createElement is 'object' in old IE
+var is = isObject(document) && isObject(document.createElement);
+module.exports = function (it) {
+  return is ? document.createElement(it) : {};
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_enum-bug-keys.js":
+/*!********************************************************!*\
+  !*** ./node_modules/core-js/modules/_enum-bug-keys.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// IE 8- don't enum bug keys
+module.exports = (
+  'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
+).split(',');
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_enum-keys.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_enum-keys.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// all enumerable object keys, includes symbols
+var getKeys = __webpack_require__(/*! ./_object-keys */ "./node_modules/core-js/modules/_object-keys.js");
+var gOPS = __webpack_require__(/*! ./_object-gops */ "./node_modules/core-js/modules/_object-gops.js");
+var pIE = __webpack_require__(/*! ./_object-pie */ "./node_modules/core-js/modules/_object-pie.js");
+module.exports = function (it) {
+  var result = getKeys(it);
+  var getSymbols = gOPS.f;
+  if (getSymbols) {
+    var symbols = getSymbols(it);
+    var isEnum = pIE.f;
+    var i = 0;
+    var key;
+    while (symbols.length > i) if (isEnum.call(it, key = symbols[i++])) result.push(key);
+  } return result;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_export.js":
+/*!*************************************************!*\
+  !*** ./node_modules/core-js/modules/_export.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var global = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js");
+var core = __webpack_require__(/*! ./_core */ "./node_modules/core-js/modules/_core.js");
+var hide = __webpack_require__(/*! ./_hide */ "./node_modules/core-js/modules/_hide.js");
+var redefine = __webpack_require__(/*! ./_redefine */ "./node_modules/core-js/modules/_redefine.js");
+var ctx = __webpack_require__(/*! ./_ctx */ "./node_modules/core-js/modules/_ctx.js");
+var PROTOTYPE = 'prototype';
+
+var $export = function (type, name, source) {
+  var IS_FORCED = type & $export.F;
+  var IS_GLOBAL = type & $export.G;
+  var IS_STATIC = type & $export.S;
+  var IS_PROTO = type & $export.P;
+  var IS_BIND = type & $export.B;
+  var target = IS_GLOBAL ? global : IS_STATIC ? global[name] || (global[name] = {}) : (global[name] || {})[PROTOTYPE];
+  var exports = IS_GLOBAL ? core : core[name] || (core[name] = {});
+  var expProto = exports[PROTOTYPE] || (exports[PROTOTYPE] = {});
+  var key, own, out, exp;
+  if (IS_GLOBAL) source = name;
+  for (key in source) {
+    // contains in native
+    own = !IS_FORCED && target && target[key] !== undefined;
+    // export native or passed
+    out = (own ? target : source)[key];
+    // bind timers to global for call from export context
+    exp = IS_BIND && own ? ctx(out, global) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+    // extend global
+    if (target) redefine(target, key, out, type & $export.U);
+    // export
+    if (exports[key] != out) hide(exports, key, exp);
+    if (IS_PROTO && expProto[key] != out) expProto[key] = out;
+  }
+};
+global.core = core;
+// type bitmap
+$export.F = 1;   // forced
+$export.G = 2;   // global
+$export.S = 4;   // static
+$export.P = 8;   // proto
+$export.B = 16;  // bind
+$export.W = 32;  // wrap
+$export.U = 64;  // safe
+$export.R = 128; // real proto method for `library`
+module.exports = $export;
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_fails.js":
+/*!************************************************!*\
+  !*** ./node_modules/core-js/modules/_fails.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function (exec) {
+  try {
+    return !!exec();
+  } catch (e) {
+    return true;
+  }
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_fix-re-wks.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/modules/_fix-re-wks.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+__webpack_require__(/*! ./es6.regexp.exec */ "./node_modules/core-js/modules/es6.regexp.exec.js");
+var redefine = __webpack_require__(/*! ./_redefine */ "./node_modules/core-js/modules/_redefine.js");
+var hide = __webpack_require__(/*! ./_hide */ "./node_modules/core-js/modules/_hide.js");
+var fails = __webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js");
+var defined = __webpack_require__(/*! ./_defined */ "./node_modules/core-js/modules/_defined.js");
+var wks = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js");
+var regexpExec = __webpack_require__(/*! ./_regexp-exec */ "./node_modules/core-js/modules/_regexp-exec.js");
+
+var SPECIES = wks('species');
+
+var REPLACE_SUPPORTS_NAMED_GROUPS = !fails(function () {
+  // #replace needs built-in support for named groups.
+  // #match works fine because it just return the exec results, even if it has
+  // a "grops" property.
+  var re = /./;
+  re.exec = function () {
+    var result = [];
+    result.groups = { a: '7' };
+    return result;
+  };
+  return ''.replace(re, '$<a>') !== '7';
+});
+
+var SPLIT_WORKS_WITH_OVERWRITTEN_EXEC = (function () {
+  // Chrome 51 has a buggy "split" implementation when RegExp#exec !== nativeExec
+  var re = /(?:)/;
+  var originalExec = re.exec;
+  re.exec = function () { return originalExec.apply(this, arguments); };
+  var result = 'ab'.split(re);
+  return result.length === 2 && result[0] === 'a' && result[1] === 'b';
+})();
+
+module.exports = function (KEY, length, exec) {
+  var SYMBOL = wks(KEY);
+
+  var DELEGATES_TO_SYMBOL = !fails(function () {
+    // String methods call symbol-named RegEp methods
+    var O = {};
+    O[SYMBOL] = function () { return 7; };
+    return ''[KEY](O) != 7;
+  });
+
+  var DELEGATES_TO_EXEC = DELEGATES_TO_SYMBOL ? !fails(function () {
+    // Symbol-named RegExp methods call .exec
+    var execCalled = false;
+    var re = /a/;
+    re.exec = function () { execCalled = true; return null; };
+    if (KEY === 'split') {
+      // RegExp[@@split] doesn't call the regex's exec method, but first creates
+      // a new one. We need to return the patched regex when creating the new one.
+      re.constructor = {};
+      re.constructor[SPECIES] = function () { return re; };
+    }
+    re[SYMBOL]('');
+    return !execCalled;
+  }) : undefined;
+
+  if (
+    !DELEGATES_TO_SYMBOL ||
+    !DELEGATES_TO_EXEC ||
+    (KEY === 'replace' && !REPLACE_SUPPORTS_NAMED_GROUPS) ||
+    (KEY === 'split' && !SPLIT_WORKS_WITH_OVERWRITTEN_EXEC)
+  ) {
+    var nativeRegExpMethod = /./[SYMBOL];
+    var fns = exec(
+      defined,
+      SYMBOL,
+      ''[KEY],
+      function maybeCallNative(nativeMethod, regexp, str, arg2, forceStringMethod) {
+        if (regexp.exec === regexpExec) {
+          if (DELEGATES_TO_SYMBOL && !forceStringMethod) {
+            // The native String method already delegates to @@method (this
+            // polyfilled function), leasing to infinite recursion.
+            // We avoid it by directly calling the native @@method method.
+            return { done: true, value: nativeRegExpMethod.call(regexp, str, arg2) };
+          }
+          return { done: true, value: nativeMethod.call(str, regexp, arg2) };
+        }
+        return { done: false };
+      }
+    );
+    var strfn = fns[0];
+    var rxfn = fns[1];
+
+    redefine(String.prototype, KEY, strfn);
+    hide(RegExp.prototype, SYMBOL, length == 2
+      // 21.2.5.8 RegExp.prototype[@@replace](string, replaceValue)
+      // 21.2.5.11 RegExp.prototype[@@split](string, limit)
+      ? function (string, arg) { return rxfn.call(string, this, arg); }
+      // 21.2.5.6 RegExp.prototype[@@match](string)
+      // 21.2.5.9 RegExp.prototype[@@search](string)
+      : function (string) { return rxfn.call(string, this); }
+    );
+  }
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_flags.js":
+/*!************************************************!*\
+  !*** ./node_modules/core-js/modules/_flags.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// 21.2.5.3 get RegExp.prototype.flags
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+module.exports = function () {
+  var that = anObject(this);
+  var result = '';
+  if (that.global) result += 'g';
+  if (that.ignoreCase) result += 'i';
+  if (that.multiline) result += 'm';
+  if (that.unicode) result += 'u';
+  if (that.sticky) result += 'y';
+  return result;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_function-to-string.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/core-js/modules/_function-to-string.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./_shared */ "./node_modules/core-js/modules/_shared.js")('native-function-to-string', Function.toString);
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_global.js":
+/*!*************************************************!*\
+  !*** ./node_modules/core-js/modules/_global.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+var global = module.exports = typeof window != 'undefined' && window.Math == Math
+  ? window : typeof self != 'undefined' && self.Math == Math ? self
+  // eslint-disable-next-line no-new-func
+  : Function('return this')();
+if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_has.js":
+/*!**********************************************!*\
+  !*** ./node_modules/core-js/modules/_has.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var hasOwnProperty = {}.hasOwnProperty;
+module.exports = function (it, key) {
+  return hasOwnProperty.call(it, key);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_hide.js":
+/*!***********************************************!*\
+  !*** ./node_modules/core-js/modules/_hide.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var dP = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js");
+var createDesc = __webpack_require__(/*! ./_property-desc */ "./node_modules/core-js/modules/_property-desc.js");
+module.exports = __webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js") ? function (object, key, value) {
+  return dP.f(object, key, createDesc(1, value));
+} : function (object, key, value) {
+  object[key] = value;
+  return object;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_html.js":
+/*!***********************************************!*\
+  !*** ./node_modules/core-js/modules/_html.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var document = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js").document;
+module.exports = document && document.documentElement;
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_ie8-dom-define.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/core-js/modules/_ie8-dom-define.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = !__webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js") && !__webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js")(function () {
+  return Object.defineProperty(__webpack_require__(/*! ./_dom-create */ "./node_modules/core-js/modules/_dom-create.js")('div'), 'a', { get: function () { return 7; } }).a != 7;
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_inherit-if-required.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/core-js/modules/_inherit-if-required.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__(/*! ./_is-object */ "./node_modules/core-js/modules/_is-object.js");
+var setPrototypeOf = __webpack_require__(/*! ./_set-proto */ "./node_modules/core-js/modules/_set-proto.js").set;
+module.exports = function (that, target, C) {
+  var S = target.constructor;
+  var P;
+  if (S !== C && typeof S == 'function' && (P = S.prototype) !== C.prototype && isObject(P) && setPrototypeOf) {
+    setPrototypeOf(that, P);
+  } return that;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_iobject.js":
+/*!**************************************************!*\
+  !*** ./node_modules/core-js/modules/_iobject.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
+var cof = __webpack_require__(/*! ./_cof */ "./node_modules/core-js/modules/_cof.js");
+// eslint-disable-next-line no-prototype-builtins
+module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
+  return cof(it) == 'String' ? it.split('') : Object(it);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_is-array-iter.js":
+/*!********************************************************!*\
+  !*** ./node_modules/core-js/modules/_is-array-iter.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// check on default Array iterator
+var Iterators = __webpack_require__(/*! ./_iterators */ "./node_modules/core-js/modules/_iterators.js");
+var ITERATOR = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('iterator');
+var ArrayProto = Array.prototype;
+
+module.exports = function (it) {
+  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_is-array.js":
+/*!***************************************************!*\
+  !*** ./node_modules/core-js/modules/_is-array.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.2.2 IsArray(argument)
+var cof = __webpack_require__(/*! ./_cof */ "./node_modules/core-js/modules/_cof.js");
+module.exports = Array.isArray || function isArray(arg) {
+  return cof(arg) == 'Array';
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_is-object.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_is-object.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function (it) {
+  return typeof it === 'object' ? it !== null : typeof it === 'function';
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_is-regexp.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_is-regexp.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.2.8 IsRegExp(argument)
+var isObject = __webpack_require__(/*! ./_is-object */ "./node_modules/core-js/modules/_is-object.js");
+var cof = __webpack_require__(/*! ./_cof */ "./node_modules/core-js/modules/_cof.js");
+var MATCH = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('match');
+module.exports = function (it) {
+  var isRegExp;
+  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_iter-call.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_iter-call.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// call something on iterator step with safe closing on error
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+module.exports = function (iterator, fn, value, entries) {
+  try {
+    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
+  // 7.4.6 IteratorClose(iterator, completion)
+  } catch (e) {
+    var ret = iterator['return'];
+    if (ret !== undefined) anObject(ret.call(iterator));
+    throw e;
+  }
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_iter-create.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/_iter-create.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var create = __webpack_require__(/*! ./_object-create */ "./node_modules/core-js/modules/_object-create.js");
+var descriptor = __webpack_require__(/*! ./_property-desc */ "./node_modules/core-js/modules/_property-desc.js");
+var setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ "./node_modules/core-js/modules/_set-to-string-tag.js");
+var IteratorPrototype = {};
+
+// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
+__webpack_require__(/*! ./_hide */ "./node_modules/core-js/modules/_hide.js")(IteratorPrototype, __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('iterator'), function () { return this; });
+
+module.exports = function (Constructor, NAME, next) {
+  Constructor.prototype = create(IteratorPrototype, { next: descriptor(1, next) });
+  setToStringTag(Constructor, NAME + ' Iterator');
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_iter-define.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/_iter-define.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var LIBRARY = __webpack_require__(/*! ./_library */ "./node_modules/core-js/modules/_library.js");
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+var redefine = __webpack_require__(/*! ./_redefine */ "./node_modules/core-js/modules/_redefine.js");
+var hide = __webpack_require__(/*! ./_hide */ "./node_modules/core-js/modules/_hide.js");
+var Iterators = __webpack_require__(/*! ./_iterators */ "./node_modules/core-js/modules/_iterators.js");
+var $iterCreate = __webpack_require__(/*! ./_iter-create */ "./node_modules/core-js/modules/_iter-create.js");
+var setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ "./node_modules/core-js/modules/_set-to-string-tag.js");
+var getPrototypeOf = __webpack_require__(/*! ./_object-gpo */ "./node_modules/core-js/modules/_object-gpo.js");
+var ITERATOR = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('iterator');
+var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
+var FF_ITERATOR = '@@iterator';
+var KEYS = 'keys';
+var VALUES = 'values';
+
+var returnThis = function () { return this; };
+
+module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED) {
+  $iterCreate(Constructor, NAME, next);
+  var getMethod = function (kind) {
+    if (!BUGGY && kind in proto) return proto[kind];
+    switch (kind) {
+      case KEYS: return function keys() { return new Constructor(this, kind); };
+      case VALUES: return function values() { return new Constructor(this, kind); };
+    } return function entries() { return new Constructor(this, kind); };
+  };
+  var TAG = NAME + ' Iterator';
+  var DEF_VALUES = DEFAULT == VALUES;
+  var VALUES_BUG = false;
+  var proto = Base.prototype;
+  var $native = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT];
+  var $default = $native || getMethod(DEFAULT);
+  var $entries = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined;
+  var $anyNative = NAME == 'Array' ? proto.entries || $native : $native;
+  var methods, key, IteratorPrototype;
+  // Fix native
+  if ($anyNative) {
+    IteratorPrototype = getPrototypeOf($anyNative.call(new Base()));
+    if (IteratorPrototype !== Object.prototype && IteratorPrototype.next) {
+      // Set @@toStringTag to native iterators
+      setToStringTag(IteratorPrototype, TAG, true);
+      // fix for some old engines
+      if (!LIBRARY && typeof IteratorPrototype[ITERATOR] != 'function') hide(IteratorPrototype, ITERATOR, returnThis);
+    }
+  }
+  // fix Array#{values, @@iterator}.name in V8 / FF
+  if (DEF_VALUES && $native && $native.name !== VALUES) {
+    VALUES_BUG = true;
+    $default = function values() { return $native.call(this); };
+  }
+  // Define iterator
+  if ((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
+    hide(proto, ITERATOR, $default);
+  }
+  // Plug for library
+  Iterators[NAME] = $default;
+  Iterators[TAG] = returnThis;
+  if (DEFAULT) {
+    methods = {
+      values: DEF_VALUES ? $default : getMethod(VALUES),
+      keys: IS_SET ? $default : getMethod(KEYS),
+      entries: $entries
+    };
+    if (FORCED) for (key in methods) {
+      if (!(key in proto)) redefine(proto, key, methods[key]);
+    } else $export($export.P + $export.F * (BUGGY || VALUES_BUG), NAME, methods);
+  }
+  return methods;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_iter-detect.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/_iter-detect.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var ITERATOR = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('iterator');
+var SAFE_CLOSING = false;
+
+try {
+  var riter = [7][ITERATOR]();
+  riter['return'] = function () { SAFE_CLOSING = true; };
+  // eslint-disable-next-line no-throw-literal
+  Array.from(riter, function () { throw 2; });
+} catch (e) { /* empty */ }
+
+module.exports = function (exec, skipClosing) {
+  if (!skipClosing && !SAFE_CLOSING) return false;
+  var safe = false;
+  try {
+    var arr = [7];
+    var iter = arr[ITERATOR]();
+    iter.next = function () { return { done: safe = true }; };
+    arr[ITERATOR] = function () { return iter; };
+    exec(arr);
+  } catch (e) { /* empty */ }
+  return safe;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_iter-step.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_iter-step.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function (done, value) {
+  return { value: value, done: !!done };
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_iterators.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_iterators.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_library.js":
+/*!**************************************************!*\
+  !*** ./node_modules/core-js/modules/_library.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = false;
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_meta.js":
+/*!***********************************************!*\
+  !*** ./node_modules/core-js/modules/_meta.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var META = __webpack_require__(/*! ./_uid */ "./node_modules/core-js/modules/_uid.js")('meta');
+var isObject = __webpack_require__(/*! ./_is-object */ "./node_modules/core-js/modules/_is-object.js");
+var has = __webpack_require__(/*! ./_has */ "./node_modules/core-js/modules/_has.js");
+var setDesc = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js").f;
+var id = 0;
+var isExtensible = Object.isExtensible || function () {
+  return true;
+};
+var FREEZE = !__webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js")(function () {
+  return isExtensible(Object.preventExtensions({}));
+});
+var setMeta = function (it) {
+  setDesc(it, META, { value: {
+    i: 'O' + ++id, // object ID
+    w: {}          // weak collections IDs
+  } });
+};
+var fastKey = function (it, create) {
+  // return primitive with prefix
+  if (!isObject(it)) return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it;
+  if (!has(it, META)) {
+    // can't set metadata to uncaught frozen object
+    if (!isExtensible(it)) return 'F';
+    // not necessary to add metadata
+    if (!create) return 'E';
+    // add missing metadata
+    setMeta(it);
+  // return object ID
+  } return it[META].i;
+};
+var getWeak = function (it, create) {
+  if (!has(it, META)) {
+    // can't set metadata to uncaught frozen object
+    if (!isExtensible(it)) return true;
+    // not necessary to add metadata
+    if (!create) return false;
+    // add missing metadata
+    setMeta(it);
+  // return hash weak collections IDs
+  } return it[META].w;
+};
+// add metadata on freeze-family methods calling
+var onFreeze = function (it) {
+  if (FREEZE && meta.NEED && isExtensible(it) && !has(it, META)) setMeta(it);
+  return it;
+};
+var meta = module.exports = {
+  KEY: META,
+  NEED: false,
+  fastKey: fastKey,
+  getWeak: getWeak,
+  onFreeze: onFreeze
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-create.js":
+/*!********************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-create.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+var dPs = __webpack_require__(/*! ./_object-dps */ "./node_modules/core-js/modules/_object-dps.js");
+var enumBugKeys = __webpack_require__(/*! ./_enum-bug-keys */ "./node_modules/core-js/modules/_enum-bug-keys.js");
+var IE_PROTO = __webpack_require__(/*! ./_shared-key */ "./node_modules/core-js/modules/_shared-key.js")('IE_PROTO');
+var Empty = function () { /* empty */ };
+var PROTOTYPE = 'prototype';
+
+// Create object with fake `null` prototype: use iframe Object with cleared prototype
+var createDict = function () {
+  // Thrash, waste and sodomy: IE GC bug
+  var iframe = __webpack_require__(/*! ./_dom-create */ "./node_modules/core-js/modules/_dom-create.js")('iframe');
+  var i = enumBugKeys.length;
+  var lt = '<';
+  var gt = '>';
+  var iframeDocument;
+  iframe.style.display = 'none';
+  __webpack_require__(/*! ./_html */ "./node_modules/core-js/modules/_html.js").appendChild(iframe);
+  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
+  // createDict = iframe.contentWindow.Object;
+  // html.removeChild(iframe);
+  iframeDocument = iframe.contentWindow.document;
+  iframeDocument.open();
+  iframeDocument.write(lt + 'script' + gt + 'document.F=Object' + lt + '/script' + gt);
+  iframeDocument.close();
+  createDict = iframeDocument.F;
+  while (i--) delete createDict[PROTOTYPE][enumBugKeys[i]];
+  return createDict();
+};
+
+module.exports = Object.create || function create(O, Properties) {
+  var result;
+  if (O !== null) {
+    Empty[PROTOTYPE] = anObject(O);
+    result = new Empty();
+    Empty[PROTOTYPE] = null;
+    // add "__proto__" for Object.getPrototypeOf polyfill
+    result[IE_PROTO] = O;
+  } else result = createDict();
+  return Properties === undefined ? result : dPs(result, Properties);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-dp.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-dp.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+var IE8_DOM_DEFINE = __webpack_require__(/*! ./_ie8-dom-define */ "./node_modules/core-js/modules/_ie8-dom-define.js");
+var toPrimitive = __webpack_require__(/*! ./_to-primitive */ "./node_modules/core-js/modules/_to-primitive.js");
+var dP = Object.defineProperty;
+
+exports.f = __webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js") ? Object.defineProperty : function defineProperty(O, P, Attributes) {
+  anObject(O);
+  P = toPrimitive(P, true);
+  anObject(Attributes);
+  if (IE8_DOM_DEFINE) try {
+    return dP(O, P, Attributes);
+  } catch (e) { /* empty */ }
+  if ('get' in Attributes || 'set' in Attributes) throw TypeError('Accessors not supported!');
+  if ('value' in Attributes) O[P] = Attributes.value;
+  return O;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-dps.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-dps.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var dP = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js");
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+var getKeys = __webpack_require__(/*! ./_object-keys */ "./node_modules/core-js/modules/_object-keys.js");
+
+module.exports = __webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js") ? Object.defineProperties : function defineProperties(O, Properties) {
+  anObject(O);
+  var keys = getKeys(Properties);
+  var length = keys.length;
+  var i = 0;
+  var P;
+  while (length > i) dP.f(O, P = keys[i++], Properties[P]);
+  return O;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-gopd.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-gopd.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var pIE = __webpack_require__(/*! ./_object-pie */ "./node_modules/core-js/modules/_object-pie.js");
+var createDesc = __webpack_require__(/*! ./_property-desc */ "./node_modules/core-js/modules/_property-desc.js");
+var toIObject = __webpack_require__(/*! ./_to-iobject */ "./node_modules/core-js/modules/_to-iobject.js");
+var toPrimitive = __webpack_require__(/*! ./_to-primitive */ "./node_modules/core-js/modules/_to-primitive.js");
+var has = __webpack_require__(/*! ./_has */ "./node_modules/core-js/modules/_has.js");
+var IE8_DOM_DEFINE = __webpack_require__(/*! ./_ie8-dom-define */ "./node_modules/core-js/modules/_ie8-dom-define.js");
+var gOPD = Object.getOwnPropertyDescriptor;
+
+exports.f = __webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js") ? gOPD : function getOwnPropertyDescriptor(O, P) {
+  O = toIObject(O);
+  P = toPrimitive(P, true);
+  if (IE8_DOM_DEFINE) try {
+    return gOPD(O, P);
+  } catch (e) { /* empty */ }
+  if (has(O, P)) return createDesc(!pIE.f.call(O, P), O[P]);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-gopn-ext.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-gopn-ext.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
+var toIObject = __webpack_require__(/*! ./_to-iobject */ "./node_modules/core-js/modules/_to-iobject.js");
+var gOPN = __webpack_require__(/*! ./_object-gopn */ "./node_modules/core-js/modules/_object-gopn.js").f;
+var toString = {}.toString;
+
+var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
+  ? Object.getOwnPropertyNames(window) : [];
+
+var getWindowNames = function (it) {
+  try {
+    return gOPN(it);
+  } catch (e) {
+    return windowNames.slice();
+  }
+};
+
+module.exports.f = function getOwnPropertyNames(it) {
+  return windowNames && toString.call(it) == '[object Window]' ? getWindowNames(it) : gOPN(toIObject(it));
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-gopn.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-gopn.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
+var $keys = __webpack_require__(/*! ./_object-keys-internal */ "./node_modules/core-js/modules/_object-keys-internal.js");
+var hiddenKeys = __webpack_require__(/*! ./_enum-bug-keys */ "./node_modules/core-js/modules/_enum-bug-keys.js").concat('length', 'prototype');
+
+exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
+  return $keys(O, hiddenKeys);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-gops.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-gops.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+exports.f = Object.getOwnPropertySymbols;
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-gpo.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-gpo.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
+var has = __webpack_require__(/*! ./_has */ "./node_modules/core-js/modules/_has.js");
+var toObject = __webpack_require__(/*! ./_to-object */ "./node_modules/core-js/modules/_to-object.js");
+var IE_PROTO = __webpack_require__(/*! ./_shared-key */ "./node_modules/core-js/modules/_shared-key.js")('IE_PROTO');
+var ObjectProto = Object.prototype;
+
+module.exports = Object.getPrototypeOf || function (O) {
+  O = toObject(O);
+  if (has(O, IE_PROTO)) return O[IE_PROTO];
+  if (typeof O.constructor == 'function' && O instanceof O.constructor) {
+    return O.constructor.prototype;
+  } return O instanceof Object ? ObjectProto : null;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-keys-internal.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-keys-internal.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var has = __webpack_require__(/*! ./_has */ "./node_modules/core-js/modules/_has.js");
+var toIObject = __webpack_require__(/*! ./_to-iobject */ "./node_modules/core-js/modules/_to-iobject.js");
+var arrayIndexOf = __webpack_require__(/*! ./_array-includes */ "./node_modules/core-js/modules/_array-includes.js")(false);
+var IE_PROTO = __webpack_require__(/*! ./_shared-key */ "./node_modules/core-js/modules/_shared-key.js")('IE_PROTO');
+
+module.exports = function (object, names) {
+  var O = toIObject(object);
+  var i = 0;
+  var result = [];
+  var key;
+  for (key in O) if (key != IE_PROTO) has(O, key) && result.push(key);
+  // Don't enum bug & hidden keys
+  while (names.length > i) if (has(O, key = names[i++])) {
+    ~arrayIndexOf(result, key) || result.push(key);
+  }
+  return result;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-keys.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-keys.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.14 / 15.2.3.14 Object.keys(O)
+var $keys = __webpack_require__(/*! ./_object-keys-internal */ "./node_modules/core-js/modules/_object-keys-internal.js");
+var enumBugKeys = __webpack_require__(/*! ./_enum-bug-keys */ "./node_modules/core-js/modules/_enum-bug-keys.js");
+
+module.exports = Object.keys || function keys(O) {
+  return $keys(O, enumBugKeys);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-pie.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-pie.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+exports.f = {}.propertyIsEnumerable;
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_object-sap.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/modules/_object-sap.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// most Object methods by ES6 should accept primitives
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+var core = __webpack_require__(/*! ./_core */ "./node_modules/core-js/modules/_core.js");
+var fails = __webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js");
+module.exports = function (KEY, exec) {
+  var fn = (core.Object || {})[KEY] || Object[KEY];
+  var exp = {};
+  exp[KEY] = exec(fn);
+  $export($export.S + $export.F * fails(function () { fn(1); }), 'Object', exp);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_own-keys.js":
+/*!***************************************************!*\
+  !*** ./node_modules/core-js/modules/_own-keys.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// all object keys, includes non-enumerable and symbols
+var gOPN = __webpack_require__(/*! ./_object-gopn */ "./node_modules/core-js/modules/_object-gopn.js");
+var gOPS = __webpack_require__(/*! ./_object-gops */ "./node_modules/core-js/modules/_object-gops.js");
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+var Reflect = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js").Reflect;
+module.exports = Reflect && Reflect.ownKeys || function ownKeys(it) {
+  var keys = gOPN.f(anObject(it));
+  var getSymbols = gOPS.f;
+  return getSymbols ? keys.concat(getSymbols(it)) : keys;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_property-desc.js":
+/*!********************************************************!*\
+  !*** ./node_modules/core-js/modules/_property-desc.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function (bitmap, value) {
+  return {
+    enumerable: !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable: !(bitmap & 4),
+    value: value
+  };
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_redefine.js":
+/*!***************************************************!*\
+  !*** ./node_modules/core-js/modules/_redefine.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var global = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js");
+var hide = __webpack_require__(/*! ./_hide */ "./node_modules/core-js/modules/_hide.js");
+var has = __webpack_require__(/*! ./_has */ "./node_modules/core-js/modules/_has.js");
+var SRC = __webpack_require__(/*! ./_uid */ "./node_modules/core-js/modules/_uid.js")('src');
+var $toString = __webpack_require__(/*! ./_function-to-string */ "./node_modules/core-js/modules/_function-to-string.js");
+var TO_STRING = 'toString';
+var TPL = ('' + $toString).split(TO_STRING);
+
+__webpack_require__(/*! ./_core */ "./node_modules/core-js/modules/_core.js").inspectSource = function (it) {
+  return $toString.call(it);
+};
+
+(module.exports = function (O, key, val, safe) {
+  var isFunction = typeof val == 'function';
+  if (isFunction) has(val, 'name') || hide(val, 'name', key);
+  if (O[key] === val) return;
+  if (isFunction) has(val, SRC) || hide(val, SRC, O[key] ? '' + O[key] : TPL.join(String(key)));
+  if (O === global) {
+    O[key] = val;
+  } else if (!safe) {
+    delete O[key];
+    hide(O, key, val);
+  } else if (O[key]) {
+    O[key] = val;
+  } else {
+    hide(O, key, val);
+  }
+// add fake Function#toString for correct work wrapped methods / constructors with methods like LoDash isNative
+})(Function.prototype, TO_STRING, function toString() {
+  return typeof this == 'function' && this[SRC] || $toString.call(this);
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_regexp-exec-abstract.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/core-js/modules/_regexp-exec-abstract.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var classof = __webpack_require__(/*! ./_classof */ "./node_modules/core-js/modules/_classof.js");
+var builtinExec = RegExp.prototype.exec;
+
+ // `RegExpExec` abstract operation
+// https://tc39.github.io/ecma262/#sec-regexpexec
+module.exports = function (R, S) {
+  var exec = R.exec;
+  if (typeof exec === 'function') {
+    var result = exec.call(R, S);
+    if (typeof result !== 'object') {
+      throw new TypeError('RegExp exec method returned something other than an Object or null');
+    }
+    return result;
+  }
+  if (classof(R) !== 'RegExp') {
+    throw new TypeError('RegExp#exec called on incompatible receiver');
+  }
+  return builtinExec.call(R, S);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_regexp-exec.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/_regexp-exec.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var regexpFlags = __webpack_require__(/*! ./_flags */ "./node_modules/core-js/modules/_flags.js");
+
+var nativeExec = RegExp.prototype.exec;
+// This always refers to the native implementation, because the
+// String#replace polyfill uses ./fix-regexp-well-known-symbol-logic.js,
+// which loads this file before patching the method.
+var nativeReplace = String.prototype.replace;
+
+var patchedExec = nativeExec;
+
+var LAST_INDEX = 'lastIndex';
+
+var UPDATES_LAST_INDEX_WRONG = (function () {
+  var re1 = /a/,
+      re2 = /b*/g;
+  nativeExec.call(re1, 'a');
+  nativeExec.call(re2, 'a');
+  return re1[LAST_INDEX] !== 0 || re2[LAST_INDEX] !== 0;
+})();
+
+// nonparticipating capturing group, copied from es5-shim's String#split patch.
+var NPCG_INCLUDED = /()??/.exec('')[1] !== undefined;
+
+var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED;
+
+if (PATCH) {
+  patchedExec = function exec(str) {
+    var re = this;
+    var lastIndex, reCopy, match, i;
+
+    if (NPCG_INCLUDED) {
+      reCopy = new RegExp('^' + re.source + '$(?!\\s)', regexpFlags.call(re));
+    }
+    if (UPDATES_LAST_INDEX_WRONG) lastIndex = re[LAST_INDEX];
+
+    match = nativeExec.call(re, str);
+
+    if (UPDATES_LAST_INDEX_WRONG && match) {
+      re[LAST_INDEX] = re.global ? match.index + match[0].length : lastIndex;
+    }
+    if (NPCG_INCLUDED && match && match.length > 1) {
+      // Fix browsers whose `exec` methods don't consistently return `undefined`
+      // for NPCG, like IE8. NOTE: This doesn' work for /(.?)?/
+      // eslint-disable-next-line no-loop-func
+      nativeReplace.call(match[0], reCopy, function () {
+        for (i = 1; i < arguments.length - 2; i++) {
+          if (arguments[i] === undefined) match[i] = undefined;
+        }
+      });
+    }
+
+    return match;
+  };
+}
+
+module.exports = patchedExec;
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_set-proto.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_set-proto.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Works with __proto__ only. Old v8 can't work with null proto objects.
+/* eslint-disable no-proto */
+var isObject = __webpack_require__(/*! ./_is-object */ "./node_modules/core-js/modules/_is-object.js");
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+var check = function (O, proto) {
+  anObject(O);
+  if (!isObject(proto) && proto !== null) throw TypeError(proto + ": can't set as prototype!");
+};
+module.exports = {
+  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
+    function (test, buggy, set) {
+      try {
+        set = __webpack_require__(/*! ./_ctx */ "./node_modules/core-js/modules/_ctx.js")(Function.call, __webpack_require__(/*! ./_object-gopd */ "./node_modules/core-js/modules/_object-gopd.js").f(Object.prototype, '__proto__').set, 2);
+        set(test, []);
+        buggy = !(test instanceof Array);
+      } catch (e) { buggy = true; }
+      return function setPrototypeOf(O, proto) {
+        check(O, proto);
+        if (buggy) O.__proto__ = proto;
+        else set(O, proto);
+        return O;
+      };
+    }({}, false) : undefined),
+  check: check
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_set-species.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/_set-species.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var global = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js");
+var dP = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js");
+var DESCRIPTORS = __webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js");
+var SPECIES = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('species');
+
+module.exports = function (KEY) {
+  var C = global[KEY];
+  if (DESCRIPTORS && C && !C[SPECIES]) dP.f(C, SPECIES, {
+    configurable: true,
+    get: function () { return this; }
+  });
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_set-to-string-tag.js":
+/*!************************************************************!*\
+  !*** ./node_modules/core-js/modules/_set-to-string-tag.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var def = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js").f;
+var has = __webpack_require__(/*! ./_has */ "./node_modules/core-js/modules/_has.js");
+var TAG = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('toStringTag');
+
+module.exports = function (it, tag, stat) {
+  if (it && !has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_shared-key.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/modules/_shared-key.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var shared = __webpack_require__(/*! ./_shared */ "./node_modules/core-js/modules/_shared.js")('keys');
+var uid = __webpack_require__(/*! ./_uid */ "./node_modules/core-js/modules/_uid.js");
+module.exports = function (key) {
+  return shared[key] || (shared[key] = uid(key));
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_shared.js":
+/*!*************************************************!*\
+  !*** ./node_modules/core-js/modules/_shared.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var core = __webpack_require__(/*! ./_core */ "./node_modules/core-js/modules/_core.js");
+var global = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js");
+var SHARED = '__core-js_shared__';
+var store = global[SHARED] || (global[SHARED] = {});
+
+(module.exports = function (key, value) {
+  return store[key] || (store[key] = value !== undefined ? value : {});
+})('versions', []).push({
+  version: core.version,
+  mode: __webpack_require__(/*! ./_library */ "./node_modules/core-js/modules/_library.js") ? 'pure' : 'global',
+  copyright: '© 2019 Denis Pushkarev (zloirock.ru)'
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_species-constructor.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/core-js/modules/_species-constructor.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.3.20 SpeciesConstructor(O, defaultConstructor)
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+var aFunction = __webpack_require__(/*! ./_a-function */ "./node_modules/core-js/modules/_a-function.js");
+var SPECIES = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('species');
+module.exports = function (O, D) {
+  var C = anObject(O).constructor;
+  var S;
+  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_strict-method.js":
+/*!********************************************************!*\
+  !*** ./node_modules/core-js/modules/_strict-method.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var fails = __webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js");
+
+module.exports = function (method, arg) {
+  return !!method && fails(function () {
+    // eslint-disable-next-line no-useless-call
+    arg ? method.call(null, function () { /* empty */ }, 1) : method.call(null);
+  });
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_string-at.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_string-at.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toInteger = __webpack_require__(/*! ./_to-integer */ "./node_modules/core-js/modules/_to-integer.js");
+var defined = __webpack_require__(/*! ./_defined */ "./node_modules/core-js/modules/_defined.js");
+// true  -> String#at
+// false -> String#codePointAt
+module.exports = function (TO_STRING) {
+  return function (that, pos) {
+    var s = String(defined(that));
+    var i = toInteger(pos);
+    var l = s.length;
+    var a, b;
+    if (i < 0 || i >= l) return TO_STRING ? '' : undefined;
+    a = s.charCodeAt(i);
+    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
+      ? TO_STRING ? s.charAt(i) : a
+      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+  };
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_to-absolute-index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/core-js/modules/_to-absolute-index.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toInteger = __webpack_require__(/*! ./_to-integer */ "./node_modules/core-js/modules/_to-integer.js");
+var max = Math.max;
+var min = Math.min;
+module.exports = function (index, length) {
+  index = toInteger(index);
+  return index < 0 ? max(index + length, 0) : min(index, length);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_to-integer.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/modules/_to-integer.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// 7.1.4 ToInteger
+var ceil = Math.ceil;
+var floor = Math.floor;
+module.exports = function (it) {
+  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_to-iobject.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/modules/_to-iobject.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// to indexed object, toObject with fallback for non-array-like ES3 strings
+var IObject = __webpack_require__(/*! ./_iobject */ "./node_modules/core-js/modules/_iobject.js");
+var defined = __webpack_require__(/*! ./_defined */ "./node_modules/core-js/modules/_defined.js");
+module.exports = function (it) {
+  return IObject(defined(it));
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_to-length.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_to-length.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.1.15 ToLength
+var toInteger = __webpack_require__(/*! ./_to-integer */ "./node_modules/core-js/modules/_to-integer.js");
+var min = Math.min;
+module.exports = function (it) {
+  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_to-object.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/_to-object.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.1.13 ToObject(argument)
+var defined = __webpack_require__(/*! ./_defined */ "./node_modules/core-js/modules/_defined.js");
+module.exports = function (it) {
+  return Object(defined(it));
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_to-primitive.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/core-js/modules/_to-primitive.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.1.1 ToPrimitive(input [, PreferredType])
+var isObject = __webpack_require__(/*! ./_is-object */ "./node_modules/core-js/modules/_is-object.js");
+// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+// and the second argument - flag - preferred type is a string
+module.exports = function (it, S) {
+  if (!isObject(it)) return it;
+  var fn, val;
+  if (S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
+  if (typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it))) return val;
+  if (!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
+  throw TypeError("Can't convert object to primitive value");
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_uid.js":
+/*!**********************************************!*\
+  !*** ./node_modules/core-js/modules/_uid.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var id = 0;
+var px = Math.random();
+module.exports = function (key) {
+  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_wks-define.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/modules/_wks-define.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var global = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js");
+var core = __webpack_require__(/*! ./_core */ "./node_modules/core-js/modules/_core.js");
+var LIBRARY = __webpack_require__(/*! ./_library */ "./node_modules/core-js/modules/_library.js");
+var wksExt = __webpack_require__(/*! ./_wks-ext */ "./node_modules/core-js/modules/_wks-ext.js");
+var defineProperty = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js").f;
+module.exports = function (name) {
+  var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
+  if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty($Symbol, name, { value: wksExt.f(name) });
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_wks-ext.js":
+/*!**************************************************!*\
+  !*** ./node_modules/core-js/modules/_wks-ext.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports.f = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js");
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/_wks.js":
+/*!**********************************************!*\
+  !*** ./node_modules/core-js/modules/_wks.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var store = __webpack_require__(/*! ./_shared */ "./node_modules/core-js/modules/_shared.js")('wks');
+var uid = __webpack_require__(/*! ./_uid */ "./node_modules/core-js/modules/_uid.js");
+var Symbol = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js").Symbol;
+var USE_SYMBOL = typeof Symbol == 'function';
+
+var $exports = module.exports = function (name) {
+  return store[name] || (store[name] =
+    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
+};
+
+$exports.store = store;
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/core.get-iterator-method.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/core-js/modules/core.get-iterator-method.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var classof = __webpack_require__(/*! ./_classof */ "./node_modules/core-js/modules/_classof.js");
+var ITERATOR = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('iterator');
+var Iterators = __webpack_require__(/*! ./_iterators */ "./node_modules/core-js/modules/_iterators.js");
+module.exports = __webpack_require__(/*! ./_core */ "./node_modules/core-js/modules/_core.js").getIteratorMethod = function (it) {
+  if (it != undefined) return it[ITERATOR]
+    || it['@@iterator']
+    || Iterators[classof(it)];
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.array.filter.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.array.filter.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+var $filter = __webpack_require__(/*! ./_array-methods */ "./node_modules/core-js/modules/_array-methods.js")(2);
+
+$export($export.P + $export.F * !__webpack_require__(/*! ./_strict-method */ "./node_modules/core-js/modules/_strict-method.js")([].filter, true), 'Array', {
+  // 22.1.3.7 / 15.4.4.20 Array.prototype.filter(callbackfn [, thisArg])
+  filter: function filter(callbackfn /* , thisArg */) {
+    return $filter(this, callbackfn, arguments[1]);
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.array.for-each.js":
+/*!************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.array.for-each.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+var $forEach = __webpack_require__(/*! ./_array-methods */ "./node_modules/core-js/modules/_array-methods.js")(0);
+var STRICT = __webpack_require__(/*! ./_strict-method */ "./node_modules/core-js/modules/_strict-method.js")([].forEach, true);
+
+$export($export.P + $export.F * !STRICT, 'Array', {
+  // 22.1.3.10 / 15.4.4.18 Array.prototype.forEach(callbackfn [, thisArg])
+  forEach: function forEach(callbackfn /* , thisArg */) {
+    return $forEach(this, callbackfn, arguments[1]);
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.array.from.js":
+/*!********************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.array.from.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var ctx = __webpack_require__(/*! ./_ctx */ "./node_modules/core-js/modules/_ctx.js");
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+var toObject = __webpack_require__(/*! ./_to-object */ "./node_modules/core-js/modules/_to-object.js");
+var call = __webpack_require__(/*! ./_iter-call */ "./node_modules/core-js/modules/_iter-call.js");
+var isArrayIter = __webpack_require__(/*! ./_is-array-iter */ "./node_modules/core-js/modules/_is-array-iter.js");
+var toLength = __webpack_require__(/*! ./_to-length */ "./node_modules/core-js/modules/_to-length.js");
+var createProperty = __webpack_require__(/*! ./_create-property */ "./node_modules/core-js/modules/_create-property.js");
+var getIterFn = __webpack_require__(/*! ./core.get-iterator-method */ "./node_modules/core-js/modules/core.get-iterator-method.js");
+
+$export($export.S + $export.F * !__webpack_require__(/*! ./_iter-detect */ "./node_modules/core-js/modules/_iter-detect.js")(function (iter) { Array.from(iter); }), 'Array', {
+  // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
+  from: function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
+    var O = toObject(arrayLike);
+    var C = typeof this == 'function' ? this : Array;
+    var aLen = arguments.length;
+    var mapfn = aLen > 1 ? arguments[1] : undefined;
+    var mapping = mapfn !== undefined;
+    var index = 0;
+    var iterFn = getIterFn(O);
+    var length, result, step, iterator;
+    if (mapping) mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
+    // if object isn't iterable or it's array with default iterator - use simple case
+    if (iterFn != undefined && !(C == Array && isArrayIter(iterFn))) {
+      for (iterator = iterFn.call(O), result = new C(); !(step = iterator.next()).done; index++) {
+        createProperty(result, index, mapping ? call(iterator, mapfn, [step.value, index], true) : step.value);
+      }
+    } else {
+      length = toLength(O.length);
+      for (result = new C(length); length > index; index++) {
+        createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
+      }
+    }
+    result.length = index;
+    return result;
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.array.index-of.js":
+/*!************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.array.index-of.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+var $indexOf = __webpack_require__(/*! ./_array-includes */ "./node_modules/core-js/modules/_array-includes.js")(false);
+var $native = [].indexOf;
+var NEGATIVE_ZERO = !!$native && 1 / [1].indexOf(1, -0) < 0;
+
+$export($export.P + $export.F * (NEGATIVE_ZERO || !__webpack_require__(/*! ./_strict-method */ "./node_modules/core-js/modules/_strict-method.js")($native)), 'Array', {
+  // 22.1.3.11 / 15.4.4.14 Array.prototype.indexOf(searchElement [, fromIndex])
+  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
+    return NEGATIVE_ZERO
+      // convert -0 to +0
+      ? $native.apply(this, arguments) || 0
+      : $indexOf(this, searchElement, arguments[1]);
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.array.is-array.js":
+/*!************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.array.is-array.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 22.1.2.2 / 15.4.3.2 Array.isArray(arg)
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+
+$export($export.S, 'Array', { isArray: __webpack_require__(/*! ./_is-array */ "./node_modules/core-js/modules/_is-array.js") });
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.array.iterator.js":
+/*!************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.array.iterator.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var addToUnscopables = __webpack_require__(/*! ./_add-to-unscopables */ "./node_modules/core-js/modules/_add-to-unscopables.js");
+var step = __webpack_require__(/*! ./_iter-step */ "./node_modules/core-js/modules/_iter-step.js");
+var Iterators = __webpack_require__(/*! ./_iterators */ "./node_modules/core-js/modules/_iterators.js");
+var toIObject = __webpack_require__(/*! ./_to-iobject */ "./node_modules/core-js/modules/_to-iobject.js");
+
+// 22.1.3.4 Array.prototype.entries()
+// 22.1.3.13 Array.prototype.keys()
+// 22.1.3.29 Array.prototype.values()
+// 22.1.3.30 Array.prototype[@@iterator]()
+module.exports = __webpack_require__(/*! ./_iter-define */ "./node_modules/core-js/modules/_iter-define.js")(Array, 'Array', function (iterated, kind) {
+  this._t = toIObject(iterated); // target
+  this._i = 0;                   // next index
+  this._k = kind;                // kind
+// 22.1.5.2.1 %ArrayIteratorPrototype%.next()
+}, function () {
+  var O = this._t;
+  var kind = this._k;
+  var index = this._i++;
+  if (!O || index >= O.length) {
+    this._t = undefined;
+    return step(1);
+  }
+  if (kind == 'keys') return step(0, index);
+  if (kind == 'values') return step(0, O[index]);
+  return step(0, [index, O[index]]);
+}, 'values');
+
+// argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
+Iterators.Arguments = Iterators.Array;
+
+addToUnscopables('keys');
+addToUnscopables('values');
+addToUnscopables('entries');
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.array.reduce.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.array.reduce.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+var $reduce = __webpack_require__(/*! ./_array-reduce */ "./node_modules/core-js/modules/_array-reduce.js");
+
+$export($export.P + $export.F * !__webpack_require__(/*! ./_strict-method */ "./node_modules/core-js/modules/_strict-method.js")([].reduce, true), 'Array', {
+  // 22.1.3.18 / 15.4.4.21 Array.prototype.reduce(callbackfn [, initialValue])
+  reduce: function reduce(callbackfn /* , initialValue */) {
+    return $reduce(this, callbackfn, arguments.length, arguments[1], false);
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.array.sort.js":
+/*!********************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.array.sort.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+var aFunction = __webpack_require__(/*! ./_a-function */ "./node_modules/core-js/modules/_a-function.js");
+var toObject = __webpack_require__(/*! ./_to-object */ "./node_modules/core-js/modules/_to-object.js");
+var fails = __webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js");
+var $sort = [].sort;
+var test = [1, 2, 3];
+
+$export($export.P + $export.F * (fails(function () {
+  // IE8-
+  test.sort(undefined);
+}) || !fails(function () {
+  // V8 bug
+  test.sort(null);
+  // Old WebKit
+}) || !__webpack_require__(/*! ./_strict-method */ "./node_modules/core-js/modules/_strict-method.js")($sort)), 'Array', {
+  // 22.1.3.25 Array.prototype.sort(comparefn)
+  sort: function sort(comparefn) {
+    return comparefn === undefined
+      ? $sort.call(toObject(this))
+      : $sort.call(toObject(this), aFunction(comparefn));
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.date.to-string.js":
+/*!************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.date.to-string.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var DateProto = Date.prototype;
+var INVALID_DATE = 'Invalid Date';
+var TO_STRING = 'toString';
+var $toString = DateProto[TO_STRING];
+var getTime = DateProto.getTime;
+if (new Date(NaN) + '' != INVALID_DATE) {
+  __webpack_require__(/*! ./_redefine */ "./node_modules/core-js/modules/_redefine.js")(DateProto, TO_STRING, function toString() {
+    var value = getTime.call(this);
+    // eslint-disable-next-line no-self-compare
+    return value === value ? $toString.call(this) : INVALID_DATE;
+  });
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.object.define-properties.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.object.define-properties.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+// 19.1.2.3 / 15.2.3.7 Object.defineProperties(O, Properties)
+$export($export.S + $export.F * !__webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js"), 'Object', { defineProperties: __webpack_require__(/*! ./_object-dps */ "./node_modules/core-js/modules/_object-dps.js") });
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.object.define-property.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.object.define-property.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
+$export($export.S + $export.F * !__webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js"), 'Object', { defineProperty: __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js").f });
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.object.keys.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.object.keys.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.14 Object.keys(O)
+var toObject = __webpack_require__(/*! ./_to-object */ "./node_modules/core-js/modules/_to-object.js");
+var $keys = __webpack_require__(/*! ./_object-keys */ "./node_modules/core-js/modules/_object-keys.js");
+
+__webpack_require__(/*! ./_object-sap */ "./node_modules/core-js/modules/_object-sap.js")('keys', function () {
+  return function keys(it) {
+    return $keys(toObject(it));
+  };
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.object.to-string.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.object.to-string.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// 19.1.3.6 Object.prototype.toString()
+var classof = __webpack_require__(/*! ./_classof */ "./node_modules/core-js/modules/_classof.js");
+var test = {};
+test[__webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('toStringTag')] = 'z';
+if (test + '' != '[object z]') {
+  __webpack_require__(/*! ./_redefine */ "./node_modules/core-js/modules/_redefine.js")(Object.prototype, 'toString', function toString() {
+    return '[object ' + classof(this) + ']';
+  }, true);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.regexp.constructor.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.regexp.constructor.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var global = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js");
+var inheritIfRequired = __webpack_require__(/*! ./_inherit-if-required */ "./node_modules/core-js/modules/_inherit-if-required.js");
+var dP = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js").f;
+var gOPN = __webpack_require__(/*! ./_object-gopn */ "./node_modules/core-js/modules/_object-gopn.js").f;
+var isRegExp = __webpack_require__(/*! ./_is-regexp */ "./node_modules/core-js/modules/_is-regexp.js");
+var $flags = __webpack_require__(/*! ./_flags */ "./node_modules/core-js/modules/_flags.js");
+var $RegExp = global.RegExp;
+var Base = $RegExp;
+var proto = $RegExp.prototype;
+var re1 = /a/g;
+var re2 = /a/g;
+// "new" creates a new object, old webkit buggy here
+var CORRECT_NEW = new $RegExp(re1) !== re1;
+
+if (__webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js") && (!CORRECT_NEW || __webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js")(function () {
+  re2[__webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js")('match')] = false;
+  // RegExp constructor can alter flags and IsRegExp works correct with @@match
+  return $RegExp(re1) != re1 || $RegExp(re2) == re2 || $RegExp(re1, 'i') != '/a/i';
+}))) {
+  $RegExp = function RegExp(p, f) {
+    var tiRE = this instanceof $RegExp;
+    var piRE = isRegExp(p);
+    var fiU = f === undefined;
+    return !tiRE && piRE && p.constructor === $RegExp && fiU ? p
+      : inheritIfRequired(CORRECT_NEW
+        ? new Base(piRE && !fiU ? p.source : p, f)
+        : Base((piRE = p instanceof $RegExp) ? p.source : p, piRE && fiU ? $flags.call(p) : f)
+      , tiRE ? this : proto, $RegExp);
+  };
+  var proxy = function (key) {
+    key in $RegExp || dP($RegExp, key, {
+      configurable: true,
+      get: function () { return Base[key]; },
+      set: function (it) { Base[key] = it; }
+    });
+  };
+  for (var keys = gOPN(Base), i = 0; keys.length > i;) proxy(keys[i++]);
+  proto.constructor = $RegExp;
+  $RegExp.prototype = proto;
+  __webpack_require__(/*! ./_redefine */ "./node_modules/core-js/modules/_redefine.js")(global, 'RegExp', $RegExp);
+}
+
+__webpack_require__(/*! ./_set-species */ "./node_modules/core-js/modules/_set-species.js")('RegExp');
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.regexp.exec.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.regexp.exec.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var regexpExec = __webpack_require__(/*! ./_regexp-exec */ "./node_modules/core-js/modules/_regexp-exec.js");
+__webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js")({
+  target: 'RegExp',
+  proto: true,
+  forced: regexpExec !== /./.exec
+}, {
+  exec: regexpExec
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.regexp.flags.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.regexp.flags.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 21.2.5.3 get RegExp.prototype.flags()
+if (__webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js") && /./g.flags != 'g') __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js").f(RegExp.prototype, 'flags', {
+  configurable: true,
+  get: __webpack_require__(/*! ./_flags */ "./node_modules/core-js/modules/_flags.js")
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.regexp.match.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.regexp.match.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+var toLength = __webpack_require__(/*! ./_to-length */ "./node_modules/core-js/modules/_to-length.js");
+var advanceStringIndex = __webpack_require__(/*! ./_advance-string-index */ "./node_modules/core-js/modules/_advance-string-index.js");
+var regExpExec = __webpack_require__(/*! ./_regexp-exec-abstract */ "./node_modules/core-js/modules/_regexp-exec-abstract.js");
+
+// @@match logic
+__webpack_require__(/*! ./_fix-re-wks */ "./node_modules/core-js/modules/_fix-re-wks.js")('match', 1, function (defined, MATCH, $match, maybeCallNative) {
+  return [
+    // `String.prototype.match` method
+    // https://tc39.github.io/ecma262/#sec-string.prototype.match
+    function match(regexp) {
+      var O = defined(this);
+      var fn = regexp == undefined ? undefined : regexp[MATCH];
+      return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
+    },
+    // `RegExp.prototype[@@match]` method
+    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@match
+    function (regexp) {
+      var res = maybeCallNative($match, regexp, this);
+      if (res.done) return res.value;
+      var rx = anObject(regexp);
+      var S = String(this);
+      if (!rx.global) return regExpExec(rx, S);
+      var fullUnicode = rx.unicode;
+      rx.lastIndex = 0;
+      var A = [];
+      var n = 0;
+      var result;
+      while ((result = regExpExec(rx, S)) !== null) {
+        var matchStr = String(result[0]);
+        A[n] = matchStr;
+        if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
+        n++;
+      }
+      return n === 0 ? null : A;
+    }
+  ];
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.regexp.replace.js":
+/*!************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.regexp.replace.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+var toObject = __webpack_require__(/*! ./_to-object */ "./node_modules/core-js/modules/_to-object.js");
+var toLength = __webpack_require__(/*! ./_to-length */ "./node_modules/core-js/modules/_to-length.js");
+var toInteger = __webpack_require__(/*! ./_to-integer */ "./node_modules/core-js/modules/_to-integer.js");
+var advanceStringIndex = __webpack_require__(/*! ./_advance-string-index */ "./node_modules/core-js/modules/_advance-string-index.js");
+var regExpExec = __webpack_require__(/*! ./_regexp-exec-abstract */ "./node_modules/core-js/modules/_regexp-exec-abstract.js");
+var max = Math.max;
+var min = Math.min;
+var floor = Math.floor;
+var SUBSTITUTION_SYMBOLS = /\$([$&`']|\d\d?|<[^>]*>)/g;
+var SUBSTITUTION_SYMBOLS_NO_NAMED = /\$([$&`']|\d\d?)/g;
+
+var maybeToString = function (it) {
+  return it === undefined ? it : String(it);
+};
+
+// @@replace logic
+__webpack_require__(/*! ./_fix-re-wks */ "./node_modules/core-js/modules/_fix-re-wks.js")('replace', 2, function (defined, REPLACE, $replace, maybeCallNative) {
+  return [
+    // `String.prototype.replace` method
+    // https://tc39.github.io/ecma262/#sec-string.prototype.replace
+    function replace(searchValue, replaceValue) {
+      var O = defined(this);
+      var fn = searchValue == undefined ? undefined : searchValue[REPLACE];
+      return fn !== undefined
+        ? fn.call(searchValue, O, replaceValue)
+        : $replace.call(String(O), searchValue, replaceValue);
+    },
+    // `RegExp.prototype[@@replace]` method
+    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@replace
+    function (regexp, replaceValue) {
+      var res = maybeCallNative($replace, regexp, this, replaceValue);
+      if (res.done) return res.value;
+
+      var rx = anObject(regexp);
+      var S = String(this);
+      var functionalReplace = typeof replaceValue === 'function';
+      if (!functionalReplace) replaceValue = String(replaceValue);
+      var global = rx.global;
+      if (global) {
+        var fullUnicode = rx.unicode;
+        rx.lastIndex = 0;
+      }
+      var results = [];
+      while (true) {
+        var result = regExpExec(rx, S);
+        if (result === null) break;
+        results.push(result);
+        if (!global) break;
+        var matchStr = String(result[0]);
+        if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
+      }
+      var accumulatedResult = '';
+      var nextSourcePosition = 0;
+      for (var i = 0; i < results.length; i++) {
+        result = results[i];
+        var matched = String(result[0]);
+        var position = max(min(toInteger(result.index), S.length), 0);
+        var captures = [];
+        // NOTE: This is equivalent to
+        //   captures = result.slice(1).map(maybeToString)
+        // but for some reason `nativeSlice.call(result, 1, result.length)` (called in
+        // the slice polyfill when slicing native arrays) "doesn't work" in safari 9 and
+        // causes a crash (https://pastebin.com/N21QzeQA) when trying to debug it.
+        for (var j = 1; j < result.length; j++) captures.push(maybeToString(result[j]));
+        var namedCaptures = result.groups;
+        if (functionalReplace) {
+          var replacerArgs = [matched].concat(captures, position, S);
+          if (namedCaptures !== undefined) replacerArgs.push(namedCaptures);
+          var replacement = String(replaceValue.apply(undefined, replacerArgs));
+        } else {
+          replacement = getSubstitution(matched, S, position, captures, namedCaptures, replaceValue);
+        }
+        if (position >= nextSourcePosition) {
+          accumulatedResult += S.slice(nextSourcePosition, position) + replacement;
+          nextSourcePosition = position + matched.length;
+        }
+      }
+      return accumulatedResult + S.slice(nextSourcePosition);
+    }
+  ];
+
+    // https://tc39.github.io/ecma262/#sec-getsubstitution
+  function getSubstitution(matched, str, position, captures, namedCaptures, replacement) {
+    var tailPos = position + matched.length;
+    var m = captures.length;
+    var symbols = SUBSTITUTION_SYMBOLS_NO_NAMED;
+    if (namedCaptures !== undefined) {
+      namedCaptures = toObject(namedCaptures);
+      symbols = SUBSTITUTION_SYMBOLS;
+    }
+    return $replace.call(replacement, symbols, function (match, ch) {
+      var capture;
+      switch (ch.charAt(0)) {
+        case '$': return '$';
+        case '&': return matched;
+        case '`': return str.slice(0, position);
+        case "'": return str.slice(tailPos);
+        case '<':
+          capture = namedCaptures[ch.slice(1, -1)];
+          break;
+        default: // \d\d?
+          var n = +ch;
+          if (n === 0) return match;
+          if (n > m) {
+            var f = floor(n / 10);
+            if (f === 0) return match;
+            if (f <= m) return captures[f - 1] === undefined ? ch.charAt(1) : captures[f - 1] + ch.charAt(1);
+            return match;
+          }
+          capture = captures[n - 1];
+      }
+      return capture === undefined ? '' : capture;
+    });
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.regexp.split.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.regexp.split.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isRegExp = __webpack_require__(/*! ./_is-regexp */ "./node_modules/core-js/modules/_is-regexp.js");
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+var speciesConstructor = __webpack_require__(/*! ./_species-constructor */ "./node_modules/core-js/modules/_species-constructor.js");
+var advanceStringIndex = __webpack_require__(/*! ./_advance-string-index */ "./node_modules/core-js/modules/_advance-string-index.js");
+var toLength = __webpack_require__(/*! ./_to-length */ "./node_modules/core-js/modules/_to-length.js");
+var callRegExpExec = __webpack_require__(/*! ./_regexp-exec-abstract */ "./node_modules/core-js/modules/_regexp-exec-abstract.js");
+var regexpExec = __webpack_require__(/*! ./_regexp-exec */ "./node_modules/core-js/modules/_regexp-exec.js");
+var fails = __webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js");
+var $min = Math.min;
+var $push = [].push;
+var $SPLIT = 'split';
+var LENGTH = 'length';
+var LAST_INDEX = 'lastIndex';
+var MAX_UINT32 = 0xffffffff;
+
+// babel-minify transpiles RegExp('x', 'y') -> /x/y and it causes SyntaxError
+var SUPPORTS_Y = !fails(function () { RegExp(MAX_UINT32, 'y'); });
+
+// @@split logic
+__webpack_require__(/*! ./_fix-re-wks */ "./node_modules/core-js/modules/_fix-re-wks.js")('split', 2, function (defined, SPLIT, $split, maybeCallNative) {
+  var internalSplit;
+  if (
+    'abbc'[$SPLIT](/(b)*/)[1] == 'c' ||
+    'test'[$SPLIT](/(?:)/, -1)[LENGTH] != 4 ||
+    'ab'[$SPLIT](/(?:ab)*/)[LENGTH] != 2 ||
+    '.'[$SPLIT](/(.?)(.?)/)[LENGTH] != 4 ||
+    '.'[$SPLIT](/()()/)[LENGTH] > 1 ||
+    ''[$SPLIT](/.?/)[LENGTH]
+  ) {
+    // based on es5-shim implementation, need to rework it
+    internalSplit = function (separator, limit) {
+      var string = String(this);
+      if (separator === undefined && limit === 0) return [];
+      // If `separator` is not a regex, use native split
+      if (!isRegExp(separator)) return $split.call(string, separator, limit);
+      var output = [];
+      var flags = (separator.ignoreCase ? 'i' : '') +
+                  (separator.multiline ? 'm' : '') +
+                  (separator.unicode ? 'u' : '') +
+                  (separator.sticky ? 'y' : '');
+      var lastLastIndex = 0;
+      var splitLimit = limit === undefined ? MAX_UINT32 : limit >>> 0;
+      // Make `global` and avoid `lastIndex` issues by working with a copy
+      var separatorCopy = new RegExp(separator.source, flags + 'g');
+      var match, lastIndex, lastLength;
+      while (match = regexpExec.call(separatorCopy, string)) {
+        lastIndex = separatorCopy[LAST_INDEX];
+        if (lastIndex > lastLastIndex) {
+          output.push(string.slice(lastLastIndex, match.index));
+          if (match[LENGTH] > 1 && match.index < string[LENGTH]) $push.apply(output, match.slice(1));
+          lastLength = match[0][LENGTH];
+          lastLastIndex = lastIndex;
+          if (output[LENGTH] >= splitLimit) break;
+        }
+        if (separatorCopy[LAST_INDEX] === match.index) separatorCopy[LAST_INDEX]++; // Avoid an infinite loop
+      }
+      if (lastLastIndex === string[LENGTH]) {
+        if (lastLength || !separatorCopy.test('')) output.push('');
+      } else output.push(string.slice(lastLastIndex));
+      return output[LENGTH] > splitLimit ? output.slice(0, splitLimit) : output;
+    };
+  // Chakra, V8
+  } else if ('0'[$SPLIT](undefined, 0)[LENGTH]) {
+    internalSplit = function (separator, limit) {
+      return separator === undefined && limit === 0 ? [] : $split.call(this, separator, limit);
+    };
+  } else {
+    internalSplit = $split;
+  }
+
+  return [
+    // `String.prototype.split` method
+    // https://tc39.github.io/ecma262/#sec-string.prototype.split
+    function split(separator, limit) {
+      var O = defined(this);
+      var splitter = separator == undefined ? undefined : separator[SPLIT];
+      return splitter !== undefined
+        ? splitter.call(separator, O, limit)
+        : internalSplit.call(String(O), separator, limit);
+    },
+    // `RegExp.prototype[@@split]` method
+    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@split
+    //
+    // NOTE: This cannot be properly polyfilled in engines that don't support
+    // the 'y' flag.
+    function (regexp, limit) {
+      var res = maybeCallNative(internalSplit, regexp, this, limit, internalSplit !== $split);
+      if (res.done) return res.value;
+
+      var rx = anObject(regexp);
+      var S = String(this);
+      var C = speciesConstructor(rx, RegExp);
+
+      var unicodeMatching = rx.unicode;
+      var flags = (rx.ignoreCase ? 'i' : '') +
+                  (rx.multiline ? 'm' : '') +
+                  (rx.unicode ? 'u' : '') +
+                  (SUPPORTS_Y ? 'y' : 'g');
+
+      // ^(? + rx + ) is needed, in combination with some S slicing, to
+      // simulate the 'y' flag.
+      var splitter = new C(SUPPORTS_Y ? rx : '^(?:' + rx.source + ')', flags);
+      var lim = limit === undefined ? MAX_UINT32 : limit >>> 0;
+      if (lim === 0) return [];
+      if (S.length === 0) return callRegExpExec(splitter, S) === null ? [S] : [];
+      var p = 0;
+      var q = 0;
+      var A = [];
+      while (q < S.length) {
+        splitter.lastIndex = SUPPORTS_Y ? q : 0;
+        var z = callRegExpExec(splitter, SUPPORTS_Y ? S : S.slice(q));
+        var e;
+        if (
+          z === null ||
+          (e = $min(toLength(splitter.lastIndex + (SUPPORTS_Y ? 0 : q)), S.length)) === p
+        ) {
+          q = advanceStringIndex(S, q, unicodeMatching);
+        } else {
+          A.push(S.slice(p, q));
+          if (A.length === lim) return A;
+          for (var i = 1; i <= z.length - 1; i++) {
+            A.push(z[i]);
+            if (A.length === lim) return A;
+          }
+          q = p = e;
+        }
+      }
+      A.push(S.slice(p));
+      return A;
+    }
+  ];
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.regexp.to-string.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.regexp.to-string.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+__webpack_require__(/*! ./es6.regexp.flags */ "./node_modules/core-js/modules/es6.regexp.flags.js");
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+var $flags = __webpack_require__(/*! ./_flags */ "./node_modules/core-js/modules/_flags.js");
+var DESCRIPTORS = __webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js");
+var TO_STRING = 'toString';
+var $toString = /./[TO_STRING];
+
+var define = function (fn) {
+  __webpack_require__(/*! ./_redefine */ "./node_modules/core-js/modules/_redefine.js")(RegExp.prototype, TO_STRING, fn, true);
+};
+
+// 21.2.5.14 RegExp.prototype.toString()
+if (__webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js")(function () { return $toString.call({ source: 'a', flags: 'b' }) != '/a/b'; })) {
+  define(function toString() {
+    var R = anObject(this);
+    return '/'.concat(R.source, '/',
+      'flags' in R ? R.flags : !DESCRIPTORS && R instanceof RegExp ? $flags.call(R) : undefined);
+  });
+// FF44- RegExp#toString has a wrong name
+} else if ($toString.name != TO_STRING) {
+  define(function toString() {
+    return $toString.call(this);
+  });
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.string.iterator.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.string.iterator.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $at = __webpack_require__(/*! ./_string-at */ "./node_modules/core-js/modules/_string-at.js")(true);
+
+// 21.1.3.27 String.prototype[@@iterator]()
+__webpack_require__(/*! ./_iter-define */ "./node_modules/core-js/modules/_iter-define.js")(String, 'String', function (iterated) {
+  this._t = String(iterated); // target
+  this._i = 0;                // next index
+// 21.1.5.2.1 %StringIteratorPrototype%.next()
+}, function () {
+  var O = this._t;
+  var index = this._i;
+  var point;
+  if (index >= O.length) return { value: undefined, done: true };
+  point = $at(O, index);
+  this._i += point.length;
+  return { value: point, done: false };
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es6.symbol.js":
+/*!****************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.symbol.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// ECMAScript 6 symbols shim
+var global = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js");
+var has = __webpack_require__(/*! ./_has */ "./node_modules/core-js/modules/_has.js");
+var DESCRIPTORS = __webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js");
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+var redefine = __webpack_require__(/*! ./_redefine */ "./node_modules/core-js/modules/_redefine.js");
+var META = __webpack_require__(/*! ./_meta */ "./node_modules/core-js/modules/_meta.js").KEY;
+var $fails = __webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js");
+var shared = __webpack_require__(/*! ./_shared */ "./node_modules/core-js/modules/_shared.js");
+var setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ "./node_modules/core-js/modules/_set-to-string-tag.js");
+var uid = __webpack_require__(/*! ./_uid */ "./node_modules/core-js/modules/_uid.js");
+var wks = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js");
+var wksExt = __webpack_require__(/*! ./_wks-ext */ "./node_modules/core-js/modules/_wks-ext.js");
+var wksDefine = __webpack_require__(/*! ./_wks-define */ "./node_modules/core-js/modules/_wks-define.js");
+var enumKeys = __webpack_require__(/*! ./_enum-keys */ "./node_modules/core-js/modules/_enum-keys.js");
+var isArray = __webpack_require__(/*! ./_is-array */ "./node_modules/core-js/modules/_is-array.js");
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/modules/_an-object.js");
+var isObject = __webpack_require__(/*! ./_is-object */ "./node_modules/core-js/modules/_is-object.js");
+var toObject = __webpack_require__(/*! ./_to-object */ "./node_modules/core-js/modules/_to-object.js");
+var toIObject = __webpack_require__(/*! ./_to-iobject */ "./node_modules/core-js/modules/_to-iobject.js");
+var toPrimitive = __webpack_require__(/*! ./_to-primitive */ "./node_modules/core-js/modules/_to-primitive.js");
+var createDesc = __webpack_require__(/*! ./_property-desc */ "./node_modules/core-js/modules/_property-desc.js");
+var _create = __webpack_require__(/*! ./_object-create */ "./node_modules/core-js/modules/_object-create.js");
+var gOPNExt = __webpack_require__(/*! ./_object-gopn-ext */ "./node_modules/core-js/modules/_object-gopn-ext.js");
+var $GOPD = __webpack_require__(/*! ./_object-gopd */ "./node_modules/core-js/modules/_object-gopd.js");
+var $GOPS = __webpack_require__(/*! ./_object-gops */ "./node_modules/core-js/modules/_object-gops.js");
+var $DP = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js");
+var $keys = __webpack_require__(/*! ./_object-keys */ "./node_modules/core-js/modules/_object-keys.js");
+var gOPD = $GOPD.f;
+var dP = $DP.f;
+var gOPN = gOPNExt.f;
+var $Symbol = global.Symbol;
+var $JSON = global.JSON;
+var _stringify = $JSON && $JSON.stringify;
+var PROTOTYPE = 'prototype';
+var HIDDEN = wks('_hidden');
+var TO_PRIMITIVE = wks('toPrimitive');
+var isEnum = {}.propertyIsEnumerable;
+var SymbolRegistry = shared('symbol-registry');
+var AllSymbols = shared('symbols');
+var OPSymbols = shared('op-symbols');
+var ObjectProto = Object[PROTOTYPE];
+var USE_NATIVE = typeof $Symbol == 'function' && !!$GOPS.f;
+var QObject = global.QObject;
+// Don't use setters in Qt Script, https://github.com/zloirock/core-js/issues/173
+var setter = !QObject || !QObject[PROTOTYPE] || !QObject[PROTOTYPE].findChild;
+
+// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
+var setSymbolDesc = DESCRIPTORS && $fails(function () {
+  return _create(dP({}, 'a', {
+    get: function () { return dP(this, 'a', { value: 7 }).a; }
+  })).a != 7;
+}) ? function (it, key, D) {
+  var protoDesc = gOPD(ObjectProto, key);
+  if (protoDesc) delete ObjectProto[key];
+  dP(it, key, D);
+  if (protoDesc && it !== ObjectProto) dP(ObjectProto, key, protoDesc);
+} : dP;
+
+var wrap = function (tag) {
+  var sym = AllSymbols[tag] = _create($Symbol[PROTOTYPE]);
+  sym._k = tag;
+  return sym;
+};
+
+var isSymbol = USE_NATIVE && typeof $Symbol.iterator == 'symbol' ? function (it) {
+  return typeof it == 'symbol';
+} : function (it) {
+  return it instanceof $Symbol;
+};
+
+var $defineProperty = function defineProperty(it, key, D) {
+  if (it === ObjectProto) $defineProperty(OPSymbols, key, D);
+  anObject(it);
+  key = toPrimitive(key, true);
+  anObject(D);
+  if (has(AllSymbols, key)) {
+    if (!D.enumerable) {
+      if (!has(it, HIDDEN)) dP(it, HIDDEN, createDesc(1, {}));
+      it[HIDDEN][key] = true;
+    } else {
+      if (has(it, HIDDEN) && it[HIDDEN][key]) it[HIDDEN][key] = false;
+      D = _create(D, { enumerable: createDesc(0, false) });
+    } return setSymbolDesc(it, key, D);
+  } return dP(it, key, D);
+};
+var $defineProperties = function defineProperties(it, P) {
+  anObject(it);
+  var keys = enumKeys(P = toIObject(P));
+  var i = 0;
+  var l = keys.length;
+  var key;
+  while (l > i) $defineProperty(it, key = keys[i++], P[key]);
+  return it;
+};
+var $create = function create(it, P) {
+  return P === undefined ? _create(it) : $defineProperties(_create(it), P);
+};
+var $propertyIsEnumerable = function propertyIsEnumerable(key) {
+  var E = isEnum.call(this, key = toPrimitive(key, true));
+  if (this === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key)) return false;
+  return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
+};
+var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key) {
+  it = toIObject(it);
+  key = toPrimitive(key, true);
+  if (it === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key)) return;
+  var D = gOPD(it, key);
+  if (D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key])) D.enumerable = true;
+  return D;
+};
+var $getOwnPropertyNames = function getOwnPropertyNames(it) {
+  var names = gOPN(toIObject(it));
+  var result = [];
+  var i = 0;
+  var key;
+  while (names.length > i) {
+    if (!has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META) result.push(key);
+  } return result;
+};
+var $getOwnPropertySymbols = function getOwnPropertySymbols(it) {
+  var IS_OP = it === ObjectProto;
+  var names = gOPN(IS_OP ? OPSymbols : toIObject(it));
+  var result = [];
+  var i = 0;
+  var key;
+  while (names.length > i) {
+    if (has(AllSymbols, key = names[i++]) && (IS_OP ? has(ObjectProto, key) : true)) result.push(AllSymbols[key]);
+  } return result;
+};
+
+// 19.4.1.1 Symbol([description])
+if (!USE_NATIVE) {
+  $Symbol = function Symbol() {
+    if (this instanceof $Symbol) throw TypeError('Symbol is not a constructor!');
+    var tag = uid(arguments.length > 0 ? arguments[0] : undefined);
+    var $set = function (value) {
+      if (this === ObjectProto) $set.call(OPSymbols, value);
+      if (has(this, HIDDEN) && has(this[HIDDEN], tag)) this[HIDDEN][tag] = false;
+      setSymbolDesc(this, tag, createDesc(1, value));
+    };
+    if (DESCRIPTORS && setter) setSymbolDesc(ObjectProto, tag, { configurable: true, set: $set });
+    return wrap(tag);
+  };
+  redefine($Symbol[PROTOTYPE], 'toString', function toString() {
+    return this._k;
+  });
+
+  $GOPD.f = $getOwnPropertyDescriptor;
+  $DP.f = $defineProperty;
+  __webpack_require__(/*! ./_object-gopn */ "./node_modules/core-js/modules/_object-gopn.js").f = gOPNExt.f = $getOwnPropertyNames;
+  __webpack_require__(/*! ./_object-pie */ "./node_modules/core-js/modules/_object-pie.js").f = $propertyIsEnumerable;
+  $GOPS.f = $getOwnPropertySymbols;
+
+  if (DESCRIPTORS && !__webpack_require__(/*! ./_library */ "./node_modules/core-js/modules/_library.js")) {
+    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
+  }
+
+  wksExt.f = function (name) {
+    return wrap(wks(name));
+  };
+}
+
+$export($export.G + $export.W + $export.F * !USE_NATIVE, { Symbol: $Symbol });
+
+for (var es6Symbols = (
+  // 19.4.2.2, 19.4.2.3, 19.4.2.4, 19.4.2.6, 19.4.2.8, 19.4.2.9, 19.4.2.10, 19.4.2.11, 19.4.2.12, 19.4.2.13, 19.4.2.14
+  'hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables'
+).split(','), j = 0; es6Symbols.length > j;)wks(es6Symbols[j++]);
+
+for (var wellKnownSymbols = $keys(wks.store), k = 0; wellKnownSymbols.length > k;) wksDefine(wellKnownSymbols[k++]);
+
+$export($export.S + $export.F * !USE_NATIVE, 'Symbol', {
+  // 19.4.2.1 Symbol.for(key)
+  'for': function (key) {
+    return has(SymbolRegistry, key += '')
+      ? SymbolRegistry[key]
+      : SymbolRegistry[key] = $Symbol(key);
+  },
+  // 19.4.2.5 Symbol.keyFor(sym)
+  keyFor: function keyFor(sym) {
+    if (!isSymbol(sym)) throw TypeError(sym + ' is not a symbol!');
+    for (var key in SymbolRegistry) if (SymbolRegistry[key] === sym) return key;
+  },
+  useSetter: function () { setter = true; },
+  useSimple: function () { setter = false; }
+});
+
+$export($export.S + $export.F * !USE_NATIVE, 'Object', {
+  // 19.1.2.2 Object.create(O [, Properties])
+  create: $create,
+  // 19.1.2.4 Object.defineProperty(O, P, Attributes)
+  defineProperty: $defineProperty,
+  // 19.1.2.3 Object.defineProperties(O, Properties)
+  defineProperties: $defineProperties,
+  // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
+  getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
+  // 19.1.2.7 Object.getOwnPropertyNames(O)
+  getOwnPropertyNames: $getOwnPropertyNames,
+  // 19.1.2.8 Object.getOwnPropertySymbols(O)
+  getOwnPropertySymbols: $getOwnPropertySymbols
+});
+
+// Chrome 38 and 39 `Object.getOwnPropertySymbols` fails on primitives
+// https://bugs.chromium.org/p/v8/issues/detail?id=3443
+var FAILS_ON_PRIMITIVES = $fails(function () { $GOPS.f(1); });
+
+$export($export.S + $export.F * FAILS_ON_PRIMITIVES, 'Object', {
+  getOwnPropertySymbols: function getOwnPropertySymbols(it) {
+    return $GOPS.f(toObject(it));
+  }
+});
+
+// 24.3.2 JSON.stringify(value [, replacer [, space]])
+$JSON && $export($export.S + $export.F * (!USE_NATIVE || $fails(function () {
+  var S = $Symbol();
+  // MS Edge converts symbol values to JSON as {}
+  // WebKit converts symbol values to JSON as null
+  // V8 throws on boxed symbols
+  return _stringify([S]) != '[null]' || _stringify({ a: S }) != '{}' || _stringify(Object(S)) != '{}';
+})), 'JSON', {
+  stringify: function stringify(it) {
+    var args = [it];
+    var i = 1;
+    var replacer, $replacer;
+    while (arguments.length > i) args.push(arguments[i++]);
+    $replacer = replacer = args[1];
+    if (!isObject(replacer) && it === undefined || isSymbol(it)) return; // IE8 returns string on undefined
+    if (!isArray(replacer)) replacer = function (key, value) {
+      if (typeof $replacer == 'function') value = $replacer.call(this, key, value);
+      if (!isSymbol(value)) return value;
+    };
+    args[1] = replacer;
+    return _stringify.apply($JSON, args);
+  }
+});
+
+// 19.4.3.4 Symbol.prototype[@@toPrimitive](hint)
+$Symbol[PROTOTYPE][TO_PRIMITIVE] || __webpack_require__(/*! ./_hide */ "./node_modules/core-js/modules/_hide.js")($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
+// 19.4.3.5 Symbol.prototype[@@toStringTag]
+setToStringTag($Symbol, 'Symbol');
+// 20.2.1.9 Math[@@toStringTag]
+setToStringTag(Math, 'Math', true);
+// 24.3.3 JSON[@@toStringTag]
+setToStringTag(global.JSON, 'JSON', true);
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es7.object.get-own-property-descriptors.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/core-js/modules/es7.object.get-own-property-descriptors.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// https://github.com/tc39/proposal-object-getownpropertydescriptors
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+var ownKeys = __webpack_require__(/*! ./_own-keys */ "./node_modules/core-js/modules/_own-keys.js");
+var toIObject = __webpack_require__(/*! ./_to-iobject */ "./node_modules/core-js/modules/_to-iobject.js");
+var gOPD = __webpack_require__(/*! ./_object-gopd */ "./node_modules/core-js/modules/_object-gopd.js");
+var createProperty = __webpack_require__(/*! ./_create-property */ "./node_modules/core-js/modules/_create-property.js");
+
+$export($export.S, 'Object', {
+  getOwnPropertyDescriptors: function getOwnPropertyDescriptors(object) {
+    var O = toIObject(object);
+    var getDesc = gOPD.f;
+    var keys = ownKeys(O);
+    var result = {};
+    var i = 0;
+    var key, desc;
+    while (keys.length > i) {
+      desc = getDesc(O, key = keys[i++]);
+      if (desc !== undefined) createProperty(result, key, desc);
+    }
+    return result;
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/web.dom.iterable.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/core-js/modules/web.dom.iterable.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $iterators = __webpack_require__(/*! ./es6.array.iterator */ "./node_modules/core-js/modules/es6.array.iterator.js");
+var getKeys = __webpack_require__(/*! ./_object-keys */ "./node_modules/core-js/modules/_object-keys.js");
+var redefine = __webpack_require__(/*! ./_redefine */ "./node_modules/core-js/modules/_redefine.js");
+var global = __webpack_require__(/*! ./_global */ "./node_modules/core-js/modules/_global.js");
+var hide = __webpack_require__(/*! ./_hide */ "./node_modules/core-js/modules/_hide.js");
+var Iterators = __webpack_require__(/*! ./_iterators */ "./node_modules/core-js/modules/_iterators.js");
+var wks = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js");
+var ITERATOR = wks('iterator');
+var TO_STRING_TAG = wks('toStringTag');
+var ArrayValues = Iterators.Array;
+
+var DOMIterables = {
+  CSSRuleList: true, // TODO: Not spec compliant, should be false.
+  CSSStyleDeclaration: false,
+  CSSValueList: false,
+  ClientRectList: false,
+  DOMRectList: false,
+  DOMStringList: false,
+  DOMTokenList: true,
+  DataTransferItemList: false,
+  FileList: false,
+  HTMLAllCollection: false,
+  HTMLCollection: false,
+  HTMLFormElement: false,
+  HTMLSelectElement: false,
+  MediaList: true, // TODO: Not spec compliant, should be false.
+  MimeTypeArray: false,
+  NamedNodeMap: false,
+  NodeList: true,
+  PaintRequestList: false,
+  Plugin: false,
+  PluginArray: false,
+  SVGLengthList: false,
+  SVGNumberList: false,
+  SVGPathSegList: false,
+  SVGPointList: false,
+  SVGStringList: false,
+  SVGTransformList: false,
+  SourceBufferList: false,
+  StyleSheetList: true, // TODO: Not spec compliant, should be false.
+  TextTrackCueList: false,
+  TextTrackList: false,
+  TouchList: false
+};
+
+for (var collections = getKeys(DOMIterables), i = 0; i < collections.length; i++) {
+  var NAME = collections[i];
+  var explicit = DOMIterables[NAME];
+  var Collection = global[NAME];
+  var proto = Collection && Collection.prototype;
+  var key;
+  if (proto) {
+    if (!proto[ITERATOR]) hide(proto, ITERATOR, ArrayValues);
+    if (!proto[TO_STRING_TAG]) hide(proto, TO_STRING_TAG, NAME);
+    Iterators[NAME] = ArrayValues;
+    if (explicit) for (key in $iterators) if (!proto[key]) redefine(proto, key, $iterators[key], true);
+  }
+}
 
 
 /***/ }),
@@ -34329,6 +37503,537 @@ return jQuery;
 
 /***/ }),
 
+/***/ "./node_modules/node-libs-browser/node_modules/punycode/punycode.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/node-libs-browser/node_modules/punycode/punycode.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module, global) {var __WEBPACK_AMD_DEFINE_RESULT__;/*! https://mths.be/punycode v1.4.1 by @mathias */
+;(function(root) {
+
+	/** Detect free variables */
+	var freeExports =  true && exports &&
+		!exports.nodeType && exports;
+	var freeModule =  true && module &&
+		!module.nodeType && module;
+	var freeGlobal = typeof global == 'object' && global;
+	if (
+		freeGlobal.global === freeGlobal ||
+		freeGlobal.window === freeGlobal ||
+		freeGlobal.self === freeGlobal
+	) {
+		root = freeGlobal;
+	}
+
+	/**
+	 * The `punycode` object.
+	 * @name punycode
+	 * @type Object
+	 */
+	var punycode,
+
+	/** Highest positive signed 32-bit float value */
+	maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
+
+	/** Bootstring parameters */
+	base = 36,
+	tMin = 1,
+	tMax = 26,
+	skew = 38,
+	damp = 700,
+	initialBias = 72,
+	initialN = 128, // 0x80
+	delimiter = '-', // '\x2D'
+
+	/** Regular expressions */
+	regexPunycode = /^xn--/,
+	regexNonASCII = /[^\x20-\x7E]/, // unprintable ASCII chars + non-ASCII chars
+	regexSeparators = /[\x2E\u3002\uFF0E\uFF61]/g, // RFC 3490 separators
+
+	/** Error messages */
+	errors = {
+		'overflow': 'Overflow: input needs wider integers to process',
+		'not-basic': 'Illegal input >= 0x80 (not a basic code point)',
+		'invalid-input': 'Invalid input'
+	},
+
+	/** Convenience shortcuts */
+	baseMinusTMin = base - tMin,
+	floor = Math.floor,
+	stringFromCharCode = String.fromCharCode,
+
+	/** Temporary variable */
+	key;
+
+	/*--------------------------------------------------------------------------*/
+
+	/**
+	 * A generic error utility function.
+	 * @private
+	 * @param {String} type The error type.
+	 * @returns {Error} Throws a `RangeError` with the applicable error message.
+	 */
+	function error(type) {
+		throw new RangeError(errors[type]);
+	}
+
+	/**
+	 * A generic `Array#map` utility function.
+	 * @private
+	 * @param {Array} array The array to iterate over.
+	 * @param {Function} callback The function that gets called for every array
+	 * item.
+	 * @returns {Array} A new array of values returned by the callback function.
+	 */
+	function map(array, fn) {
+		var length = array.length;
+		var result = [];
+		while (length--) {
+			result[length] = fn(array[length]);
+		}
+		return result;
+	}
+
+	/**
+	 * A simple `Array#map`-like wrapper to work with domain name strings or email
+	 * addresses.
+	 * @private
+	 * @param {String} domain The domain name or email address.
+	 * @param {Function} callback The function that gets called for every
+	 * character.
+	 * @returns {Array} A new string of characters returned by the callback
+	 * function.
+	 */
+	function mapDomain(string, fn) {
+		var parts = string.split('@');
+		var result = '';
+		if (parts.length > 1) {
+			// In email addresses, only the domain name should be punycoded. Leave
+			// the local part (i.e. everything up to `@`) intact.
+			result = parts[0] + '@';
+			string = parts[1];
+		}
+		// Avoid `split(regex)` for IE8 compatibility. See #17.
+		string = string.replace(regexSeparators, '\x2E');
+		var labels = string.split('.');
+		var encoded = map(labels, fn).join('.');
+		return result + encoded;
+	}
+
+	/**
+	 * Creates an array containing the numeric code points of each Unicode
+	 * character in the string. While JavaScript uses UCS-2 internally,
+	 * this function will convert a pair of surrogate halves (each of which
+	 * UCS-2 exposes as separate characters) into a single code point,
+	 * matching UTF-16.
+	 * @see `punycode.ucs2.encode`
+	 * @see <https://mathiasbynens.be/notes/javascript-encoding>
+	 * @memberOf punycode.ucs2
+	 * @name decode
+	 * @param {String} string The Unicode input string (UCS-2).
+	 * @returns {Array} The new array of code points.
+	 */
+	function ucs2decode(string) {
+		var output = [],
+		    counter = 0,
+		    length = string.length,
+		    value,
+		    extra;
+		while (counter < length) {
+			value = string.charCodeAt(counter++);
+			if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+				// high surrogate, and there is a next character
+				extra = string.charCodeAt(counter++);
+				if ((extra & 0xFC00) == 0xDC00) { // low surrogate
+					output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+				} else {
+					// unmatched surrogate; only append this code unit, in case the next
+					// code unit is the high surrogate of a surrogate pair
+					output.push(value);
+					counter--;
+				}
+			} else {
+				output.push(value);
+			}
+		}
+		return output;
+	}
+
+	/**
+	 * Creates a string based on an array of numeric code points.
+	 * @see `punycode.ucs2.decode`
+	 * @memberOf punycode.ucs2
+	 * @name encode
+	 * @param {Array} codePoints The array of numeric code points.
+	 * @returns {String} The new Unicode string (UCS-2).
+	 */
+	function ucs2encode(array) {
+		return map(array, function(value) {
+			var output = '';
+			if (value > 0xFFFF) {
+				value -= 0x10000;
+				output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
+				value = 0xDC00 | value & 0x3FF;
+			}
+			output += stringFromCharCode(value);
+			return output;
+		}).join('');
+	}
+
+	/**
+	 * Converts a basic code point into a digit/integer.
+	 * @see `digitToBasic()`
+	 * @private
+	 * @param {Number} codePoint The basic numeric code point value.
+	 * @returns {Number} The numeric value of a basic code point (for use in
+	 * representing integers) in the range `0` to `base - 1`, or `base` if
+	 * the code point does not represent a value.
+	 */
+	function basicToDigit(codePoint) {
+		if (codePoint - 48 < 10) {
+			return codePoint - 22;
+		}
+		if (codePoint - 65 < 26) {
+			return codePoint - 65;
+		}
+		if (codePoint - 97 < 26) {
+			return codePoint - 97;
+		}
+		return base;
+	}
+
+	/**
+	 * Converts a digit/integer into a basic code point.
+	 * @see `basicToDigit()`
+	 * @private
+	 * @param {Number} digit The numeric value of a basic code point.
+	 * @returns {Number} The basic code point whose value (when used for
+	 * representing integers) is `digit`, which needs to be in the range
+	 * `0` to `base - 1`. If `flag` is non-zero, the uppercase form is
+	 * used; else, the lowercase form is used. The behavior is undefined
+	 * if `flag` is non-zero and `digit` has no uppercase form.
+	 */
+	function digitToBasic(digit, flag) {
+		//  0..25 map to ASCII a..z or A..Z
+		// 26..35 map to ASCII 0..9
+		return digit + 22 + 75 * (digit < 26) - ((flag != 0) << 5);
+	}
+
+	/**
+	 * Bias adaptation function as per section 3.4 of RFC 3492.
+	 * https://tools.ietf.org/html/rfc3492#section-3.4
+	 * @private
+	 */
+	function adapt(delta, numPoints, firstTime) {
+		var k = 0;
+		delta = firstTime ? floor(delta / damp) : delta >> 1;
+		delta += floor(delta / numPoints);
+		for (/* no initialization */; delta > baseMinusTMin * tMax >> 1; k += base) {
+			delta = floor(delta / baseMinusTMin);
+		}
+		return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
+	}
+
+	/**
+	 * Converts a Punycode string of ASCII-only symbols to a string of Unicode
+	 * symbols.
+	 * @memberOf punycode
+	 * @param {String} input The Punycode string of ASCII-only symbols.
+	 * @returns {String} The resulting string of Unicode symbols.
+	 */
+	function decode(input) {
+		// Don't use UCS-2
+		var output = [],
+		    inputLength = input.length,
+		    out,
+		    i = 0,
+		    n = initialN,
+		    bias = initialBias,
+		    basic,
+		    j,
+		    index,
+		    oldi,
+		    w,
+		    k,
+		    digit,
+		    t,
+		    /** Cached calculation results */
+		    baseMinusT;
+
+		// Handle the basic code points: let `basic` be the number of input code
+		// points before the last delimiter, or `0` if there is none, then copy
+		// the first basic code points to the output.
+
+		basic = input.lastIndexOf(delimiter);
+		if (basic < 0) {
+			basic = 0;
+		}
+
+		for (j = 0; j < basic; ++j) {
+			// if it's not a basic code point
+			if (input.charCodeAt(j) >= 0x80) {
+				error('not-basic');
+			}
+			output.push(input.charCodeAt(j));
+		}
+
+		// Main decoding loop: start just after the last delimiter if any basic code
+		// points were copied; start at the beginning otherwise.
+
+		for (index = basic > 0 ? basic + 1 : 0; index < inputLength; /* no final expression */) {
+
+			// `index` is the index of the next character to be consumed.
+			// Decode a generalized variable-length integer into `delta`,
+			// which gets added to `i`. The overflow checking is easier
+			// if we increase `i` as we go, then subtract off its starting
+			// value at the end to obtain `delta`.
+			for (oldi = i, w = 1, k = base; /* no condition */; k += base) {
+
+				if (index >= inputLength) {
+					error('invalid-input');
+				}
+
+				digit = basicToDigit(input.charCodeAt(index++));
+
+				if (digit >= base || digit > floor((maxInt - i) / w)) {
+					error('overflow');
+				}
+
+				i += digit * w;
+				t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+
+				if (digit < t) {
+					break;
+				}
+
+				baseMinusT = base - t;
+				if (w > floor(maxInt / baseMinusT)) {
+					error('overflow');
+				}
+
+				w *= baseMinusT;
+
+			}
+
+			out = output.length + 1;
+			bias = adapt(i - oldi, out, oldi == 0);
+
+			// `i` was supposed to wrap around from `out` to `0`,
+			// incrementing `n` each time, so we'll fix that now:
+			if (floor(i / out) > maxInt - n) {
+				error('overflow');
+			}
+
+			n += floor(i / out);
+			i %= out;
+
+			// Insert `n` at position `i` of the output
+			output.splice(i++, 0, n);
+
+		}
+
+		return ucs2encode(output);
+	}
+
+	/**
+	 * Converts a string of Unicode symbols (e.g. a domain name label) to a
+	 * Punycode string of ASCII-only symbols.
+	 * @memberOf punycode
+	 * @param {String} input The string of Unicode symbols.
+	 * @returns {String} The resulting Punycode string of ASCII-only symbols.
+	 */
+	function encode(input) {
+		var n,
+		    delta,
+		    handledCPCount,
+		    basicLength,
+		    bias,
+		    j,
+		    m,
+		    q,
+		    k,
+		    t,
+		    currentValue,
+		    output = [],
+		    /** `inputLength` will hold the number of code points in `input`. */
+		    inputLength,
+		    /** Cached calculation results */
+		    handledCPCountPlusOne,
+		    baseMinusT,
+		    qMinusT;
+
+		// Convert the input in UCS-2 to Unicode
+		input = ucs2decode(input);
+
+		// Cache the length
+		inputLength = input.length;
+
+		// Initialize the state
+		n = initialN;
+		delta = 0;
+		bias = initialBias;
+
+		// Handle the basic code points
+		for (j = 0; j < inputLength; ++j) {
+			currentValue = input[j];
+			if (currentValue < 0x80) {
+				output.push(stringFromCharCode(currentValue));
+			}
+		}
+
+		handledCPCount = basicLength = output.length;
+
+		// `handledCPCount` is the number of code points that have been handled;
+		// `basicLength` is the number of basic code points.
+
+		// Finish the basic string - if it is not empty - with a delimiter
+		if (basicLength) {
+			output.push(delimiter);
+		}
+
+		// Main encoding loop:
+		while (handledCPCount < inputLength) {
+
+			// All non-basic code points < n have been handled already. Find the next
+			// larger one:
+			for (m = maxInt, j = 0; j < inputLength; ++j) {
+				currentValue = input[j];
+				if (currentValue >= n && currentValue < m) {
+					m = currentValue;
+				}
+			}
+
+			// Increase `delta` enough to advance the decoder's <n,i> state to <m,0>,
+			// but guard against overflow
+			handledCPCountPlusOne = handledCPCount + 1;
+			if (m - n > floor((maxInt - delta) / handledCPCountPlusOne)) {
+				error('overflow');
+			}
+
+			delta += (m - n) * handledCPCountPlusOne;
+			n = m;
+
+			for (j = 0; j < inputLength; ++j) {
+				currentValue = input[j];
+
+				if (currentValue < n && ++delta > maxInt) {
+					error('overflow');
+				}
+
+				if (currentValue == n) {
+					// Represent delta as a generalized variable-length integer
+					for (q = delta, k = base; /* no condition */; k += base) {
+						t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+						if (q < t) {
+							break;
+						}
+						qMinusT = q - t;
+						baseMinusT = base - t;
+						output.push(
+							stringFromCharCode(digitToBasic(t + qMinusT % baseMinusT, 0))
+						);
+						q = floor(qMinusT / baseMinusT);
+					}
+
+					output.push(stringFromCharCode(digitToBasic(q, 0)));
+					bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
+					delta = 0;
+					++handledCPCount;
+				}
+			}
+
+			++delta;
+			++n;
+
+		}
+		return output.join('');
+	}
+
+	/**
+	 * Converts a Punycode string representing a domain name or an email address
+	 * to Unicode. Only the Punycoded parts of the input will be converted, i.e.
+	 * it doesn't matter if you call it on a string that has already been
+	 * converted to Unicode.
+	 * @memberOf punycode
+	 * @param {String} input The Punycoded domain name or email address to
+	 * convert to Unicode.
+	 * @returns {String} The Unicode representation of the given Punycode
+	 * string.
+	 */
+	function toUnicode(input) {
+		return mapDomain(input, function(string) {
+			return regexPunycode.test(string)
+				? decode(string.slice(4).toLowerCase())
+				: string;
+		});
+	}
+
+	/**
+	 * Converts a Unicode string representing a domain name or an email address to
+	 * Punycode. Only the non-ASCII parts of the domain name will be converted,
+	 * i.e. it doesn't matter if you call it with a domain that's already in
+	 * ASCII.
+	 * @memberOf punycode
+	 * @param {String} input The domain name or email address to convert, as a
+	 * Unicode string.
+	 * @returns {String} The Punycode representation of the given domain name or
+	 * email address.
+	 */
+	function toASCII(input) {
+		return mapDomain(input, function(string) {
+			return regexNonASCII.test(string)
+				? 'xn--' + encode(string)
+				: string;
+		});
+	}
+
+	/*--------------------------------------------------------------------------*/
+
+	/** Define the public API */
+	punycode = {
+		/**
+		 * A string representing the current Punycode.js version number.
+		 * @memberOf punycode
+		 * @type String
+		 */
+		'version': '1.4.1',
+		/**
+		 * An object of methods to convert from JavaScript's internal character
+		 * representation (UCS-2) to Unicode code points, and back.
+		 * @see <https://mathiasbynens.be/notes/javascript-encoding>
+		 * @memberOf punycode
+		 * @type Object
+		 */
+		'ucs2': {
+			'decode': ucs2decode,
+			'encode': ucs2encode
+		},
+		'decode': decode,
+		'encode': encode,
+		'toASCII': toASCII,
+		'toUnicode': toUnicode
+	};
+
+	/** Expose `punycode` */
+	// Some AMD build optimizers, like r.js, check for specific condition patterns
+	// like the following:
+	if (
+		true
+	) {
+		!(__WEBPACK_AMD_DEFINE_RESULT__ = (function() {
+			return punycode;
+		}).call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else {}
+
+}(this));
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module), __webpack_require__(/*! ./../../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
 /***/ "./node_modules/popper.js/dist/esm/popper.js":
 /*!***************************************************!*\
   !*** ./node_modules/popper.js/dist/esm/popper.js ***!
@@ -37154,6 +40859,4751 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/twemoji-parser/dist/index.js":
+/*!***************************************************!*\
+  !*** ./node_modules/twemoji-parser/dist/index.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TypeName = undefined;
+exports.parse = parse;
+exports.toCodePoints = toCodePoints;
+
+var _regex = __webpack_require__(/*! ./lib/regex */ "./node_modules/twemoji-parser/dist/lib/regex.js");
+
+var _regex2 = _interopRequireDefault(_regex);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var TypeName = exports.TypeName = 'emoji';
+// Copyright Twitter Inc. Licensed under MIT
+// https://github.com/twitter/twemoji-parser/blob/master/LICENSE.md
+function parse(text, options) {
+  var assetType = options && options.assetType ? options.assetType : 'svg';
+  var getTwemojiUrl = options && options.buildUrl ? options.buildUrl : function (codepoints, assetType) {
+    return assetType === 'png' ? 'https://twemoji.maxcdn.com/2/72x72/' + codepoints + '.png' : 'https://twemoji.maxcdn.com/2/svg/' + codepoints + '.svg';
+  };
+
+  var entities = [];
+
+  _regex2.default.lastIndex = 0;
+  while (true) {
+    var result = _regex2.default.exec(text);
+    if (!result) {
+      break;
+    }
+
+    var emojiText = result[0];
+    var codepoints = toCodePoints(removeVS16s(emojiText)).join('-');
+
+    entities.push({
+      url: codepoints ? getTwemojiUrl(codepoints, assetType) : '',
+      indices: [result.index, _regex2.default.lastIndex],
+      text: emojiText,
+      type: TypeName
+    });
+  }
+  return entities;
+}
+
+var vs16RegExp = /\uFE0F/g;
+// avoid using a string literal like '\u200D' here because minifiers expand it inline
+var zeroWidthJoiner = String.fromCharCode(0x200d);
+
+var removeVS16s = function removeVS16s(rawEmoji) {
+  return rawEmoji.indexOf(zeroWidthJoiner) < 0 ? rawEmoji.replace(vs16RegExp, '') : rawEmoji;
+};
+
+function toCodePoints(unicodeSurrogates) {
+  var points = [];
+  var char = 0;
+  var previous = 0;
+  var i = 0;
+  while (i < unicodeSurrogates.length) {
+    char = unicodeSurrogates.charCodeAt(i++);
+    if (previous) {
+      points.push((0x10000 + (previous - 0xd800 << 10) + (char - 0xdc00)).toString(16));
+      previous = 0;
+    } else if (char > 0xd800 && char <= 0xdbff) {
+      previous = char;
+    } else {
+      points.push(char.toString(16));
+    }
+  }
+  return points;
+}
+
+/***/ }),
+
+/***/ "./node_modules/twemoji-parser/dist/lib/regex.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/twemoji-parser/dist/lib/regex.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// Copyright Twitter Inc. Licensed under MIT
+// https://github.com/twitter/twemoji-parser/blob/master/LICENSE.md
+
+// This file is auto-generated
+exports.default = /(?:\ud83d[\udc68\udc69])(?:\ud83c[\udffb-\udfff])?\u200d(?:\u2695\ufe0f|\u2696\ufe0f|\u2708\ufe0f|\ud83c[\udf3e\udf73\udf93\udfa4\udfa8\udfeb\udfed]|\ud83d[\udcbb\udcbc\udd27\udd2c\ude80\ude92]|\ud83e[\uddb0-\uddb3])|(?:\ud83c[\udfcb\udfcc]|\ud83d[\udd74\udd75]|\u26f9)((?:\ud83c[\udffb-\udfff]|\ufe0f)\u200d[\u2640\u2642]\ufe0f)|(?:\ud83c[\udfc3\udfc4\udfca]|\ud83d[\udc6e\udc71\udc73\udc77\udc81\udc82\udc86\udc87\ude45-\ude47\ude4b\ude4d\ude4e\udea3\udeb4-\udeb6]|\ud83e[\udd26\udd35\udd37-\udd39\udd3d\udd3e\uddb8\uddb9\uddd6-\udddd])(?:\ud83c[\udffb-\udfff])?\u200d[\u2640\u2642]\ufe0f|(?:\ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d[\udc68\udc69]|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc68|\ud83d\udc68\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d[\udc68\udc69]|\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83c\udff3\ufe0f\u200d\ud83c\udf08|\ud83c\udff4\u200d\u2620\ufe0f|\ud83d\udc41\u200d\ud83d\udde8|\ud83d\udc68\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83d\udc6f\u200d\u2640\ufe0f|\ud83d\udc6f\u200d\u2642\ufe0f|\ud83e\udd3c\u200d\u2640\ufe0f|\ud83e\udd3c\u200d\u2642\ufe0f|\ud83e\uddde\u200d\u2640\ufe0f|\ud83e\uddde\u200d\u2642\ufe0f|\ud83e\udddf\u200d\u2640\ufe0f|\ud83e\udddf\u200d\u2642\ufe0f)|[#*0-9]\ufe0f?\u20e3|(?:[©®\u2122\u265f]\ufe0f)|(?:\ud83c[\udc04\udd70\udd71\udd7e\udd7f\ude02\ude1a\ude2f\ude37\udf21\udf24-\udf2c\udf36\udf7d\udf96\udf97\udf99-\udf9b\udf9e\udf9f\udfcd\udfce\udfd4-\udfdf\udff3\udff5\udff7]|\ud83d[\udc3f\udc41\udcfd\udd49\udd4a\udd6f\udd70\udd73\udd76-\udd79\udd87\udd8a-\udd8d\udda5\udda8\uddb1\uddb2\uddbc\uddc2-\uddc4\uddd1-\uddd3\udddc-\uddde\udde1\udde3\udde8\uddef\uddf3\uddfa\udecb\udecd-\udecf\udee0-\udee5\udee9\udef0\udef3]|[\u203c\u2049\u2139\u2194-\u2199\u21a9\u21aa\u231a\u231b\u2328\u23cf\u23ed-\u23ef\u23f1\u23f2\u23f8-\u23fa\u24c2\u25aa\u25ab\u25b6\u25c0\u25fb-\u25fe\u2600-\u2604\u260e\u2611\u2614\u2615\u2618\u2620\u2622\u2623\u2626\u262a\u262e\u262f\u2638-\u263a\u2640\u2642\u2648-\u2653\u2660\u2663\u2665\u2666\u2668\u267b\u267f\u2692-\u2697\u2699\u269b\u269c\u26a0\u26a1\u26aa\u26ab\u26b0\u26b1\u26bd\u26be\u26c4\u26c5\u26c8\u26cf\u26d1\u26d3\u26d4\u26e9\u26ea\u26f0-\u26f5\u26f8\u26fa\u26fd\u2702\u2708\u2709\u270f\u2712\u2714\u2716\u271d\u2721\u2733\u2734\u2744\u2747\u2757\u2763\u2764\u27a1\u2934\u2935\u2b05-\u2b07\u2b1b\u2b1c\u2b50\u2b55\u3030\u303d\u3297\u3299])(?:\ufe0f|(?!\ufe0e))|(?:(?:\ud83c[\udfcb\udfcc]|\ud83d[\udd74\udd75\udd90]|[\u261d\u26f7\u26f9\u270c\u270d])(?:\ufe0f|(?!\ufe0e))|(?:\ud83c[\udf85\udfc2-\udfc4\udfc7\udfca]|\ud83d[\udc42\udc43\udc46-\udc50\udc66-\udc69\udc6e\udc70-\udc78\udc7c\udc81-\udc83\udc85-\udc87\udcaa\udd7a\udd95\udd96\ude45-\ude47\ude4b-\ude4f\udea3\udeb4-\udeb6\udec0\udecc]|\ud83e[\udd18-\udd1c\udd1e\udd1f\udd26\udd30-\udd39\udd3d\udd3e\uddb5\uddb6\uddb8\uddb9\uddd1-\udddd]|[\u270a\u270b]))(?:\ud83c[\udffb-\udfff])?|(?:\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f|\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc73\udb40\udc63\udb40\udc74\udb40\udc7f|\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc77\udb40\udc6c\udb40\udc73\udb40\udc7f|\ud83c\udde6\ud83c[\udde8-\uddec\uddee\uddf1\uddf2\uddf4\uddf6-\uddfa\uddfc\uddfd\uddff]|\ud83c\udde7\ud83c[\udde6\udde7\udde9-\uddef\uddf1-\uddf4\uddf6-\uddf9\uddfb\uddfc\uddfe\uddff]|\ud83c\udde8\ud83c[\udde6\udde8\udde9\uddeb-\uddee\uddf0-\uddf5\uddf7\uddfa-\uddff]|\ud83c\udde9\ud83c[\uddea\uddec\uddef\uddf0\uddf2\uddf4\uddff]|\ud83c\uddea\ud83c[\udde6\udde8\uddea\uddec\udded\uddf7-\uddfa]|\ud83c\uddeb\ud83c[\uddee-\uddf0\uddf2\uddf4\uddf7]|\ud83c\uddec\ud83c[\udde6\udde7\udde9-\uddee\uddf1-\uddf3\uddf5-\uddfa\uddfc\uddfe]|\ud83c\udded\ud83c[\uddf0\uddf2\uddf3\uddf7\uddf9\uddfa]|\ud83c\uddee\ud83c[\udde8-\uddea\uddf1-\uddf4\uddf6-\uddf9]|\ud83c\uddef\ud83c[\uddea\uddf2\uddf4\uddf5]|\ud83c\uddf0\ud83c[\uddea\uddec-\uddee\uddf2\uddf3\uddf5\uddf7\uddfc\uddfe\uddff]|\ud83c\uddf1\ud83c[\udde6-\udde8\uddee\uddf0\uddf7-\uddfb\uddfe]|\ud83c\uddf2\ud83c[\udde6\udde8-\udded\uddf0-\uddff]|\ud83c\uddf3\ud83c[\udde6\udde8\uddea-\uddec\uddee\uddf1\uddf4\uddf5\uddf7\uddfa\uddff]|\ud83c\uddf4\ud83c\uddf2|\ud83c\uddf5\ud83c[\udde6\uddea-\udded\uddf0-\uddf3\uddf7-\uddf9\uddfc\uddfe]|\ud83c\uddf6\ud83c\udde6|\ud83c\uddf7\ud83c[\uddea\uddf4\uddf8\uddfa\uddfc]|\ud83c\uddf8\ud83c[\udde6-\uddea\uddec-\uddf4\uddf7-\uddf9\uddfb\uddfd-\uddff]|\ud83c\uddf9\ud83c[\udde6\udde8\udde9\uddeb-\udded\uddef-\uddf4\uddf7\uddf9\uddfb\uddfc\uddff]|\ud83c\uddfa\ud83c[\udde6\uddec\uddf2\uddf3\uddf8\uddfe\uddff]|\ud83c\uddfb\ud83c[\udde6\udde8\uddea\uddec\uddee\uddf3\uddfa]|\ud83c\uddfc\ud83c[\uddeb\uddf8]|\ud83c\uddfd\ud83c\uddf0|\ud83c\uddfe\ud83c[\uddea\uddf9]|\ud83c\uddff\ud83c[\udde6\uddf2\uddfc]|\ud83c[\udccf\udd8e\udd91-\udd9a\udde6-\uddff\ude01\ude32-\ude36\ude38-\ude3a\ude50\ude51\udf00-\udf20\udf2d-\udf35\udf37-\udf7c\udf7e-\udf84\udf86-\udf93\udfa0-\udfc1\udfc5\udfc6\udfc8\udfc9\udfcf-\udfd3\udfe0-\udff0\udff4\udff8-\udfff]|\ud83d[\udc00-\udc3e\udc40\udc44\udc45\udc51-\udc65\udc6a-\udc6d\udc6f\udc79-\udc7b\udc7d-\udc80\udc84\udc88-\udca9\udcab-\udcfc\udcff-\udd3d\udd4b-\udd4e\udd50-\udd67\udda4\uddfb-\ude44\ude48-\ude4a\ude80-\udea2\udea4-\udeb3\udeb7-\udebf\udec1-\udec5\uded0-\uded2\udeeb\udeec\udef4-\udef9]|\ud83e[\udd10-\udd17\udd1d\udd20-\udd25\udd27-\udd2f\udd3a\udd3c\udd40-\udd45\udd47-\udd70\udd73-\udd76\udd7a\udd7c-\udda2\uddb4\uddb7\uddc0-\uddc2\uddd0\uddde-\uddff]|[\u23e9-\u23ec\u23f0\u23f3\u267e\u26ce\u2705\u2728\u274c\u274e\u2753-\u2755\u2795-\u2797\u27b0\u27bf\ue50a])|\ufe0f/g;
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/autoLink.js":
+/*!********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/autoLink.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extractEntitiesWithIndices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extractEntitiesWithIndices */ "./node_modules/twitter-text/dist/esm/extractEntitiesWithIndices.js");
+/* harmony import */ var _autoLinkEntities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./autoLinkEntities */ "./node_modules/twitter-text/dist/esm/autoLinkEntities.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, options) {
+  var entities = Object(_extractEntitiesWithIndices__WEBPACK_IMPORTED_MODULE_0__["default"])(text, {
+    extractUrlsWithoutProtocol: false
+  });
+  return Object(_autoLinkEntities__WEBPACK_IMPORTED_MODULE_1__["default"])(text, entities, options);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/autoLinkCashtags.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/autoLinkCashtags.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _autoLinkEntities__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./autoLinkEntities */ "./node_modules/twitter-text/dist/esm/autoLinkEntities.js");
+/* harmony import */ var _extractCashtagsWithIndices__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./extractCashtagsWithIndices */ "./node_modules/twitter-text/dist/esm/extractCashtagsWithIndices.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, options) {
+  var entities = Object(_extractCashtagsWithIndices__WEBPACK_IMPORTED_MODULE_1__["default"])(text);
+  return Object(_autoLinkEntities__WEBPACK_IMPORTED_MODULE_0__["default"])(text, entities, options);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/autoLinkEntities.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/autoLinkEntities.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.sort */ "./node_modules/core-js/modules/es6.array.sort.js");
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_clone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lib/clone */ "./node_modules/twitter-text/dist/esm/lib/clone.js");
+/* harmony import */ var _extractHtmlAttrsFromOptions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./extractHtmlAttrsFromOptions */ "./node_modules/twitter-text/dist/esm/extractHtmlAttrsFromOptions.js");
+/* harmony import */ var _htmlEscape__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./htmlEscape */ "./node_modules/twitter-text/dist/esm/htmlEscape.js");
+/* harmony import */ var _linkToCashtag__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./linkToCashtag */ "./node_modules/twitter-text/dist/esm/linkToCashtag.js");
+/* harmony import */ var _linkToHashtag__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./linkToHashtag */ "./node_modules/twitter-text/dist/esm/linkToHashtag.js");
+/* harmony import */ var _linkToUrl__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./linkToUrl */ "./node_modules/twitter-text/dist/esm/linkToUrl.js");
+/* harmony import */ var _linkToMentionAndList__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./linkToMentionAndList */ "./node_modules/twitter-text/dist/esm/linkToMentionAndList.js");
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+
+ // Default CSS class for auto-linked lists (along with the url class)
+
+var DEFAULT_LIST_CLASS = 'tweet-url list-slug'; // Default CSS class for auto-linked usernames (along with the url class)
+
+var DEFAULT_USERNAME_CLASS = 'tweet-url username'; // Default CSS class for auto-linked hashtags (along with the url class)
+
+var DEFAULT_HASHTAG_CLASS = 'tweet-url hashtag'; // Default CSS class for auto-linked cashtags (along with the url class)
+
+var DEFAULT_CASHTAG_CLASS = 'tweet-url cashtag';
+/* harmony default export */ __webpack_exports__["default"] = (function (text, entities, options) {
+  var options = Object(_lib_clone__WEBPACK_IMPORTED_MODULE_1__["default"])(options || {});
+  options.hashtagClass = options.hashtagClass || DEFAULT_HASHTAG_CLASS;
+  options.hashtagUrlBase = options.hashtagUrlBase || 'https://twitter.com/search?q=%23';
+  options.cashtagClass = options.cashtagClass || DEFAULT_CASHTAG_CLASS;
+  options.cashtagUrlBase = options.cashtagUrlBase || 'https://twitter.com/search?q=%24';
+  options.listClass = options.listClass || DEFAULT_LIST_CLASS;
+  options.usernameClass = options.usernameClass || DEFAULT_USERNAME_CLASS;
+  options.usernameUrlBase = options.usernameUrlBase || 'https://twitter.com/';
+  options.listUrlBase = options.listUrlBase || 'https://twitter.com/';
+  options.htmlAttrs = Object(_extractHtmlAttrsFromOptions__WEBPACK_IMPORTED_MODULE_2__["default"])(options);
+  options.invisibleTagAttrs = options.invisibleTagAttrs || "style='position:absolute;left:-9999px;'"; // remap url entities to hash
+
+  var urlEntities, i, len;
+
+  if (options.urlEntities) {
+    urlEntities = {};
+
+    for (i = 0, len = options.urlEntities.length; i < len; i++) {
+      urlEntities[options.urlEntities[i].url] = options.urlEntities[i];
+    }
+
+    options.urlEntities = urlEntities;
+  }
+
+  var result = '';
+  var beginIndex = 0; // sort entities by start index
+
+  entities.sort(function (a, b) {
+    return a.indices[0] - b.indices[0];
+  });
+  var nonEntity = options.htmlEscapeNonEntities ? _htmlEscape__WEBPACK_IMPORTED_MODULE_3__["default"] : function (text) {
+    return text;
+  };
+
+  for (var i = 0; i < entities.length; i++) {
+    var entity = entities[i];
+    result += nonEntity(text.substring(beginIndex, entity.indices[0]));
+
+    if (entity.url) {
+      result += Object(_linkToUrl__WEBPACK_IMPORTED_MODULE_6__["default"])(entity, text, options);
+    } else if (entity.hashtag) {
+      result += Object(_linkToHashtag__WEBPACK_IMPORTED_MODULE_5__["default"])(entity, text, options);
+    } else if (entity.screenName) {
+      result += Object(_linkToMentionAndList__WEBPACK_IMPORTED_MODULE_7__["default"])(entity, text, options);
+    } else if (entity.cashtag) {
+      result += Object(_linkToCashtag__WEBPACK_IMPORTED_MODULE_4__["default"])(entity, text, options);
+    }
+
+    beginIndex = entity.indices[1];
+  }
+
+  result += nonEntity(text.substring(beginIndex, text.length));
+  return result;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/autoLinkHashtags.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/autoLinkHashtags.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extractHashtagsWithIndices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extractHashtagsWithIndices */ "./node_modules/twitter-text/dist/esm/extractHashtagsWithIndices.js");
+/* harmony import */ var _autoLinkEntities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./autoLinkEntities */ "./node_modules/twitter-text/dist/esm/autoLinkEntities.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, options) {
+  var entities = Object(_extractHashtagsWithIndices__WEBPACK_IMPORTED_MODULE_0__["default"])(text);
+  return Object(_autoLinkEntities__WEBPACK_IMPORTED_MODULE_1__["default"])(text, entities, options);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/autoLinkUrlsCustom.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/autoLinkUrlsCustom.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _autoLinkEntities__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./autoLinkEntities */ "./node_modules/twitter-text/dist/esm/autoLinkEntities.js");
+/* harmony import */ var _extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./extractUrlsWithIndices */ "./node_modules/twitter-text/dist/esm/extractUrlsWithIndices.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, options) {
+  var entities = Object(_extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_1__["default"])(text, {
+    extractUrlsWithoutProtocol: false
+  });
+  return Object(_autoLinkEntities__WEBPACK_IMPORTED_MODULE_0__["default"])(text, entities, options);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/autoLinkUsernamesOrLists.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/autoLinkUsernamesOrLists.js ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extractMentionsOrListsWithIndices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extractMentionsOrListsWithIndices */ "./node_modules/twitter-text/dist/esm/extractMentionsOrListsWithIndices.js");
+/* harmony import */ var _autoLinkEntities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./autoLinkEntities */ "./node_modules/twitter-text/dist/esm/autoLinkEntities.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, options) {
+  var entities = Object(_extractMentionsOrListsWithIndices__WEBPACK_IMPORTED_MODULE_0__["default"])(text);
+  return Object(_autoLinkEntities__WEBPACK_IMPORTED_MODULE_1__["default"])(text, entities, options);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/autoLinkWithJSON.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/autoLinkWithJSON.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _autoLinkEntities__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./autoLinkEntities */ "./node_modules/twitter-text/dist/esm/autoLinkEntities.js");
+/* harmony import */ var _modifyIndicesFromUnicodeToUTF16__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modifyIndicesFromUnicodeToUTF16 */ "./node_modules/twitter-text/dist/esm/modifyIndicesFromUnicodeToUTF16.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, json, options) {
+  // map JSON entity to twitter-text entity
+  if (json.user_mentions) {
+    for (var i = 0; i < json.user_mentions.length; i++) {
+      // this is a @mention
+      json.user_mentions[i].screenName = json.user_mentions[i].screen_name;
+    }
+  }
+
+  if (json.hashtags) {
+    for (var i = 0; i < json.hashtags.length; i++) {
+      // this is a #hashtag
+      json.hashtags[i].hashtag = json.hashtags[i].text;
+    }
+  }
+
+  if (json.symbols) {
+    for (var i = 0; i < json.symbols.length; i++) {
+      // this is a $CASH tag
+      json.symbols[i].cashtag = json.symbols[i].text;
+    }
+  } // concatenate all entities
+
+
+  var entities = [];
+
+  for (var key in json) {
+    entities = entities.concat(json[key]);
+  } // modify indices to UTF-16
+
+
+  Object(_modifyIndicesFromUnicodeToUTF16__WEBPACK_IMPORTED_MODULE_1__["default"])(text, entities);
+  return Object(_autoLinkEntities__WEBPACK_IMPORTED_MODULE_0__["default"])(text, entities, options);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/configs.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/configs.js ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// This file is generated by scripts/buildConfig.js
+/* harmony default export */ __webpack_exports__["default"] = ({
+  version1: {
+    version: 1,
+    maxWeightedTweetLength: 140,
+    scale: 1,
+    defaultWeight: 1,
+    transformedURLLength: 23,
+    ranges: []
+  },
+  version2: {
+    version: 2,
+    maxWeightedTweetLength: 280,
+    scale: 100,
+    defaultWeight: 200,
+    transformedURLLength: 23,
+    ranges: [{
+      start: 0,
+      end: 4351,
+      weight: 100
+    }, {
+      start: 8192,
+      end: 8205,
+      weight: 100
+    }, {
+      start: 8208,
+      end: 8223,
+      weight: 100
+    }, {
+      start: 8242,
+      end: 8247,
+      weight: 100
+    }]
+  },
+  version3: {
+    version: 3,
+    maxWeightedTweetLength: 280,
+    scale: 100,
+    defaultWeight: 200,
+    emojiParsingEnabled: true,
+    transformedURLLength: 23,
+    ranges: [{
+      start: 0,
+      end: 4351,
+      weight: 100
+    }, {
+      start: 8192,
+      end: 8205,
+      weight: 100
+    }, {
+      start: 8208,
+      end: 8223,
+      weight: 100
+    }, {
+      start: 8242,
+      end: 8247,
+      weight: 100
+    }]
+  },
+  defaults: {
+    version: 3,
+    maxWeightedTweetLength: 280,
+    scale: 100,
+    defaultWeight: 200,
+    emojiParsingEnabled: true,
+    transformedURLLength: 23,
+    ranges: [{
+      start: 0,
+      end: 4351,
+      weight: 100
+    }, {
+      start: 8192,
+      end: 8205,
+      weight: 100
+    }, {
+      start: 8208,
+      end: 8223,
+      weight: 100
+    }, {
+      start: 8242,
+      end: 8247,
+      weight: 100
+    }]
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/convertUnicodeIndices.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/convertUnicodeIndices.js ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.sort */ "./node_modules/core-js/modules/es6.array.sort.js");
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0__);
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+/* harmony default export */ __webpack_exports__["default"] = (function (text, entities, indicesInUTF16) {
+  if (entities.length == 0) {
+    return;
+  }
+
+  var charIndex = 0;
+  var codePointIndex = 0; // sort entities by start index
+
+  entities.sort(function (a, b) {
+    return a.indices[0] - b.indices[0];
+  });
+  var entityIndex = 0;
+  var entity = entities[0];
+
+  while (charIndex < text.length) {
+    if (entity.indices[0] == (indicesInUTF16 ? charIndex : codePointIndex)) {
+      var len = entity.indices[1] - entity.indices[0];
+      entity.indices[0] = indicesInUTF16 ? codePointIndex : charIndex;
+      entity.indices[1] = entity.indices[0] + len;
+      entityIndex++;
+
+      if (entityIndex == entities.length) {
+        // no more entity
+        break;
+      }
+
+      entity = entities[entityIndex];
+    }
+
+    var c = text.charCodeAt(charIndex);
+
+    if (c >= 0xd800 && c <= 0xdbff && charIndex < text.length - 1) {
+      // Found high surrogate char
+      c = text.charCodeAt(charIndex + 1);
+
+      if (c >= 0xdc00 && c <= 0xdfff) {
+        // Found surrogate pair
+        charIndex++;
+      }
+    }
+
+    codePointIndex++;
+    charIndex++;
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractCashtags.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractCashtags.js ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extractCashtagsWithIndices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extractCashtagsWithIndices */ "./node_modules/twitter-text/dist/esm/extractCashtagsWithIndices.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  var cashtagsOnly = [],
+      cashtagsWithIndices = Object(_extractCashtagsWithIndices__WEBPACK_IMPORTED_MODULE_0__["default"])(text);
+
+  for (var i = 0; i < cashtagsWithIndices.length; i++) {
+    cashtagsOnly.push(cashtagsWithIndices[i].cashtag);
+  }
+
+  return cashtagsOnly;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractCashtagsWithIndices.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractCashtagsWithIndices.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.array.index-of */ "./node_modules/core-js/modules/es6.array.index-of.js");
+/* harmony import */ var core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _regexp_validCashtag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./regexp/validCashtag */ "./node_modules/twitter-text/dist/esm/regexp/validCashtag.js");
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  if (!text || text.indexOf('$') === -1) {
+    return [];
+  }
+
+  var tags = [];
+  text.replace(_regexp_validCashtag__WEBPACK_IMPORTED_MODULE_2__["default"], function (match, before, dollar, cashtag, offset, chunk) {
+    var startPosition = offset + before.length;
+    var endPosition = startPosition + cashtag.length + 1;
+    tags.push({
+      cashtag: cashtag,
+      indices: [startPosition, endPosition]
+    });
+  });
+  return tags;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractEntitiesWithIndices.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractEntitiesWithIndices.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extractCashtagsWithIndices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extractCashtagsWithIndices */ "./node_modules/twitter-text/dist/esm/extractCashtagsWithIndices.js");
+/* harmony import */ var _extractHashtagsWithIndices__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./extractHashtagsWithIndices */ "./node_modules/twitter-text/dist/esm/extractHashtagsWithIndices.js");
+/* harmony import */ var _extractMentionsOrListsWithIndices__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./extractMentionsOrListsWithIndices */ "./node_modules/twitter-text/dist/esm/extractMentionsOrListsWithIndices.js");
+/* harmony import */ var _extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./extractUrlsWithIndices */ "./node_modules/twitter-text/dist/esm/extractUrlsWithIndices.js");
+/* harmony import */ var _removeOverlappingEntities__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./removeOverlappingEntities */ "./node_modules/twitter-text/dist/esm/removeOverlappingEntities.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, options) {
+  var entities = Object(_extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_3__["default"])(text, options).concat(Object(_extractMentionsOrListsWithIndices__WEBPACK_IMPORTED_MODULE_2__["default"])(text)).concat(Object(_extractHashtagsWithIndices__WEBPACK_IMPORTED_MODULE_1__["default"])(text, {
+    checkUrlOverlap: false
+  })).concat(Object(_extractCashtagsWithIndices__WEBPACK_IMPORTED_MODULE_0__["default"])(text));
+
+  if (entities.length == 0) {
+    return [];
+  }
+
+  Object(_removeOverlappingEntities__WEBPACK_IMPORTED_MODULE_4__["default"])(entities);
+  return entities;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractHashtags.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractHashtags.js ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extractHashtagsWithIndices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extractHashtagsWithIndices */ "./node_modules/twitter-text/dist/esm/extractHashtagsWithIndices.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  var hashtagsOnly = [];
+  var hashtagsWithIndices = Object(_extractHashtagsWithIndices__WEBPACK_IMPORTED_MODULE_0__["default"])(text);
+
+  for (var i = 0; i < hashtagsWithIndices.length; i++) {
+    hashtagsOnly.push(hashtagsWithIndices[i].hashtag);
+  }
+
+  return hashtagsOnly;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractHashtagsWithIndices.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractHashtagsWithIndices.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _regexp_endHashtagMatch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./regexp/endHashtagMatch */ "./node_modules/twitter-text/dist/esm/regexp/endHashtagMatch.js");
+/* harmony import */ var _extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./extractUrlsWithIndices */ "./node_modules/twitter-text/dist/esm/extractUrlsWithIndices.js");
+/* harmony import */ var _regexp_hashSigns__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./regexp/hashSigns */ "./node_modules/twitter-text/dist/esm/regexp/hashSigns.js");
+/* harmony import */ var _removeOverlappingEntities__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./removeOverlappingEntities */ "./node_modules/twitter-text/dist/esm/removeOverlappingEntities.js");
+/* harmony import */ var _regexp_validHashtag__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./regexp/validHashtag */ "./node_modules/twitter-text/dist/esm/regexp/validHashtag.js");
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+
+var extractHashtagsWithIndices = function extractHashtagsWithIndices(text, options) {
+  if (!options) {
+    options = {
+      checkUrlOverlap: true
+    };
+  }
+
+  if (!text || !text.match(_regexp_hashSigns__WEBPACK_IMPORTED_MODULE_4__["default"])) {
+    return [];
+  }
+
+  var tags = [];
+  text.replace(_regexp_validHashtag__WEBPACK_IMPORTED_MODULE_6__["default"], function (match, before, hash, hashText, offset, chunk) {
+    var after = chunk.slice(offset + match.length);
+
+    if (after.match(_regexp_endHashtagMatch__WEBPACK_IMPORTED_MODULE_2__["default"])) {
+      return;
+    }
+
+    var startPosition = offset + before.length;
+    var endPosition = startPosition + hashText.length + 1;
+    tags.push({
+      hashtag: hashText,
+      indices: [startPosition, endPosition]
+    });
+  });
+
+  if (options.checkUrlOverlap) {
+    // also extract URL entities
+    var urls = Object(_extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_3__["default"])(text);
+
+    if (urls.length > 0) {
+      var entities = tags.concat(urls); // remove overlap
+
+      Object(_removeOverlappingEntities__WEBPACK_IMPORTED_MODULE_5__["default"])(entities); // only push back hashtags
+
+      tags = [];
+
+      for (var i = 0; i < entities.length; i++) {
+        if (entities[i].hashtag) {
+          tags.push(entities[i]);
+        }
+      }
+    }
+  }
+
+  return tags;
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (extractHashtagsWithIndices);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractHtmlAttrsFromOptions.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractHtmlAttrsFromOptions.js ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var BOOLEAN_ATTRIBUTES = {
+  disabled: true,
+  readonly: true,
+  multiple: true,
+  checked: true
+}; // Options which should not be passed as HTML attributes
+
+var OPTIONS_NOT_ATTRIBUTES = {
+  urlClass: true,
+  listClass: true,
+  usernameClass: true,
+  hashtagClass: true,
+  cashtagClass: true,
+  usernameUrlBase: true,
+  listUrlBase: true,
+  hashtagUrlBase: true,
+  cashtagUrlBase: true,
+  usernameUrlBlock: true,
+  listUrlBlock: true,
+  hashtagUrlBlock: true,
+  linkUrlBlock: true,
+  usernameIncludeSymbol: true,
+  suppressLists: true,
+  suppressNoFollow: true,
+  targetBlank: true,
+  suppressDataScreenName: true,
+  urlEntities: true,
+  symbolTag: true,
+  textWithSymbolTag: true,
+  urlTarget: true,
+  invisibleTagAttrs: true,
+  linkAttributeBlock: true,
+  linkTextBlock: true,
+  htmlEscapeNonEntities: true
+};
+/* harmony default export */ __webpack_exports__["default"] = (function (options) {
+  var htmlAttrs = {};
+
+  for (var k in options) {
+    var v = options[k];
+
+    if (OPTIONS_NOT_ATTRIBUTES[k]) {
+      continue;
+    }
+
+    if (BOOLEAN_ATTRIBUTES[k]) {
+      v = v ? k : null;
+    }
+
+    if (v == null) {
+      continue;
+    }
+
+    htmlAttrs[k] = v;
+  }
+
+  return htmlAttrs;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractMentions.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractMentions.js ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extractMentionsWithIndices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extractMentionsWithIndices */ "./node_modules/twitter-text/dist/esm/extractMentionsWithIndices.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  var screenNamesOnly = [],
+      screenNamesWithIndices = Object(_extractMentionsWithIndices__WEBPACK_IMPORTED_MODULE_0__["default"])(text);
+
+  for (var i = 0; i < screenNamesWithIndices.length; i++) {
+    var screenName = screenNamesWithIndices[i].screenName;
+    screenNamesOnly.push(screenName);
+  }
+
+  return screenNamesOnly;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractMentionsOrListsWithIndices.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractMentionsOrListsWithIndices.js ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _regexp_atSigns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./regexp/atSigns */ "./node_modules/twitter-text/dist/esm/regexp/atSigns.js");
+/* harmony import */ var _regexp_endMentionMatch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./regexp/endMentionMatch */ "./node_modules/twitter-text/dist/esm/regexp/endMentionMatch.js");
+/* harmony import */ var _regexp_validMentionOrList__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./regexp/validMentionOrList */ "./node_modules/twitter-text/dist/esm/regexp/validMentionOrList.js");
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  if (!text || !text.match(_regexp_atSigns__WEBPACK_IMPORTED_MODULE_2__["default"])) {
+    return [];
+  }
+
+  var possibleNames = [];
+  text.replace(_regexp_validMentionOrList__WEBPACK_IMPORTED_MODULE_4__["default"], function (match, before, atSign, screenName, slashListname, offset, chunk) {
+    var after = chunk.slice(offset + match.length);
+
+    if (!after.match(_regexp_endMentionMatch__WEBPACK_IMPORTED_MODULE_3__["default"])) {
+      slashListname = slashListname || '';
+      var startPosition = offset + before.length;
+      var endPosition = startPosition + screenName.length + slashListname.length + 1;
+      possibleNames.push({
+        screenName: screenName,
+        listSlug: slashListname,
+        indices: [startPosition, endPosition]
+      });
+    }
+  });
+  return possibleNames;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractMentionsWithIndices.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractMentionsWithIndices.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extractMentionsOrListsWithIndices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extractMentionsOrListsWithIndices */ "./node_modules/twitter-text/dist/esm/extractMentionsOrListsWithIndices.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  var mentions = [];
+  var mentionOrList;
+  var mentionsOrLists = Object(_extractMentionsOrListsWithIndices__WEBPACK_IMPORTED_MODULE_0__["default"])(text);
+
+  for (var i = 0; i < mentionsOrLists.length; i++) {
+    mentionOrList = mentionsOrLists[i];
+
+    if (mentionOrList.listSlug === '') {
+      mentions.push({
+        screenName: mentionOrList.screenName,
+        indices: mentionOrList.indices
+      });
+    }
+  }
+
+  return mentions;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractReplies.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractReplies.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.constructor */ "./node_modules/core-js/modules/es6.regexp.constructor.js");
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _regexp_endMentionMatch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./regexp/endMentionMatch */ "./node_modules/twitter-text/dist/esm/regexp/endMentionMatch.js");
+/* harmony import */ var _regexp_validReply__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./regexp/validReply */ "./node_modules/twitter-text/dist/esm/regexp/validReply.js");
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  if (!text) {
+    return null;
+  }
+
+  var possibleScreenName = text.match(_regexp_validReply__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+  if (!possibleScreenName || RegExp.rightContext.match(_regexp_endMentionMatch__WEBPACK_IMPORTED_MODULE_2__["default"])) {
+    return null;
+  }
+
+  return possibleScreenName[1];
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractUrls.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractUrls.js ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extractUrlsWithIndices */ "./node_modules/twitter-text/dist/esm/extractUrlsWithIndices.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, options) {
+  var urlsOnly = [];
+  var urlsWithIndices = Object(_extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_0__["default"])(text, options);
+
+  for (var i = 0; i < urlsWithIndices.length; i++) {
+    urlsOnly.push(urlsWithIndices[i].url);
+  }
+
+  return urlsOnly;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/extractUrlsWithIndices.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/extractUrlsWithIndices.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.index-of */ "./node_modules/core-js/modules/es6.array.index-of.js");
+/* harmony import */ var core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es6.regexp.constructor */ "./node_modules/core-js/modules/es6.regexp.constructor.js");
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _regexp_extractUrl__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./regexp/extractUrl */ "./node_modules/twitter-text/dist/esm/regexp/extractUrl.js");
+/* harmony import */ var _regexp_invalidUrlWithoutProtocolPrecedingChars__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./regexp/invalidUrlWithoutProtocolPrecedingChars */ "./node_modules/twitter-text/dist/esm/regexp/invalidUrlWithoutProtocolPrecedingChars.js");
+/* harmony import */ var _lib_idna__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lib/idna */ "./node_modules/twitter-text/dist/esm/lib/idna.js");
+/* harmony import */ var _regexp_validAsciiDomain__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./regexp/validAsciiDomain */ "./node_modules/twitter-text/dist/esm/regexp/validAsciiDomain.js");
+/* harmony import */ var _regexp_validTcoUrl__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./regexp/validTcoUrl */ "./node_modules/twitter-text/dist/esm/regexp/validTcoUrl.js");
+
+
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+var DEFAULT_PROTOCOL = 'https://';
+var DEFAULT_PROTOCOL_OPTIONS = {
+  extractUrlsWithoutProtocol: true
+};
+var MAX_URL_LENGTH = 4096;
+var MAX_TCO_SLUG_LENGTH = 40;
+
+var extractUrlsWithIndices = function extractUrlsWithIndices(text) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DEFAULT_PROTOCOL_OPTIONS;
+
+  if (!text || (options.extractUrlsWithoutProtocol ? !text.match(/\./) : !text.match(/:/))) {
+    return [];
+  }
+
+  var urls = [];
+
+  var _loop = function _loop() {
+    var before = RegExp.$2;
+    var url = RegExp.$3;
+    var protocol = RegExp.$4;
+    var domain = RegExp.$5;
+    var path = RegExp.$7;
+    var endPosition = _regexp_extractUrl__WEBPACK_IMPORTED_MODULE_4__["default"].lastIndex;
+    var startPosition = endPosition - url.length;
+
+    if (!isValidUrl(url, protocol || DEFAULT_PROTOCOL, domain)) {
+      return "continue";
+    } // extract ASCII-only domains.
+
+
+    if (!protocol) {
+      if (!options.extractUrlsWithoutProtocol || before.match(_regexp_invalidUrlWithoutProtocolPrecedingChars__WEBPACK_IMPORTED_MODULE_5__["default"])) {
+        return "continue";
+      }
+
+      var lastUrl = null;
+      var asciiEndPosition = 0;
+      domain.replace(_regexp_validAsciiDomain__WEBPACK_IMPORTED_MODULE_7__["default"], function (asciiDomain) {
+        var asciiStartPosition = domain.indexOf(asciiDomain, asciiEndPosition);
+        asciiEndPosition = asciiStartPosition + asciiDomain.length;
+        lastUrl = {
+          url: asciiDomain,
+          indices: [startPosition + asciiStartPosition, startPosition + asciiEndPosition]
+        };
+        urls.push(lastUrl);
+      }); // no ASCII-only domain found. Skip the entire URL.
+
+      if (lastUrl == null) {
+        return "continue";
+      } // lastUrl only contains domain. Need to add path and query if they exist.
+
+
+      if (path) {
+        lastUrl.url = url.replace(domain, lastUrl.url);
+        lastUrl.indices[1] = endPosition;
+      }
+    } else {
+      // In the case of t.co URLs, don't allow additional path characters.
+      if (url.match(_regexp_validTcoUrl__WEBPACK_IMPORTED_MODULE_8__["default"])) {
+        var tcoUrlSlug = RegExp.$1;
+
+        if (tcoUrlSlug && tcoUrlSlug.length > MAX_TCO_SLUG_LENGTH) {
+          return "continue";
+        } else {
+          url = RegExp.lastMatch;
+          endPosition = startPosition + url.length;
+        }
+      }
+
+      urls.push({
+        url: url,
+        indices: [startPosition, endPosition]
+      });
+    }
+  };
+
+  while (_regexp_extractUrl__WEBPACK_IMPORTED_MODULE_4__["default"].exec(text)) {
+    var _ret = _loop();
+
+    if (_ret === "continue") continue;
+  }
+
+  return urls;
+};
+
+var isValidUrl = function isValidUrl(url, protocol, domain) {
+  var urlLength = url.length;
+  var punycodeEncodedDomain = _lib_idna__WEBPACK_IMPORTED_MODULE_6__["default"].toAscii(domain);
+
+  if (!punycodeEncodedDomain || !punycodeEncodedDomain.length) {
+    return false;
+  }
+
+  urlLength = urlLength + punycodeEncodedDomain.length - domain.length;
+  return protocol.length + urlLength <= MAX_URL_LENGTH;
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (extractUrlsWithIndices);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/getTweetLength.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/getTweetLength.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _configs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./configs */ "./node_modules/twitter-text/dist/esm/configs.js");
+/* harmony import */ var _extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./extractUrlsWithIndices */ "./node_modules/twitter-text/dist/esm/extractUrlsWithIndices.js");
+/* harmony import */ var _lib_getCharacterWeight__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lib/getCharacterWeight */ "./node_modules/twitter-text/dist/esm/lib/getCharacterWeight.js");
+/* harmony import */ var _modifyIndicesFromUTF16ToUnicode__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modifyIndicesFromUTF16ToUnicode */ "./node_modules/twitter-text/dist/esm/modifyIndicesFromUTF16ToUnicode.js");
+/* harmony import */ var _regexp_nonBmpCodePairs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./regexp/nonBmpCodePairs */ "./node_modules/twitter-text/dist/esm/regexp/nonBmpCodePairs.js");
+/* harmony import */ var _parseTweet__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./parseTweet */ "./node_modules/twitter-text/dist/esm/parseTweet.js");
+/* harmony import */ var _regexp_urlHasHttps__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./regexp/urlHasHttps */ "./node_modules/twitter-text/dist/esm/regexp/urlHasHttps.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+
+
+
+var getTweetLength = function getTweetLength(text) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _configs__WEBPACK_IMPORTED_MODULE_0__["default"].defaults;
+  return Object(_parseTweet__WEBPACK_IMPORTED_MODULE_5__["default"])(text, options).weightedLength;
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (getTweetLength);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/getUnicodeTextLength.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/getUnicodeTextLength.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _regexp_nonBmpCodePairs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./regexp/nonBmpCodePairs */ "./node_modules/twitter-text/dist/esm/regexp/nonBmpCodePairs.js");
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/**
+ * Copied from https://github.com/twitter/twitter-text/blob/master/js/twitter-text.js
+ */
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  return text.replace(_regexp_nonBmpCodePairs__WEBPACK_IMPORTED_MODULE_1__["default"], ' ').length;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/hasInvalidCharacters.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/hasInvalidCharacters.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _regexp_invalidChars__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regexp/invalidChars */ "./node_modules/twitter-text/dist/esm/regexp/invalidChars.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  return _regexp_invalidChars__WEBPACK_IMPORTED_MODULE_0__["default"].test(text);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/hitHighlight.js":
+/*!************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/hitHighlight.js ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _splitTags__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./splitTags */ "./node_modules/twitter-text/dist/esm/splitTags.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, hits, options) {
+  var defaultHighlightTag = 'em';
+  hits = hits || [];
+  options = options || {};
+
+  if (hits.length === 0) {
+    return text;
+  }
+
+  var tagName = options.tag || defaultHighlightTag,
+      tags = ["<".concat(tagName, ">"), "</".concat(tagName, ">")],
+      chunks = Object(_splitTags__WEBPACK_IMPORTED_MODULE_0__["default"])(text),
+      i,
+      j,
+      result = '',
+      chunkIndex = 0,
+      chunk = chunks[0],
+      prevChunksLen = 0,
+      chunkCursor = 0,
+      startInChunk = false,
+      chunkChars = chunk,
+      flatHits = [],
+      index,
+      hit,
+      tag,
+      placed,
+      hitSpot;
+
+  for (i = 0; i < hits.length; i += 1) {
+    for (j = 0; j < hits[i].length; j += 1) {
+      flatHits.push(hits[i][j]);
+    }
+  }
+
+  for (index = 0; index < flatHits.length; index += 1) {
+    hit = flatHits[index];
+    tag = tags[index % 2];
+    placed = false;
+
+    while (chunk != null && hit >= prevChunksLen + chunk.length) {
+      result += chunkChars.slice(chunkCursor);
+
+      if (startInChunk && hit === prevChunksLen + chunkChars.length) {
+        result += tag;
+        placed = true;
+      }
+
+      if (chunks[chunkIndex + 1]) {
+        result += "<".concat(chunks[chunkIndex + 1], ">");
+      }
+
+      prevChunksLen += chunkChars.length;
+      chunkCursor = 0;
+      chunkIndex += 2;
+      chunk = chunks[chunkIndex];
+      chunkChars = chunk;
+      startInChunk = false;
+    }
+
+    if (!placed && chunk != null) {
+      hitSpot = hit - prevChunksLen;
+      result += chunkChars.slice(chunkCursor, hitSpot) + tag;
+      chunkCursor = hitSpot;
+
+      if (index % 2 === 0) {
+        startInChunk = true;
+      } else {
+        startInChunk = false;
+      }
+    } else if (!placed) {
+      placed = true;
+      result += tag;
+    }
+  }
+
+  if (chunk != null) {
+    if (chunkCursor < chunkChars.length) {
+      result += chunkChars.slice(chunkCursor);
+    }
+
+    for (index = chunkIndex + 1; index < chunks.length; index += 1) {
+      result += index % 2 === 0 ? chunks[index] : "<".concat(chunks[index], ">");
+    }
+  }
+
+  return result;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/htmlEscape.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/htmlEscape.js ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var HTML_ENTITIES = {
+  '&': '&amp;',
+  '>': '&gt;',
+  '<': '&lt;',
+  '"': '&quot;',
+  "'": '&#39;'
+};
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  return text && text.replace(/[&"'><]/g, function (character) {
+    return HTML_ENTITIES[character];
+  });
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/index.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/index.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _autoLink__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./autoLink */ "./node_modules/twitter-text/dist/esm/autoLink.js");
+/* harmony import */ var _autoLinkCashtags__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./autoLinkCashtags */ "./node_modules/twitter-text/dist/esm/autoLinkCashtags.js");
+/* harmony import */ var _autoLinkEntities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./autoLinkEntities */ "./node_modules/twitter-text/dist/esm/autoLinkEntities.js");
+/* harmony import */ var _autoLinkHashtags__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./autoLinkHashtags */ "./node_modules/twitter-text/dist/esm/autoLinkHashtags.js");
+/* harmony import */ var _autoLinkUrlsCustom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./autoLinkUrlsCustom */ "./node_modules/twitter-text/dist/esm/autoLinkUrlsCustom.js");
+/* harmony import */ var _autoLinkUsernamesOrLists__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./autoLinkUsernamesOrLists */ "./node_modules/twitter-text/dist/esm/autoLinkUsernamesOrLists.js");
+/* harmony import */ var _autoLinkWithJSON__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./autoLinkWithJSON */ "./node_modules/twitter-text/dist/esm/autoLinkWithJSON.js");
+/* harmony import */ var _configs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./configs */ "./node_modules/twitter-text/dist/esm/configs.js");
+/* harmony import */ var _convertUnicodeIndices__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./convertUnicodeIndices */ "./node_modules/twitter-text/dist/esm/convertUnicodeIndices.js");
+/* harmony import */ var _extractCashtags__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./extractCashtags */ "./node_modules/twitter-text/dist/esm/extractCashtags.js");
+/* harmony import */ var _extractCashtagsWithIndices__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./extractCashtagsWithIndices */ "./node_modules/twitter-text/dist/esm/extractCashtagsWithIndices.js");
+/* harmony import */ var _extractEntitiesWithIndices__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./extractEntitiesWithIndices */ "./node_modules/twitter-text/dist/esm/extractEntitiesWithIndices.js");
+/* harmony import */ var _extractHashtags__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./extractHashtags */ "./node_modules/twitter-text/dist/esm/extractHashtags.js");
+/* harmony import */ var _extractHashtagsWithIndices__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./extractHashtagsWithIndices */ "./node_modules/twitter-text/dist/esm/extractHashtagsWithIndices.js");
+/* harmony import */ var _extractHtmlAttrsFromOptions__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./extractHtmlAttrsFromOptions */ "./node_modules/twitter-text/dist/esm/extractHtmlAttrsFromOptions.js");
+/* harmony import */ var _extractMentions__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./extractMentions */ "./node_modules/twitter-text/dist/esm/extractMentions.js");
+/* harmony import */ var _extractMentionsOrListsWithIndices__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./extractMentionsOrListsWithIndices */ "./node_modules/twitter-text/dist/esm/extractMentionsOrListsWithIndices.js");
+/* harmony import */ var _extractMentionsWithIndices__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./extractMentionsWithIndices */ "./node_modules/twitter-text/dist/esm/extractMentionsWithIndices.js");
+/* harmony import */ var _extractReplies__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./extractReplies */ "./node_modules/twitter-text/dist/esm/extractReplies.js");
+/* harmony import */ var _extractUrls__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./extractUrls */ "./node_modules/twitter-text/dist/esm/extractUrls.js");
+/* harmony import */ var _extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./extractUrlsWithIndices */ "./node_modules/twitter-text/dist/esm/extractUrlsWithIndices.js");
+/* harmony import */ var _getTweetLength__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./getTweetLength */ "./node_modules/twitter-text/dist/esm/getTweetLength.js");
+/* harmony import */ var _getUnicodeTextLength__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./getUnicodeTextLength */ "./node_modules/twitter-text/dist/esm/getUnicodeTextLength.js");
+/* harmony import */ var _hasInvalidCharacters__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./hasInvalidCharacters */ "./node_modules/twitter-text/dist/esm/hasInvalidCharacters.js");
+/* harmony import */ var _hitHighlight__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./hitHighlight */ "./node_modules/twitter-text/dist/esm/hitHighlight.js");
+/* harmony import */ var _htmlEscape__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./htmlEscape */ "./node_modules/twitter-text/dist/esm/htmlEscape.js");
+/* harmony import */ var _isInvalidTweet__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./isInvalidTweet */ "./node_modules/twitter-text/dist/esm/isInvalidTweet.js");
+/* harmony import */ var _isValidHashtag__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./isValidHashtag */ "./node_modules/twitter-text/dist/esm/isValidHashtag.js");
+/* harmony import */ var _isValidList__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./isValidList */ "./node_modules/twitter-text/dist/esm/isValidList.js");
+/* harmony import */ var _isValidTweetText__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./isValidTweetText */ "./node_modules/twitter-text/dist/esm/isValidTweetText.js");
+/* harmony import */ var _isValidUrl__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./isValidUrl */ "./node_modules/twitter-text/dist/esm/isValidUrl.js");
+/* harmony import */ var _isValidUsername__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./isValidUsername */ "./node_modules/twitter-text/dist/esm/isValidUsername.js");
+/* harmony import */ var _linkTextWithEntity__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./linkTextWithEntity */ "./node_modules/twitter-text/dist/esm/linkTextWithEntity.js");
+/* harmony import */ var _linkToCashtag__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./linkToCashtag */ "./node_modules/twitter-text/dist/esm/linkToCashtag.js");
+/* harmony import */ var _linkToHashtag__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./linkToHashtag */ "./node_modules/twitter-text/dist/esm/linkToHashtag.js");
+/* harmony import */ var _linkToMentionAndList__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./linkToMentionAndList */ "./node_modules/twitter-text/dist/esm/linkToMentionAndList.js");
+/* harmony import */ var _linkToText__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./linkToText */ "./node_modules/twitter-text/dist/esm/linkToText.js");
+/* harmony import */ var _linkToTextWithSymbol__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./linkToTextWithSymbol */ "./node_modules/twitter-text/dist/esm/linkToTextWithSymbol.js");
+/* harmony import */ var _linkToUrl__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./linkToUrl */ "./node_modules/twitter-text/dist/esm/linkToUrl.js");
+/* harmony import */ var _modifyIndicesFromUTF16ToUnicode__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./modifyIndicesFromUTF16ToUnicode */ "./node_modules/twitter-text/dist/esm/modifyIndicesFromUTF16ToUnicode.js");
+/* harmony import */ var _modifyIndicesFromUnicodeToUTF16__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./modifyIndicesFromUnicodeToUTF16 */ "./node_modules/twitter-text/dist/esm/modifyIndicesFromUnicodeToUTF16.js");
+/* harmony import */ var _regexp_index__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./regexp/index */ "./node_modules/twitter-text/dist/esm/regexp/index.js");
+/* harmony import */ var _removeOverlappingEntities__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./removeOverlappingEntities */ "./node_modules/twitter-text/dist/esm/removeOverlappingEntities.js");
+/* harmony import */ var _parseTweet__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./parseTweet */ "./node_modules/twitter-text/dist/esm/parseTweet.js");
+/* harmony import */ var _splitTags__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./splitTags */ "./node_modules/twitter-text/dist/esm/splitTags.js");
+/* harmony import */ var _standardizeIndices__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./standardizeIndices */ "./node_modules/twitter-text/dist/esm/standardizeIndices.js");
+/* harmony import */ var _tagAttrs__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./tagAttrs */ "./node_modules/twitter-text/dist/esm/tagAttrs.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  autoLink: _autoLink__WEBPACK_IMPORTED_MODULE_0__["default"],
+  autoLinkCashtags: _autoLinkCashtags__WEBPACK_IMPORTED_MODULE_1__["default"],
+  autoLinkEntities: _autoLinkEntities__WEBPACK_IMPORTED_MODULE_2__["default"],
+  autoLinkHashtags: _autoLinkHashtags__WEBPACK_IMPORTED_MODULE_3__["default"],
+  autoLinkUrlsCustom: _autoLinkUrlsCustom__WEBPACK_IMPORTED_MODULE_4__["default"],
+  autoLinkUsernamesOrLists: _autoLinkUsernamesOrLists__WEBPACK_IMPORTED_MODULE_5__["default"],
+  autoLinkWithJSON: _autoLinkWithJSON__WEBPACK_IMPORTED_MODULE_6__["default"],
+  configs: _configs__WEBPACK_IMPORTED_MODULE_7__["default"],
+  convertUnicodeIndices: _convertUnicodeIndices__WEBPACK_IMPORTED_MODULE_8__["default"],
+  extractCashtags: _extractCashtags__WEBPACK_IMPORTED_MODULE_9__["default"],
+  extractCashtagsWithIndices: _extractCashtagsWithIndices__WEBPACK_IMPORTED_MODULE_10__["default"],
+  extractEntitiesWithIndices: _extractEntitiesWithIndices__WEBPACK_IMPORTED_MODULE_11__["default"],
+  extractHashtags: _extractHashtags__WEBPACK_IMPORTED_MODULE_12__["default"],
+  extractHashtagsWithIndices: _extractHashtagsWithIndices__WEBPACK_IMPORTED_MODULE_13__["default"],
+  extractHtmlAttrsFromOptions: _extractHtmlAttrsFromOptions__WEBPACK_IMPORTED_MODULE_14__["default"],
+  extractMentions: _extractMentions__WEBPACK_IMPORTED_MODULE_15__["default"],
+  extractMentionsOrListsWithIndices: _extractMentionsOrListsWithIndices__WEBPACK_IMPORTED_MODULE_16__["default"],
+  extractMentionsWithIndices: _extractMentionsWithIndices__WEBPACK_IMPORTED_MODULE_17__["default"],
+  extractReplies: _extractReplies__WEBPACK_IMPORTED_MODULE_18__["default"],
+  extractUrls: _extractUrls__WEBPACK_IMPORTED_MODULE_19__["default"],
+  extractUrlsWithIndices: _extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_20__["default"],
+  getTweetLength: _getTweetLength__WEBPACK_IMPORTED_MODULE_21__["default"],
+  getUnicodeTextLength: _getUnicodeTextLength__WEBPACK_IMPORTED_MODULE_22__["default"],
+  hasInvalidCharacters: _hasInvalidCharacters__WEBPACK_IMPORTED_MODULE_23__["default"],
+  hitHighlight: _hitHighlight__WEBPACK_IMPORTED_MODULE_24__["default"],
+  htmlEscape: _htmlEscape__WEBPACK_IMPORTED_MODULE_25__["default"],
+  isInvalidTweet: _isInvalidTweet__WEBPACK_IMPORTED_MODULE_26__["default"],
+  isValidHashtag: _isValidHashtag__WEBPACK_IMPORTED_MODULE_27__["default"],
+  isValidList: _isValidList__WEBPACK_IMPORTED_MODULE_28__["default"],
+  isValidTweetText: _isValidTweetText__WEBPACK_IMPORTED_MODULE_29__["default"],
+  isValidUrl: _isValidUrl__WEBPACK_IMPORTED_MODULE_30__["default"],
+  isValidUsername: _isValidUsername__WEBPACK_IMPORTED_MODULE_31__["default"],
+  linkTextWithEntity: _linkTextWithEntity__WEBPACK_IMPORTED_MODULE_32__["default"],
+  linkToCashtag: _linkToCashtag__WEBPACK_IMPORTED_MODULE_33__["default"],
+  linkToHashtag: _linkToHashtag__WEBPACK_IMPORTED_MODULE_34__["default"],
+  linkToMentionAndList: _linkToMentionAndList__WEBPACK_IMPORTED_MODULE_35__["default"],
+  linkToText: _linkToText__WEBPACK_IMPORTED_MODULE_36__["default"],
+  linkToTextWithSymbol: _linkToTextWithSymbol__WEBPACK_IMPORTED_MODULE_37__["default"],
+  linkToUrl: _linkToUrl__WEBPACK_IMPORTED_MODULE_38__["default"],
+  modifyIndicesFromUTF16ToUnicode: _modifyIndicesFromUTF16ToUnicode__WEBPACK_IMPORTED_MODULE_39__["default"],
+  modifyIndicesFromUnicodeToUTF16: _modifyIndicesFromUnicodeToUTF16__WEBPACK_IMPORTED_MODULE_40__["default"],
+  regexen: _regexp_index__WEBPACK_IMPORTED_MODULE_41__["default"],
+  removeOverlappingEntities: _removeOverlappingEntities__WEBPACK_IMPORTED_MODULE_42__["default"],
+  parseTweet: _parseTweet__WEBPACK_IMPORTED_MODULE_43__["default"],
+  splitTags: _splitTags__WEBPACK_IMPORTED_MODULE_44__["default"],
+  standardizeIndices: _standardizeIndices__WEBPACK_IMPORTED_MODULE_45__["default"],
+  tagAttrs: _tagAttrs__WEBPACK_IMPORTED_MODULE_46__["default"]
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/isInvalidTweet.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/isInvalidTweet.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_object_define_property__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.object.define-property */ "./node_modules/core-js/modules/es6.object.define-property.js");
+/* harmony import */ var core_js_modules_es6_object_define_property__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_define_property__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_object_define_properties__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.object.define-properties */ "./node_modules/core-js/modules/es6.object.define-properties.js");
+/* harmony import */ var core_js_modules_es6_object_define_properties__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_define_properties__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es7_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es7.object.get-own-property-descriptors */ "./node_modules/core-js/modules/es7.object.get-own-property-descriptors.js");
+/* harmony import */ var core_js_modules_es7_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es7_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var core_js_modules_es6_array_for_each__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es6.array.for-each */ "./node_modules/core-js/modules/es6.array.for-each.js");
+/* harmony import */ var core_js_modules_es6_array_for_each__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_for_each__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var core_js_modules_es6_array_filter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es6.array.filter */ "./node_modules/core-js/modules/es6.array.filter.js");
+/* harmony import */ var core_js_modules_es6_array_filter__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_filter__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var core_js_modules_es6_symbol__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/es6.symbol */ "./node_modules/core-js/modules/es6.symbol.js");
+/* harmony import */ var core_js_modules_es6_symbol__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_symbol__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! core-js/modules/web.dom.iterable */ "./node_modules/core-js/modules/web.dom.iterable.js");
+/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! core-js/modules/es6.array.iterator */ "./node_modules/core-js/modules/es6.array.iterator.js");
+/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var core_js_modules_es6_object_to_string__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! core-js/modules/es6.object.to-string */ "./node_modules/core-js/modules/es6.object.to-string.js");
+/* harmony import */ var core_js_modules_es6_object_to_string__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_to_string__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! core-js/modules/es6.object.keys */ "./node_modules/core-js/modules/es6.object.keys.js");
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _configs__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./configs */ "./node_modules/twitter-text/dist/esm/configs.js");
+/* harmony import */ var _getTweetLength__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./getTweetLength */ "./node_modules/twitter-text/dist/esm/getTweetLength.js");
+/* harmony import */ var _hasInvalidCharacters__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./hasInvalidCharacters */ "./node_modules/twitter-text/dist/esm/hasInvalidCharacters.js");
+
+
+
+
+
+
+
+
+
+
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_10___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _configs__WEBPACK_IMPORTED_MODULE_11__["default"].defaults;
+
+  if (!text) {
+    return 'empty';
+  }
+
+  var mergedOptions = _objectSpread({}, _configs__WEBPACK_IMPORTED_MODULE_11__["default"].defaults, {}, options);
+
+  var maxLength = mergedOptions.maxWeightedTweetLength; // Determine max length independent of URL length
+
+  if (Object(_getTweetLength__WEBPACK_IMPORTED_MODULE_12__["default"])(text, mergedOptions) > maxLength) {
+    return 'too_long';
+  }
+
+  if (Object(_hasInvalidCharacters__WEBPACK_IMPORTED_MODULE_13__["default"])(text)) {
+    return 'invalid_characters';
+  }
+
+  return false;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/isValidHashtag.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/isValidHashtag.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extractHashtags__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extractHashtags */ "./node_modules/twitter-text/dist/esm/extractHashtags.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (hashtag) {
+  if (!hashtag) {
+    return false;
+  }
+
+  var extracted = Object(_extractHashtags__WEBPACK_IMPORTED_MODULE_0__["default"])(hashtag); // Should extract the hashtag minus the # sign, hence the .slice(1)
+
+  return extracted.length === 1 && extracted[0] === hashtag.slice(1);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/isValidList.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/isValidList.js ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _regexp_validMentionOrList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./regexp/validMentionOrList */ "./node_modules/twitter-text/dist/esm/regexp/validMentionOrList.js");
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+var VALID_LIST_RE = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__["default"])(/^#{validMentionOrList}$/, {
+  validMentionOrList: _regexp_validMentionOrList__WEBPACK_IMPORTED_MODULE_2__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (function (usernameList) {
+  var match = usernameList.match(VALID_LIST_RE); // Must have matched and had nothing before or after
+
+  return !!(match && match[1] == '' && match[4]);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/isValidTweetText.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/isValidTweetText.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _isInvalidTweet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isInvalidTweet */ "./node_modules/twitter-text/dist/esm/isInvalidTweet.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, options) {
+  return !Object(_isInvalidTweet__WEBPACK_IMPORTED_MODULE_0__["default"])(text, options);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/isValidUrl.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/isValidUrl.js ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.constructor */ "./node_modules/core-js/modules/es6.regexp.constructor.js");
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _regexp_validateUrlAuthority__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./regexp/validateUrlAuthority */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlAuthority.js");
+/* harmony import */ var _regexp_validateUrlFragment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./regexp/validateUrlFragment */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlFragment.js");
+/* harmony import */ var _regexp_validateUrlPath__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./regexp/validateUrlPath */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPath.js");
+/* harmony import */ var _regexp_validateUrlQuery__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./regexp/validateUrlQuery */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlQuery.js");
+/* harmony import */ var _regexp_validateUrlScheme__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./regexp/validateUrlScheme */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlScheme.js");
+/* harmony import */ var _regexp_validateUrlUnencoded__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./regexp/validateUrlUnencoded */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnencoded.js");
+/* harmony import */ var _regexp_validateUrlUnicodeAuthority__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./regexp/validateUrlUnicodeAuthority */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeAuthority.js");
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+
+
+
+function isValidMatch(string, regex, optional) {
+  if (!optional) {
+    // RegExp["$&"] is the text of the last match
+    // blank strings are ok, but are falsy, so we check stringiness instead of truthiness
+    return typeof string === 'string' && string.match(regex) && RegExp['$&'] === string;
+  } // RegExp["$&"] is the text of the last match
+
+
+  return !string || string.match(regex) && RegExp['$&'] === string;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (function (url, unicodeDomains, requireProtocol) {
+  if (unicodeDomains == null) {
+    unicodeDomains = true;
+  }
+
+  if (requireProtocol == null) {
+    requireProtocol = true;
+  }
+
+  if (!url) {
+    return false;
+  }
+
+  var urlParts = url.match(_regexp_validateUrlUnencoded__WEBPACK_IMPORTED_MODULE_7__["default"]);
+
+  if (!urlParts || urlParts[0] !== url) {
+    return false;
+  }
+
+  var scheme = urlParts[1],
+      authority = urlParts[2],
+      path = urlParts[3],
+      query = urlParts[4],
+      fragment = urlParts[5];
+
+  if (!((!requireProtocol || isValidMatch(scheme, _regexp_validateUrlScheme__WEBPACK_IMPORTED_MODULE_6__["default"]) && scheme.match(/^https?$/i)) && isValidMatch(path, _regexp_validateUrlPath__WEBPACK_IMPORTED_MODULE_4__["default"]) && isValidMatch(query, _regexp_validateUrlQuery__WEBPACK_IMPORTED_MODULE_5__["default"], true) && isValidMatch(fragment, _regexp_validateUrlFragment__WEBPACK_IMPORTED_MODULE_3__["default"], true))) {
+    return false;
+  }
+
+  return unicodeDomains && isValidMatch(authority, _regexp_validateUrlUnicodeAuthority__WEBPACK_IMPORTED_MODULE_8__["default"]) || !unicodeDomains && isValidMatch(authority, _regexp_validateUrlAuthority__WEBPACK_IMPORTED_MODULE_2__["default"]);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/isValidUsername.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/isValidUsername.js ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extractMentions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extractMentions */ "./node_modules/twitter-text/dist/esm/extractMentions.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (username) {
+  if (!username) {
+    return false;
+  }
+
+  var extracted = Object(_extractMentions__WEBPACK_IMPORTED_MODULE_0__["default"])(username); // Should extract the username minus the @ sign, hence the .slice(1)
+
+  return extracted.length === 1 && extracted[0] === username.slice(1);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/lib/clone.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/lib/clone.js ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+/* harmony default export */ __webpack_exports__["default"] = (function (o) {
+  var r = {};
+
+  for (var k in o) {
+    if (o.hasOwnProperty(k)) {
+      r[k] = o[k];
+    }
+  }
+
+  return r;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/lib/convertUnicodeIndices.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/lib/convertUnicodeIndices.js ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.sort */ "./node_modules/core-js/modules/es6.array.sort.js");
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0__);
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/**
+ * Copied from https://github.com/twitter/twitter-text/blob/master/js/twitter-text.js
+ */
+var convertUnicodeIndices = function convertUnicodeIndices(text, entities, indicesInUTF16) {
+  if (entities.length === 0) {
+    return;
+  }
+
+  var charIndex = 0;
+  var codePointIndex = 0; // sort entities by start index
+
+  entities.sort(function (a, b) {
+    return a.indices[0] - b.indices[0];
+  });
+  var entityIndex = 0;
+  var entity = entities[0];
+
+  while (charIndex < text.length) {
+    if (entity.indices[0] === (indicesInUTF16 ? charIndex : codePointIndex)) {
+      var len = entity.indices[1] - entity.indices[0];
+      entity.indices[0] = indicesInUTF16 ? codePointIndex : charIndex;
+      entity.indices[1] = entity.indices[0] + len;
+      entityIndex++;
+
+      if (entityIndex === entities.length) {
+        // no more entity
+        break;
+      }
+
+      entity = entities[entityIndex];
+    }
+
+    var c = text.charCodeAt(charIndex);
+
+    if (c >= 0xd800 && c <= 0xdbff && charIndex < text.length - 1) {
+      // Found high surrogate char
+      c = text.charCodeAt(charIndex + 1);
+
+      if (c >= 0xdc00 && c <= 0xdfff) {
+        // Found surrogate pair
+        charIndex++;
+      }
+    }
+
+    codePointIndex++;
+    charIndex++;
+  }
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (convertUnicodeIndices);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/lib/getCharacterWeight.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/lib/getCharacterWeight.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_array_is_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.is-array */ "./node_modules/core-js/modules/es6.array.is-array.js");
+/* harmony import */ var core_js_modules_es6_array_is_array__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_is_array__WEBPACK_IMPORTED_MODULE_0__);
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var getCharacterWeight = function getCharacterWeight(ch, options) {
+  var defaultWeight = options.defaultWeight,
+      ranges = options.ranges;
+  var weight = defaultWeight;
+  var chCodePoint = ch.charCodeAt(0);
+
+  if (Array.isArray(ranges)) {
+    for (var i = 0, length = ranges.length; i < length; i++) {
+      var currRange = ranges[i];
+
+      if (chCodePoint >= currRange.start && chCodePoint <= currRange.end) {
+        weight = currRange.weight;
+        break;
+      }
+    }
+  }
+
+  return weight;
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (getCharacterWeight);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/lib/idna.js":
+/*!********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/lib/idna.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_split__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.split */ "./node_modules/core-js/modules/es6.regexp.split.js");
+/* harmony import */ var core_js_modules_es6_regexp_split__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_split__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var punycode__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! punycode */ "./node_modules/node-libs-browser/node_modules/punycode/punycode.js");
+/* harmony import */ var punycode__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(punycode__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _regexp_validAsciiDomain__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../regexp/validAsciiDomain */ "./node_modules/twitter-text/dist/esm/regexp/validAsciiDomain.js");
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+var MAX_DOMAIN_LABEL_LENGTH = 63;
+var PUNYCODE_ENCODED_DOMAIN_PREFIX = 'xn--'; // This is an extremely lightweight implementation of domain name validation according to RFC 3490
+// Our regexes handle most of the cases well enough
+// See https://tools.ietf.org/html/rfc3490#section-4.1 for details
+
+var idna = {
+  toAscii: function toAscii(domain) {
+    if (domain.substring(0, 4) === PUNYCODE_ENCODED_DOMAIN_PREFIX && !domain.match(_regexp_validAsciiDomain__WEBPACK_IMPORTED_MODULE_3__["default"])) {
+      // Punycode encoded url cannot contain non ASCII characters
+      return;
+    }
+
+    var labels = domain.split('.');
+
+    for (var i = 0; i < labels.length; i++) {
+      var label = labels[i];
+      var punycodeEncodedLabel = punycode__WEBPACK_IMPORTED_MODULE_2___default.a.toASCII(label);
+
+      if (punycodeEncodedLabel.length < 1 || punycodeEncodedLabel.length > MAX_DOMAIN_LABEL_LENGTH) {
+        // DNS label has invalid length
+        return;
+      }
+    }
+
+    return labels.join('.');
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (idna);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/lib/regexSupplant.js ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.constructor */ "./node_modules/core-js/modules/es6.regexp.constructor.js");
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es6.array.index-of */ "./node_modules/core-js/modules/es6.array.index-of.js");
+/* harmony import */ var core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+// Builds a RegExp
+/* harmony default export */ __webpack_exports__["default"] = (function (regex, map, flags) {
+  flags = flags || '';
+
+  if (typeof regex !== 'string') {
+    if (regex.global && flags.indexOf('g') < 0) {
+      flags += 'g';
+    }
+
+    if (regex.ignoreCase && flags.indexOf('i') < 0) {
+      flags += 'i';
+    }
+
+    if (regex.multiline && flags.indexOf('m') < 0) {
+      flags += 'm';
+    }
+
+    regex = regex.source;
+  }
+
+  return new RegExp(regex.replace(/#\{(\w+)\}/g, function (match, name) {
+    var newRegex = map[name] || '';
+
+    if (typeof newRegex !== 'string') {
+      newRegex = newRegex.source;
+    }
+
+    return newRegex;
+  }), flags);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/lib/stringSupplant.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/lib/stringSupplant.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+// simple string interpolation
+/* harmony default export */ __webpack_exports__["default"] = (function (str, map) {
+  return str.replace(/#\{(\w+)\}/g, function (match, name) {
+    return map[name] || '';
+  });
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/linkTextWithEntity.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/linkTextWithEntity.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.array.index-of */ "./node_modules/core-js/modules/es6.array.index-of.js");
+/* harmony import */ var core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_index_of__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _htmlEscape__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./htmlEscape */ "./node_modules/twitter-text/dist/esm/htmlEscape.js");
+/* harmony import */ var _lib_stringSupplant__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./lib/stringSupplant */ "./node_modules/twitter-text/dist/esm/lib/stringSupplant.js");
+
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (entity, options) {
+  var displayUrl = entity.display_url;
+  var expandedUrl = entity.expanded_url; // Goal: If a user copies and pastes a tweet containing t.co'ed link, the resulting paste
+  // should contain the full original URL (expanded_url), not the display URL.
+  //
+  // Method: Whenever possible, we actually emit HTML that contains expanded_url, and use
+  // font-size:0 to hide those parts that should not be displayed (because they are not part of display_url).
+  // Elements with font-size:0 get copied even though they are not visible.
+  // Note that display:none doesn't work here. Elements with display:none don't get copied.
+  //
+  // Additionally, we want to *display* ellipses, but we don't want them copied.  To make this happen we
+  // wrap the ellipses in a tco-ellipsis class and provide an onCopy handler that sets display:none on
+  // everything with the tco-ellipsis class.
+  //
+  // Exception: pic.twitter.com images, for which expandedUrl = "https://twitter.com/#!/username/status/1234/photo/1
+  // For those URLs, display_url is not a substring of expanded_url, so we don't do anything special to render the elided parts.
+  // For a pic.twitter.com URL, the only elided part will be the "https://", so this is fine.
+
+  var displayUrlSansEllipses = displayUrl.replace(/…/g, ''); // We have to disregard ellipses for matching
+  // Note: we currently only support eliding parts of the URL at the beginning or the end.
+  // Eventually we may want to elide parts of the URL in the *middle*.  If so, this code will
+  // become more complicated.  We will probably want to create a regexp out of display URL,
+  // replacing every ellipsis with a ".*".
+
+  if (expandedUrl.indexOf(displayUrlSansEllipses) != -1) {
+    var displayUrlIndex = expandedUrl.indexOf(displayUrlSansEllipses);
+    var v = {
+      displayUrlSansEllipses: displayUrlSansEllipses,
+      // Portion of expandedUrl that precedes the displayUrl substring
+      beforeDisplayUrl: expandedUrl.substr(0, displayUrlIndex),
+      // Portion of expandedUrl that comes after displayUrl
+      afterDisplayUrl: expandedUrl.substr(displayUrlIndex + displayUrlSansEllipses.length),
+      precedingEllipsis: displayUrl.match(/^…/) ? '…' : '',
+      followingEllipsis: displayUrl.match(/…$/) ? '…' : ''
+    };
+
+    for (var k in v) {
+      if (v.hasOwnProperty(k)) {
+        v[k] = Object(_htmlEscape__WEBPACK_IMPORTED_MODULE_3__["default"])(v[k]);
+      }
+    } // As an example: The user tweets "hi http://longdomainname.com/foo"
+    // This gets shortened to "hi http://t.co/xyzabc", with display_url = "…nname.com/foo"
+    // This will get rendered as:
+    // <span class='tco-ellipsis'> <!-- This stuff should get displayed but not copied -->
+    //   …
+    //   <!-- There's a chance the onCopy event handler might not fire. In case that happens,
+    //        we include an &nbsp; here so that the … doesn't bump up against the URL and ruin it.
+    //        The &nbsp; is inside the tco-ellipsis span so that when the onCopy handler *does*
+    //        fire, it doesn't get copied.  Otherwise the copied text would have two spaces in a row,
+    //        e.g. "hi  http://longdomainname.com/foo".
+    //   <span style='font-size:0'>&nbsp;</span>
+    // </span>
+    // <span style='font-size:0'>  <!-- This stuff should get copied but not displayed -->
+    //   http://longdomai
+    // </span>
+    // <span class='js-display-url'> <!-- This stuff should get displayed *and* copied -->
+    //   nname.com/foo
+    // </span>
+    // <span class='tco-ellipsis'> <!-- This stuff should get displayed but not copied -->
+    //   <span style='font-size:0'>&nbsp;</span>
+    //   …
+    // </span>
+
+
+    v['invisible'] = options.invisibleTagAttrs;
+    return Object(_lib_stringSupplant__WEBPACK_IMPORTED_MODULE_4__["default"])("<span class='tco-ellipsis'>#{precedingEllipsis}<span #{invisible}>&nbsp;</span></span><span #{invisible}>#{beforeDisplayUrl}</span><span class='js-display-url'>#{displayUrlSansEllipses}</span><span #{invisible}>#{afterDisplayUrl}</span><span class='tco-ellipsis'><span #{invisible}>&nbsp;</span>#{followingEllipsis}</span>", v);
+  }
+
+  return displayUrl;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/linkToCashtag.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/linkToCashtag.js ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_clone__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/clone */ "./node_modules/twitter-text/dist/esm/lib/clone.js");
+/* harmony import */ var _htmlEscape__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./htmlEscape */ "./node_modules/twitter-text/dist/esm/htmlEscape.js");
+/* harmony import */ var _linkToTextWithSymbol__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./linkToTextWithSymbol */ "./node_modules/twitter-text/dist/esm/linkToTextWithSymbol.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (entity, text, options) {
+  var cashtag = Object(_htmlEscape__WEBPACK_IMPORTED_MODULE_1__["default"])(entity.cashtag);
+  var attrs = Object(_lib_clone__WEBPACK_IMPORTED_MODULE_0__["default"])(options.htmlAttrs || {});
+  attrs.href = options.cashtagUrlBase + cashtag;
+  attrs.title = "$".concat(cashtag);
+  attrs['class'] = options.cashtagClass;
+
+  if (options.targetBlank) {
+    attrs.target = '_blank';
+  }
+
+  return Object(_linkToTextWithSymbol__WEBPACK_IMPORTED_MODULE_2__["default"])(entity, '$', cashtag, attrs, options);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/linkToHashtag.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/linkToHashtag.js ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_clone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lib/clone */ "./node_modules/twitter-text/dist/esm/lib/clone.js");
+/* harmony import */ var _htmlEscape__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./htmlEscape */ "./node_modules/twitter-text/dist/esm/htmlEscape.js");
+/* harmony import */ var _regexp_rtlChars__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./regexp/rtlChars */ "./node_modules/twitter-text/dist/esm/regexp/rtlChars.js");
+/* harmony import */ var _linkToTextWithSymbol__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./linkToTextWithSymbol */ "./node_modules/twitter-text/dist/esm/linkToTextWithSymbol.js");
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (entity, text, options) {
+  var hash = text.substring(entity.indices[0], entity.indices[0] + 1);
+  var hashtag = Object(_htmlEscape__WEBPACK_IMPORTED_MODULE_2__["default"])(entity.hashtag);
+  var attrs = Object(_lib_clone__WEBPACK_IMPORTED_MODULE_1__["default"])(options.htmlAttrs || {});
+  attrs.href = options.hashtagUrlBase + hashtag;
+  attrs.title = "#".concat(hashtag);
+  attrs['class'] = options.hashtagClass;
+
+  if (hashtag.charAt(0).match(_regexp_rtlChars__WEBPACK_IMPORTED_MODULE_3__["default"])) {
+    attrs['class'] += ' rtl';
+  }
+
+  if (options.targetBlank) {
+    attrs.target = '_blank';
+  }
+
+  return Object(_linkToTextWithSymbol__WEBPACK_IMPORTED_MODULE_4__["default"])(entity, hash, hashtag, attrs, options);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/linkToMentionAndList.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/linkToMentionAndList.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_clone__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/clone */ "./node_modules/twitter-text/dist/esm/lib/clone.js");
+/* harmony import */ var _htmlEscape__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./htmlEscape */ "./node_modules/twitter-text/dist/esm/htmlEscape.js");
+/* harmony import */ var _linkToTextWithSymbol__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./linkToTextWithSymbol */ "./node_modules/twitter-text/dist/esm/linkToTextWithSymbol.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (entity, text, options) {
+  var at = text.substring(entity.indices[0], entity.indices[0] + 1);
+  var user = Object(_htmlEscape__WEBPACK_IMPORTED_MODULE_1__["default"])(entity.screenName);
+  var slashListname = Object(_htmlEscape__WEBPACK_IMPORTED_MODULE_1__["default"])(entity.listSlug);
+  var isList = entity.listSlug && !options.suppressLists;
+  var attrs = Object(_lib_clone__WEBPACK_IMPORTED_MODULE_0__["default"])(options.htmlAttrs || {});
+  attrs['class'] = isList ? options.listClass : options.usernameClass;
+  attrs.href = isList ? options.listUrlBase + user + slashListname : options.usernameUrlBase + user;
+
+  if (!isList && !options.suppressDataScreenName) {
+    attrs['data-screen-name'] = user;
+  }
+
+  if (options.targetBlank) {
+    attrs.target = '_blank';
+  }
+
+  return Object(_linkToTextWithSymbol__WEBPACK_IMPORTED_MODULE_2__["default"])(entity, at, isList ? user + slashListname : user, attrs, options);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/linkToText.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/linkToText.js ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_stringSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/stringSupplant */ "./node_modules/twitter-text/dist/esm/lib/stringSupplant.js");
+/* harmony import */ var _tagAttrs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tagAttrs */ "./node_modules/twitter-text/dist/esm/tagAttrs.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (entity, text, attributes, options) {
+  if (!options.suppressNoFollow) {
+    attributes.rel = 'nofollow';
+  } // if linkAttributeBlock is specified, call it to modify the attributes
+
+
+  if (options.linkAttributeBlock) {
+    options.linkAttributeBlock(entity, attributes);
+  } // if linkTextBlock is specified, call it to get a new/modified link text
+
+
+  if (options.linkTextBlock) {
+    text = options.linkTextBlock(entity, text);
+  }
+
+  var d = {
+    text: text,
+    attr: Object(_tagAttrs__WEBPACK_IMPORTED_MODULE_1__["default"])(attributes)
+  };
+  return Object(_lib_stringSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])('<a#{attr}>#{text}</a>', d);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/linkToTextWithSymbol.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/linkToTextWithSymbol.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _regexp_atSigns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./regexp/atSigns */ "./node_modules/twitter-text/dist/esm/regexp/atSigns.js");
+/* harmony import */ var _htmlEscape__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./htmlEscape */ "./node_modules/twitter-text/dist/esm/htmlEscape.js");
+/* harmony import */ var _linkToText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./linkToText */ "./node_modules/twitter-text/dist/esm/linkToText.js");
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (entity, symbol, text, attributes, options) {
+  var taggedSymbol = options.symbolTag ? "<".concat(options.symbolTag, ">").concat(symbol, "</").concat(options.symbolTag, ">") : symbol;
+  text = Object(_htmlEscape__WEBPACK_IMPORTED_MODULE_2__["default"])(text);
+  var taggedText = options.textWithSymbolTag ? "<".concat(options.textWithSymbolTag, ">").concat(text, "</").concat(options.textWithSymbolTag, ">") : text;
+
+  if (options.usernameIncludeSymbol || !symbol.match(_regexp_atSigns__WEBPACK_IMPORTED_MODULE_1__["default"])) {
+    return Object(_linkToText__WEBPACK_IMPORTED_MODULE_3__["default"])(entity, taggedSymbol + taggedText, attributes, options);
+  } else {
+    return taggedSymbol + Object(_linkToText__WEBPACK_IMPORTED_MODULE_3__["default"])(entity, taggedText, attributes, options);
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/linkToUrl.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/linkToUrl.js ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
+/* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_clone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lib/clone */ "./node_modules/twitter-text/dist/esm/lib/clone.js");
+/* harmony import */ var _htmlEscape__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./htmlEscape */ "./node_modules/twitter-text/dist/esm/htmlEscape.js");
+/* harmony import */ var _linkToText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./linkToText */ "./node_modules/twitter-text/dist/esm/linkToText.js");
+/* harmony import */ var _linkTextWithEntity__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./linkTextWithEntity */ "./node_modules/twitter-text/dist/esm/linkTextWithEntity.js");
+/* harmony import */ var _regexp_urlHasProtocol__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./regexp/urlHasProtocol */ "./node_modules/twitter-text/dist/esm/regexp/urlHasProtocol.js");
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (entity, text, options) {
+  var url = entity.url;
+  var displayUrl = url;
+  var linkText = Object(_htmlEscape__WEBPACK_IMPORTED_MODULE_2__["default"])(displayUrl); // If the caller passed a urlEntities object (provided by a Twitter API
+  // response with include_entities=true), we use that to render the display_url
+  // for each URL instead of it's underlying t.co URL.
+
+  var urlEntity = options.urlEntities && options.urlEntities[url] || entity;
+
+  if (urlEntity.display_url) {
+    linkText = Object(_linkTextWithEntity__WEBPACK_IMPORTED_MODULE_4__["default"])(urlEntity, options);
+  }
+
+  var attrs = Object(_lib_clone__WEBPACK_IMPORTED_MODULE_1__["default"])(options.htmlAttrs || {});
+
+  if (!url.match(_regexp_urlHasProtocol__WEBPACK_IMPORTED_MODULE_5__["default"])) {
+    url = "http://".concat(url);
+  }
+
+  attrs.href = url;
+
+  if (options.targetBlank) {
+    attrs.target = '_blank';
+  } // set class only if urlClass is specified.
+
+
+  if (options.urlClass) {
+    attrs['class'] = options.urlClass;
+  } // set target only if urlTarget is specified.
+
+
+  if (options.urlTarget) {
+    attrs.target = options.urlTarget;
+  }
+
+  if (!options.title && urlEntity.display_url) {
+    attrs.title = urlEntity.expanded_url;
+  }
+
+  return Object(_linkToText__WEBPACK_IMPORTED_MODULE_3__["default"])(entity, linkText, attrs, options);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/modifyIndicesFromUTF16ToUnicode.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/modifyIndicesFromUTF16ToUnicode.js ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_convertUnicodeIndices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/convertUnicodeIndices */ "./node_modules/twitter-text/dist/esm/lib/convertUnicodeIndices.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, entities) {
+  Object(_lib_convertUnicodeIndices__WEBPACK_IMPORTED_MODULE_0__["default"])(text, entities, true);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/modifyIndicesFromUnicodeToUTF16.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/modifyIndicesFromUnicodeToUTF16.js ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_convertUnicodeIndices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/convertUnicodeIndices */ "./node_modules/twitter-text/dist/esm/lib/convertUnicodeIndices.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+/* harmony default export */ __webpack_exports__["default"] = (function (text, entities) {
+  Object(_lib_convertUnicodeIndices__WEBPACK_IMPORTED_MODULE_0__["default"])(text, entities, false);
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/parseTweet.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/parseTweet.js ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_array_reduce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.reduce */ "./node_modules/core-js/modules/es6.array.reduce.js");
+/* harmony import */ var core_js_modules_es6_array_reduce__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_reduce__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/web.dom.iterable */ "./node_modules/core-js/modules/web.dom.iterable.js");
+/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es6.array.iterator */ "./node_modules/core-js/modules/es6.array.iterator.js");
+/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var core_js_modules_es6_object_to_string__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es6.object.to-string */ "./node_modules/core-js/modules/es6.object.to-string.js");
+/* harmony import */ var core_js_modules_es6_object_to_string__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_to_string__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es6.object.keys */ "./node_modules/core-js/modules/es6.object.keys.js");
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _configs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./configs */ "./node_modules/twitter-text/dist/esm/configs.js");
+/* harmony import */ var _extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./extractUrlsWithIndices */ "./node_modules/twitter-text/dist/esm/extractUrlsWithIndices.js");
+/* harmony import */ var _lib_getCharacterWeight__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./lib/getCharacterWeight */ "./node_modules/twitter-text/dist/esm/lib/getCharacterWeight.js");
+/* harmony import */ var _hasInvalidCharacters__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./hasInvalidCharacters */ "./node_modules/twitter-text/dist/esm/hasInvalidCharacters.js");
+/* harmony import */ var _modifyIndicesFromUTF16ToUnicode__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modifyIndicesFromUTF16ToUnicode */ "./node_modules/twitter-text/dist/esm/modifyIndicesFromUTF16ToUnicode.js");
+/* harmony import */ var twemoji_parser__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! twemoji-parser */ "./node_modules/twemoji-parser/dist/index.js");
+/* harmony import */ var twemoji_parser__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(twemoji_parser__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _regexp_urlHasHttps__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./regexp/urlHasHttps */ "./node_modules/twitter-text/dist/esm/regexp/urlHasHttps.js");
+
+
+
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+ // TODO: WEB-19861 Replace with public package after it is open sourced
+
+
+
+/**
+ * [parseTweet description]
+ * @param  {string} text tweet text to parse
+ * @param  {Object} options config options to pass
+ * @return {Object} Fields in response described below:
+ *
+ * Response fields:
+ * weightedLength {int} the weighted length of tweet based on weights specified in the config
+ * valid {bool} If tweet is valid
+ * permillage {float} permillage of the tweet over the max length specified in config
+ * validRangeStart {int} beginning of valid text
+ * validRangeEnd {int} End index of valid part of the tweet text (inclusive) in utf16
+ * displayRangeStart {int} beginning index of display text
+ * displayRangeEnd {int} end index of display text (inclusive) in utf16
+ */
+
+var parseTweet = function parseTweet() {
+  var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _configs__WEBPACK_IMPORTED_MODULE_5__["default"].defaults;
+  var mergedOptions = Object.keys(options).length ? options : _configs__WEBPACK_IMPORTED_MODULE_5__["default"].defaults;
+  var defaultWeight = mergedOptions.defaultWeight,
+      emojiParsingEnabled = mergedOptions.emojiParsingEnabled,
+      scale = mergedOptions.scale,
+      maxWeightedTweetLength = mergedOptions.maxWeightedTweetLength,
+      transformedURLLength = mergedOptions.transformedURLLength;
+  var normalizedText = typeof String.prototype.normalize === 'function' ? text.normalize() : text; // Hash all entities by their startIndex for fast lookup
+
+  var urlEntitiesMap = transformEntitiesToHash(Object(_extractUrlsWithIndices__WEBPACK_IMPORTED_MODULE_6__["default"])(normalizedText));
+  var emojiEntitiesMap = emojiParsingEnabled ? transformEntitiesToHash(Object(twemoji_parser__WEBPACK_IMPORTED_MODULE_10__["parse"])(normalizedText)) : [];
+  var tweetLength = normalizedText.length;
+  var weightedLength = 0;
+  var validDisplayIndex = 0;
+  var valid = true; // Go through every character and calculate weight
+
+  for (var charIndex = 0; charIndex < tweetLength; charIndex++) {
+    // If a url begins at the specified index handle, add constant length
+    if (urlEntitiesMap[charIndex]) {
+      var _urlEntitiesMap$charI = urlEntitiesMap[charIndex],
+          url = _urlEntitiesMap$charI.url,
+          indices = _urlEntitiesMap$charI.indices;
+      weightedLength += transformedURLLength * scale;
+      charIndex += url.length - 1;
+    } else if (emojiParsingEnabled && emojiEntitiesMap[charIndex]) {
+      var _emojiEntitiesMap$cha = emojiEntitiesMap[charIndex],
+          emoji = _emojiEntitiesMap$cha.text,
+          _indices = _emojiEntitiesMap$cha.indices;
+      weightedLength += defaultWeight;
+      charIndex += emoji.length - 1;
+    } else {
+      charIndex += isSurrogatePair(normalizedText, charIndex) ? 1 : 0;
+      weightedLength += Object(_lib_getCharacterWeight__WEBPACK_IMPORTED_MODULE_7__["default"])(normalizedText.charAt(charIndex), mergedOptions);
+    } // Only test for validity of character if it is still valid
+
+
+    if (valid) {
+      valid = !Object(_hasInvalidCharacters__WEBPACK_IMPORTED_MODULE_8__["default"])(normalizedText.substring(charIndex, charIndex + 1));
+    }
+
+    if (valid && weightedLength <= maxWeightedTweetLength * scale) {
+      validDisplayIndex = charIndex;
+    }
+  }
+
+  weightedLength = weightedLength / scale;
+  valid = valid && weightedLength > 0 && weightedLength <= maxWeightedTweetLength;
+  var permillage = Math.floor(weightedLength / maxWeightedTweetLength * 1000);
+  var normalizationOffset = text.length - normalizedText.length;
+  validDisplayIndex += normalizationOffset;
+  return {
+    weightedLength: weightedLength,
+    valid: valid,
+    permillage: permillage,
+    validRangeStart: 0,
+    validRangeEnd: validDisplayIndex,
+    displayRangeStart: 0,
+    displayRangeEnd: text.length > 0 ? text.length - 1 : 0
+  };
+};
+
+var transformEntitiesToHash = function transformEntitiesToHash(entities) {
+  return entities.reduce(function (map, entity) {
+    map[entity.indices[0]] = entity;
+    return map;
+  }, {});
+};
+
+var isSurrogatePair = function isSurrogatePair(text, cIndex) {
+  // Test if a character is the beginning of a surrogate pair
+  if (cIndex < text.length - 1) {
+    var c = text.charCodeAt(cIndex);
+    var cNext = text.charCodeAt(cIndex + 1);
+    return 0xd800 <= c && c <= 0xdbff && 0xdc00 <= cNext && cNext <= 0xdfff;
+  }
+
+  return false;
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (parseTweet);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/astralLetterAndMarks.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/astralLetterAndMarks.js ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+// Generated from unicode_regex/unicode_regex_groups.scala, same as objective c's \p{L}\p{M}
+var astralLetterAndMarks = /\ud800[\udc00-\udc0b\udc0d-\udc26\udc28-\udc3a\udc3c\udc3d\udc3f-\udc4d\udc50-\udc5d\udc80-\udcfa\uddfd\ude80-\ude9c\udea0-\uded0\udee0\udf00-\udf1f\udf30-\udf40\udf42-\udf49\udf50-\udf7a\udf80-\udf9d\udfa0-\udfc3\udfc8-\udfcf]|\ud801[\udc00-\udc9d\udd00-\udd27\udd30-\udd63\ude00-\udf36\udf40-\udf55\udf60-\udf67]|\ud802[\udc00-\udc05\udc08\udc0a-\udc35\udc37\udc38\udc3c\udc3f-\udc55\udc60-\udc76\udc80-\udc9e\udd00-\udd15\udd20-\udd39\udd80-\uddb7\uddbe\uddbf\ude00-\ude03\ude05\ude06\ude0c-\ude13\ude15-\ude17\ude19-\ude33\ude38-\ude3a\ude3f\ude60-\ude7c\ude80-\ude9c\udec0-\udec7\udec9-\udee6\udf00-\udf35\udf40-\udf55\udf60-\udf72\udf80-\udf91]|\ud803[\udc00-\udc48]|\ud804[\udc00-\udc46\udc7f-\udcba\udcd0-\udce8\udd00-\udd34\udd50-\udd73\udd76\udd80-\uddc4\uddda\ude00-\ude11\ude13-\ude37\udeb0-\udeea\udf01-\udf03\udf05-\udf0c\udf0f\udf10\udf13-\udf28\udf2a-\udf30\udf32\udf33\udf35-\udf39\udf3c-\udf44\udf47\udf48\udf4b-\udf4d\udf57\udf5d-\udf63\udf66-\udf6c\udf70-\udf74]|\ud805[\udc80-\udcc5\udcc7\udd80-\uddb5\uddb8-\uddc0\ude00-\ude40\ude44\ude80-\udeb7]|\ud806[\udca0-\udcdf\udcff\udec0-\udef8]|\ud808[\udc00-\udf98]|\ud80c[\udc00-\udfff]|\ud80d[\udc00-\udc2e]|\ud81a[\udc00-\ude38\ude40-\ude5e\uded0-\udeed\udef0-\udef4\udf00-\udf36\udf40-\udf43\udf63-\udf77\udf7d-\udf8f]|\ud81b[\udf00-\udf44\udf50-\udf7e\udf8f-\udf9f]|\ud82c[\udc00\udc01]|\ud82f[\udc00-\udc6a\udc70-\udc7c\udc80-\udc88\udc90-\udc99\udc9d\udc9e]|\ud834[\udd65-\udd69\udd6d-\udd72\udd7b-\udd82\udd85-\udd8b\uddaa-\uddad\ude42-\ude44]|\ud835[\udc00-\udc54\udc56-\udc9c\udc9e\udc9f\udca2\udca5\udca6\udca9-\udcac\udcae-\udcb9\udcbb\udcbd-\udcc3\udcc5-\udd05\udd07-\udd0a\udd0d-\udd14\udd16-\udd1c\udd1e-\udd39\udd3b-\udd3e\udd40-\udd44\udd46\udd4a-\udd50\udd52-\udea5\udea8-\udec0\udec2-\udeda\udedc-\udefa\udefc-\udf14\udf16-\udf34\udf36-\udf4e\udf50-\udf6e\udf70-\udf88\udf8a-\udfa8\udfaa-\udfc2\udfc4-\udfcb]|\ud83a[\udc00-\udcc4\udcd0-\udcd6]|\ud83b[\ude00-\ude03\ude05-\ude1f\ude21\ude22\ude24\ude27\ude29-\ude32\ude34-\ude37\ude39\ude3b\ude42\ude47\ude49\ude4b\ude4d-\ude4f\ude51\ude52\ude54\ude57\ude59\ude5b\ude5d\ude5f\ude61\ude62\ude64\ude67-\ude6a\ude6c-\ude72\ude74-\ude77\ude79-\ude7c\ude7e\ude80-\ude89\ude8b-\ude9b\udea1-\udea3\udea5-\udea9\udeab-\udebb]|\ud840[\udc00-\udfff]|\ud841[\udc00-\udfff]|\ud842[\udc00-\udfff]|\ud843[\udc00-\udfff]|\ud844[\udc00-\udfff]|\ud845[\udc00-\udfff]|\ud846[\udc00-\udfff]|\ud847[\udc00-\udfff]|\ud848[\udc00-\udfff]|\ud849[\udc00-\udfff]|\ud84a[\udc00-\udfff]|\ud84b[\udc00-\udfff]|\ud84c[\udc00-\udfff]|\ud84d[\udc00-\udfff]|\ud84e[\udc00-\udfff]|\ud84f[\udc00-\udfff]|\ud850[\udc00-\udfff]|\ud851[\udc00-\udfff]|\ud852[\udc00-\udfff]|\ud853[\udc00-\udfff]|\ud854[\udc00-\udfff]|\ud855[\udc00-\udfff]|\ud856[\udc00-\udfff]|\ud857[\udc00-\udfff]|\ud858[\udc00-\udfff]|\ud859[\udc00-\udfff]|\ud85a[\udc00-\udfff]|\ud85b[\udc00-\udfff]|\ud85c[\udc00-\udfff]|\ud85d[\udc00-\udfff]|\ud85e[\udc00-\udfff]|\ud85f[\udc00-\udfff]|\ud860[\udc00-\udfff]|\ud861[\udc00-\udfff]|\ud862[\udc00-\udfff]|\ud863[\udc00-\udfff]|\ud864[\udc00-\udfff]|\ud865[\udc00-\udfff]|\ud866[\udc00-\udfff]|\ud867[\udc00-\udfff]|\ud868[\udc00-\udfff]|\ud869[\udc00-\uded6\udf00-\udfff]|\ud86a[\udc00-\udfff]|\ud86b[\udc00-\udfff]|\ud86c[\udc00-\udfff]|\ud86d[\udc00-\udf34\udf40-\udfff]|\ud86e[\udc00-\udc1d]|\ud87e[\udc00-\ude1d]|\udb40[\udd00-\uddef]/;
+/* harmony default export */ __webpack_exports__["default"] = (astralLetterAndMarks);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/astralNumerals.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/astralNumerals.js ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var astralNumerals = /\ud801[\udca0-\udca9]|\ud804[\udc66-\udc6f\udcf0-\udcf9\udd36-\udd3f\uddd0-\uddd9\udef0-\udef9]|\ud805[\udcd0-\udcd9\ude50-\ude59\udec0-\udec9]|\ud806[\udce0-\udce9]|\ud81a[\ude60-\ude69\udf50-\udf59]|\ud835[\udfce-\udfff]/;
+/* harmony default export */ __webpack_exports__["default"] = (astralNumerals);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/atSigns.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/atSigns.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var atSigns = /[@＠]/;
+/* harmony default export */ __webpack_exports__["default"] = (atSigns);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/bmpLetterAndMarks.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/bmpLetterAndMarks.js ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+// Generated from unicode_regex/unicode_regex_groups.scala, same as objective c's \p{L}\p{M}
+var bmpLetterAndMarks = /A-Za-z\xaa\xb5\xba\xc0-\xd6\xd8-\xf6\xf8-\u02c1\u02c6-\u02d1\u02e0-\u02e4\u02ec\u02ee\u0300-\u0374\u0376\u0377\u037a-\u037d\u037f\u0386\u0388-\u038a\u038c\u038e-\u03a1\u03a3-\u03f5\u03f7-\u0481\u0483-\u052f\u0531-\u0556\u0559\u0561-\u0587\u0591-\u05bd\u05bf\u05c1\u05c2\u05c4\u05c5\u05c7\u05d0-\u05ea\u05f0-\u05f2\u0610-\u061a\u0620-\u065f\u066e-\u06d3\u06d5-\u06dc\u06df-\u06e8\u06ea-\u06ef\u06fa-\u06fc\u06ff\u0710-\u074a\u074d-\u07b1\u07ca-\u07f5\u07fa\u0800-\u082d\u0840-\u085b\u08a0-\u08b2\u08e4-\u0963\u0971-\u0983\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bc-\u09c4\u09c7\u09c8\u09cb-\u09ce\u09d7\u09dc\u09dd\u09df-\u09e3\u09f0\u09f1\u0a01-\u0a03\u0a05-\u0a0a\u0a0f\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32\u0a33\u0a35\u0a36\u0a38\u0a39\u0a3c\u0a3e-\u0a42\u0a47\u0a48\u0a4b-\u0a4d\u0a51\u0a59-\u0a5c\u0a5e\u0a70-\u0a75\u0a81-\u0a83\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2\u0ab3\u0ab5-\u0ab9\u0abc-\u0ac5\u0ac7-\u0ac9\u0acb-\u0acd\u0ad0\u0ae0-\u0ae3\u0b01-\u0b03\u0b05-\u0b0c\u0b0f\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32\u0b33\u0b35-\u0b39\u0b3c-\u0b44\u0b47\u0b48\u0b4b-\u0b4d\u0b56\u0b57\u0b5c\u0b5d\u0b5f-\u0b63\u0b71\u0b82\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99\u0b9a\u0b9c\u0b9e\u0b9f\u0ba3\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bbe-\u0bc2\u0bc6-\u0bc8\u0bca-\u0bcd\u0bd0\u0bd7\u0c00-\u0c03\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c39\u0c3d-\u0c44\u0c46-\u0c48\u0c4a-\u0c4d\u0c55\u0c56\u0c58\u0c59\u0c60-\u0c63\u0c81-\u0c83\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbc-\u0cc4\u0cc6-\u0cc8\u0cca-\u0ccd\u0cd5\u0cd6\u0cde\u0ce0-\u0ce3\u0cf1\u0cf2\u0d01-\u0d03\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d-\u0d44\u0d46-\u0d48\u0d4a-\u0d4e\u0d57\u0d60-\u0d63\u0d7a-\u0d7f\u0d82\u0d83\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0dca\u0dcf-\u0dd4\u0dd6\u0dd8-\u0ddf\u0df2\u0df3\u0e01-\u0e3a\u0e40-\u0e4e\u0e81\u0e82\u0e84\u0e87\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa\u0eab\u0ead-\u0eb9\u0ebb-\u0ebd\u0ec0-\u0ec4\u0ec6\u0ec8-\u0ecd\u0edc-\u0edf\u0f00\u0f18\u0f19\u0f35\u0f37\u0f39\u0f3e-\u0f47\u0f49-\u0f6c\u0f71-\u0f84\u0f86-\u0f97\u0f99-\u0fbc\u0fc6\u1000-\u103f\u1050-\u108f\u109a-\u109d\u10a0-\u10c5\u10c7\u10cd\u10d0-\u10fa\u10fc-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u135d-\u135f\u1380-\u138f\u13a0-\u13f4\u1401-\u166c\u166f-\u167f\u1681-\u169a\u16a0-\u16ea\u16f1-\u16f8\u1700-\u170c\u170e-\u1714\u1720-\u1734\u1740-\u1753\u1760-\u176c\u176e-\u1770\u1772\u1773\u1780-\u17d3\u17d7\u17dc\u17dd\u180b-\u180d\u1820-\u1877\u1880-\u18aa\u18b0-\u18f5\u1900-\u191e\u1920-\u192b\u1930-\u193b\u1950-\u196d\u1970-\u1974\u1980-\u19ab\u19b0-\u19c9\u1a00-\u1a1b\u1a20-\u1a5e\u1a60-\u1a7c\u1a7f\u1aa7\u1ab0-\u1abe\u1b00-\u1b4b\u1b6b-\u1b73\u1b80-\u1baf\u1bba-\u1bf3\u1c00-\u1c37\u1c4d-\u1c4f\u1c5a-\u1c7d\u1cd0-\u1cd2\u1cd4-\u1cf6\u1cf8\u1cf9\u1d00-\u1df5\u1dfc-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fbc\u1fbe\u1fc2-\u1fc4\u1fc6-\u1fcc\u1fd0-\u1fd3\u1fd6-\u1fdb\u1fe0-\u1fec\u1ff2-\u1ff4\u1ff6-\u1ffc\u2071\u207f\u2090-\u209c\u20d0-\u20f0\u2102\u2107\u210a-\u2113\u2115\u2119-\u211d\u2124\u2126\u2128\u212a-\u212d\u212f-\u2139\u213c-\u213f\u2145-\u2149\u214e\u2183\u2184\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2ce4\u2ceb-\u2cf3\u2d00-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f\u2d7f-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2de0-\u2dff\u2e2f\u3005\u3006\u302a-\u302f\u3031-\u3035\u303b\u303c\u3041-\u3096\u3099\u309a\u309d-\u309f\u30a1-\u30fa\u30fc-\u30ff\u3105-\u312d\u3131-\u318e\u31a0-\u31ba\u31f0-\u31ff\u3400-\u4db5\u4e00-\u9fcc\ua000-\ua48c\ua4d0-\ua4fd\ua500-\ua60c\ua610-\ua61f\ua62a\ua62b\ua640-\ua672\ua674-\ua67d\ua67f-\ua69d\ua69f-\ua6e5\ua6f0\ua6f1\ua717-\ua71f\ua722-\ua788\ua78b-\ua78e\ua790-\ua7ad\ua7b0\ua7b1\ua7f7-\ua827\ua840-\ua873\ua880-\ua8c4\ua8e0-\ua8f7\ua8fb\ua90a-\ua92d\ua930-\ua953\ua960-\ua97c\ua980-\ua9c0\ua9cf\ua9e0-\ua9ef\ua9fa-\ua9fe\uaa00-\uaa36\uaa40-\uaa4d\uaa60-\uaa76\uaa7a-\uaac2\uaadb-\uaadd\uaae0-\uaaef\uaaf2-\uaaf6\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uab30-\uab5a\uab5c-\uab5f\uab64\uab65\uabc0-\uabea\uabec\uabed\uac00-\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\uf870-\uf87f\uf882\uf884-\uf89f\uf8b8\uf8c1-\uf8d6\uf900-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe00-\ufe0f\ufe20-\ufe2d\ufe70-\ufe74\ufe76-\ufefc\uff21-\uff3a\uff41-\uff5a\uff66-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc/;
+/* harmony default export */ __webpack_exports__["default"] = (bmpLetterAndMarks);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/bmpNumerals.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/bmpNumerals.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var bmpNumerals = /0-9\u0660-\u0669\u06f0-\u06f9\u07c0-\u07c9\u0966-\u096f\u09e6-\u09ef\u0a66-\u0a6f\u0ae6-\u0aef\u0b66-\u0b6f\u0be6-\u0bef\u0c66-\u0c6f\u0ce6-\u0cef\u0d66-\u0d6f\u0de6-\u0def\u0e50-\u0e59\u0ed0-\u0ed9\u0f20-\u0f29\u1040-\u1049\u1090-\u1099\u17e0-\u17e9\u1810-\u1819\u1946-\u194f\u19d0-\u19d9\u1a80-\u1a89\u1a90-\u1a99\u1b50-\u1b59\u1bb0-\u1bb9\u1c40-\u1c49\u1c50-\u1c59\ua620-\ua629\ua8d0-\ua8d9\ua900-\ua909\ua9d0-\ua9d9\ua9f0-\ua9f9\uaa50-\uaa59\uabf0-\uabf9\uff10-\uff19/;
+/* harmony default export */ __webpack_exports__["default"] = (bmpNumerals);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/cashtag.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/cashtag.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var cashtag = /[a-z]{1,6}(?:[._][a-z]{1,2})?/i;
+/* harmony default export */ __webpack_exports__["default"] = (cashtag);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/codePoint.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/codePoint.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var codePoint = /(?:[^\uD800-\uDFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF])/;
+/* harmony default export */ __webpack_exports__["default"] = (codePoint);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/cyrillicLettersAndMarks.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/cyrillicLettersAndMarks.js ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var cyrillicLettersAndMarks = /\u0400-\u04FF/;
+/* harmony default export */ __webpack_exports__["default"] = (cyrillicLettersAndMarks);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/directionalMarkersGroup.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/directionalMarkersGroup.js ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var directionalMarkersGroup = /\u202A-\u202E\u061C\u200E\u200F\u2066\u2067\u2068\u2069/;
+/* harmony default export */ __webpack_exports__["default"] = (directionalMarkersGroup);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/endHashtagMatch.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/endHashtagMatch.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _hashSigns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hashSigns */ "./node_modules/twitter-text/dist/esm/regexp/hashSigns.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+var endHashtagMatch = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__["default"])(/^(?:#{hashSigns}|:\/\/)/, {
+  hashSigns: _hashSigns__WEBPACK_IMPORTED_MODULE_0__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (endHashtagMatch);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/endMentionMatch.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/endMentionMatch.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _atSigns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./atSigns */ "./node_modules/twitter-text/dist/esm/regexp/atSigns.js");
+/* harmony import */ var _latinAccentChars__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./latinAccentChars */ "./node_modules/twitter-text/dist/esm/regexp/latinAccentChars.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+var endMentionMatch = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__["default"])(/^(?:#{atSigns}|[#{latinAccentChars}]|:\/\/)/, {
+  atSigns: _atSigns__WEBPACK_IMPORTED_MODULE_0__["default"],
+  latinAccentChars: _latinAccentChars__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (endMentionMatch);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/extractUrl.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/extractUrl.js ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validDomain__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validDomain */ "./node_modules/twitter-text/dist/esm/regexp/validDomain.js");
+/* harmony import */ var _validPortNumber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validPortNumber */ "./node_modules/twitter-text/dist/esm/regexp/validPortNumber.js");
+/* harmony import */ var _validUrlPath__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validUrlPath */ "./node_modules/twitter-text/dist/esm/regexp/validUrlPath.js");
+/* harmony import */ var _validUrlPrecedingChars__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./validUrlPrecedingChars */ "./node_modules/twitter-text/dist/esm/regexp/validUrlPrecedingChars.js");
+/* harmony import */ var _validUrlQueryChars__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./validUrlQueryChars */ "./node_modules/twitter-text/dist/esm/regexp/validUrlQueryChars.js");
+/* harmony import */ var _validUrlQueryEndingChars__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./validUrlQueryEndingChars */ "./node_modules/twitter-text/dist/esm/regexp/validUrlQueryEndingChars.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+
+
+var extractUrl = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])('(' + // $1 total match
+'(#{validUrlPrecedingChars})' + // $2 Preceeding chracter
+'(' + // $3 URL
+'(https?:\\/\\/)?' + // $4 Protocol (optional)
+'(#{validDomain})' + // $5 Domain(s)
+'(?::(#{validPortNumber}))?' + // $6 Port number (optional)
+'(\\/#{validUrlPath}*)?' + // $7 URL Path
+'(\\?#{validUrlQueryChars}*#{validUrlQueryEndingChars})?' + // $8 Query String
+')' + ')', {
+  validUrlPrecedingChars: _validUrlPrecedingChars__WEBPACK_IMPORTED_MODULE_4__["default"],
+  validDomain: _validDomain__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validPortNumber: _validPortNumber__WEBPACK_IMPORTED_MODULE_2__["default"],
+  validUrlPath: _validUrlPath__WEBPACK_IMPORTED_MODULE_3__["default"],
+  validUrlQueryChars: _validUrlQueryChars__WEBPACK_IMPORTED_MODULE_5__["default"],
+  validUrlQueryEndingChars: _validUrlQueryEndingChars__WEBPACK_IMPORTED_MODULE_6__["default"]
+}, 'gi');
+/* harmony default export */ __webpack_exports__["default"] = (extractUrl);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/hashSigns.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/hashSigns.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var hashSigns = /[#＃]/;
+/* harmony default export */ __webpack_exports__["default"] = (hashSigns);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/hashtagAlpha.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/hashtagAlpha.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _astralLetterAndMarks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./astralLetterAndMarks */ "./node_modules/twitter-text/dist/esm/regexp/astralLetterAndMarks.js");
+/* harmony import */ var _bmpLetterAndMarks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./bmpLetterAndMarks */ "./node_modules/twitter-text/dist/esm/regexp/bmpLetterAndMarks.js");
+/* harmony import */ var _nonBmpCodePairs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./nonBmpCodePairs */ "./node_modules/twitter-text/dist/esm/regexp/nonBmpCodePairs.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+ // A hashtag must contain at least one unicode letter or mark, as well as numbers, underscores, and select special characters.
+
+var hashtagAlpha = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_3__["default"])(/(?:[#{bmpLetterAndMarks}]|(?=#{nonBmpCodePairs})(?:#{astralLetterAndMarks}))/, {
+  bmpLetterAndMarks: _bmpLetterAndMarks__WEBPACK_IMPORTED_MODULE_1__["default"],
+  nonBmpCodePairs: _nonBmpCodePairs__WEBPACK_IMPORTED_MODULE_2__["default"],
+  astralLetterAndMarks: _astralLetterAndMarks__WEBPACK_IMPORTED_MODULE_0__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (hashtagAlpha);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/hashtagAlphaNumeric.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/hashtagAlphaNumeric.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _astralLetterAndMarks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./astralLetterAndMarks */ "./node_modules/twitter-text/dist/esm/regexp/astralLetterAndMarks.js");
+/* harmony import */ var _astralNumerals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./astralNumerals */ "./node_modules/twitter-text/dist/esm/regexp/astralNumerals.js");
+/* harmony import */ var _bmpLetterAndMarks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./bmpLetterAndMarks */ "./node_modules/twitter-text/dist/esm/regexp/bmpLetterAndMarks.js");
+/* harmony import */ var _bmpNumerals__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./bmpNumerals */ "./node_modules/twitter-text/dist/esm/regexp/bmpNumerals.js");
+/* harmony import */ var _hashtagSpecialChars__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./hashtagSpecialChars */ "./node_modules/twitter-text/dist/esm/regexp/hashtagSpecialChars.js");
+/* harmony import */ var _nonBmpCodePairs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./nonBmpCodePairs */ "./node_modules/twitter-text/dist/esm/regexp/nonBmpCodePairs.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+
+
+var hashtagAlphaNumeric = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_6__["default"])(/(?:[#{bmpLetterAndMarks}#{bmpNumerals}#{hashtagSpecialChars}]|(?=#{nonBmpCodePairs})(?:#{astralLetterAndMarks}|#{astralNumerals}))/, {
+  bmpLetterAndMarks: _bmpLetterAndMarks__WEBPACK_IMPORTED_MODULE_2__["default"],
+  bmpNumerals: _bmpNumerals__WEBPACK_IMPORTED_MODULE_3__["default"],
+  hashtagSpecialChars: _hashtagSpecialChars__WEBPACK_IMPORTED_MODULE_4__["default"],
+  nonBmpCodePairs: _nonBmpCodePairs__WEBPACK_IMPORTED_MODULE_5__["default"],
+  astralLetterAndMarks: _astralLetterAndMarks__WEBPACK_IMPORTED_MODULE_0__["default"],
+  astralNumerals: _astralNumerals__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (hashtagAlphaNumeric);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/hashtagBoundary.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/hashtagBoundary.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _codePoint__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./codePoint */ "./node_modules/twitter-text/dist/esm/regexp/codePoint.js");
+/* harmony import */ var _hashtagAlphaNumeric__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hashtagAlphaNumeric */ "./node_modules/twitter-text/dist/esm/regexp/hashtagAlphaNumeric.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+var hashtagBoundary = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__["default"])(/(?:^|\uFE0E|\uFE0F|$|(?!#{hashtagAlphaNumeric}|&)#{codePoint})/, {
+  codePoint: _codePoint__WEBPACK_IMPORTED_MODULE_0__["default"],
+  hashtagAlphaNumeric: _hashtagAlphaNumeric__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (hashtagBoundary);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/hashtagSpecialChars.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/hashtagSpecialChars.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var hashtagSpecialChars = /_\u200c\u200d\ua67e\u05be\u05f3\u05f4\uff5e\u301c\u309b\u309c\u30a0\u30fb\u3003\u0f0b\u0f0c\xb7/;
+/* harmony default export */ __webpack_exports__["default"] = (hashtagSpecialChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/index.js ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _astralLetterAndMarks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./astralLetterAndMarks */ "./node_modules/twitter-text/dist/esm/regexp/astralLetterAndMarks.js");
+/* harmony import */ var _astralNumerals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./astralNumerals */ "./node_modules/twitter-text/dist/esm/regexp/astralNumerals.js");
+/* harmony import */ var _atSigns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./atSigns */ "./node_modules/twitter-text/dist/esm/regexp/atSigns.js");
+/* harmony import */ var _bmpLetterAndMarks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./bmpLetterAndMarks */ "./node_modules/twitter-text/dist/esm/regexp/bmpLetterAndMarks.js");
+/* harmony import */ var _bmpNumerals__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./bmpNumerals */ "./node_modules/twitter-text/dist/esm/regexp/bmpNumerals.js");
+/* harmony import */ var _cashtag__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./cashtag */ "./node_modules/twitter-text/dist/esm/regexp/cashtag.js");
+/* harmony import */ var _codePoint__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./codePoint */ "./node_modules/twitter-text/dist/esm/regexp/codePoint.js");
+/* harmony import */ var _cyrillicLettersAndMarks__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./cyrillicLettersAndMarks */ "./node_modules/twitter-text/dist/esm/regexp/cyrillicLettersAndMarks.js");
+/* harmony import */ var _endHashtagMatch__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./endHashtagMatch */ "./node_modules/twitter-text/dist/esm/regexp/endHashtagMatch.js");
+/* harmony import */ var _endMentionMatch__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./endMentionMatch */ "./node_modules/twitter-text/dist/esm/regexp/endMentionMatch.js");
+/* harmony import */ var _extractUrl__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./extractUrl */ "./node_modules/twitter-text/dist/esm/regexp/extractUrl.js");
+/* harmony import */ var _hashSigns__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./hashSigns */ "./node_modules/twitter-text/dist/esm/regexp/hashSigns.js");
+/* harmony import */ var _hashtagAlpha__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./hashtagAlpha */ "./node_modules/twitter-text/dist/esm/regexp/hashtagAlpha.js");
+/* harmony import */ var _hashtagAlphaNumeric__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./hashtagAlphaNumeric */ "./node_modules/twitter-text/dist/esm/regexp/hashtagAlphaNumeric.js");
+/* harmony import */ var _hashtagBoundary__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./hashtagBoundary */ "./node_modules/twitter-text/dist/esm/regexp/hashtagBoundary.js");
+/* harmony import */ var _hashtagSpecialChars__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./hashtagSpecialChars */ "./node_modules/twitter-text/dist/esm/regexp/hashtagSpecialChars.js");
+/* harmony import */ var _invalidChars__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./invalidChars */ "./node_modules/twitter-text/dist/esm/regexp/invalidChars.js");
+/* harmony import */ var _invalidCharsGroup__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./invalidCharsGroup */ "./node_modules/twitter-text/dist/esm/regexp/invalidCharsGroup.js");
+/* harmony import */ var _invalidDomainChars__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./invalidDomainChars */ "./node_modules/twitter-text/dist/esm/regexp/invalidDomainChars.js");
+/* harmony import */ var _invalidUrlWithoutProtocolPrecedingChars__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./invalidUrlWithoutProtocolPrecedingChars */ "./node_modules/twitter-text/dist/esm/regexp/invalidUrlWithoutProtocolPrecedingChars.js");
+/* harmony import */ var _latinAccentChars__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./latinAccentChars */ "./node_modules/twitter-text/dist/esm/regexp/latinAccentChars.js");
+/* harmony import */ var _nonBmpCodePairs__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./nonBmpCodePairs */ "./node_modules/twitter-text/dist/esm/regexp/nonBmpCodePairs.js");
+/* harmony import */ var _punct__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./punct */ "./node_modules/twitter-text/dist/esm/regexp/punct.js");
+/* harmony import */ var _rtlChars__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./rtlChars */ "./node_modules/twitter-text/dist/esm/regexp/rtlChars.js");
+/* harmony import */ var _spaces__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./spaces */ "./node_modules/twitter-text/dist/esm/regexp/spaces.js");
+/* harmony import */ var _spacesGroup__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./spacesGroup */ "./node_modules/twitter-text/dist/esm/regexp/spacesGroup.js");
+/* harmony import */ var _urlHasHttps__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./urlHasHttps */ "./node_modules/twitter-text/dist/esm/regexp/urlHasHttps.js");
+/* harmony import */ var _urlHasProtocol__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./urlHasProtocol */ "./node_modules/twitter-text/dist/esm/regexp/urlHasProtocol.js");
+/* harmony import */ var _validAsciiDomain__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./validAsciiDomain */ "./node_modules/twitter-text/dist/esm/regexp/validAsciiDomain.js");
+/* harmony import */ var _validateUrlAuthority__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./validateUrlAuthority */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlAuthority.js");
+/* harmony import */ var _validateUrlDecOctet__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./validateUrlDecOctet */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDecOctet.js");
+/* harmony import */ var _validateUrlDomain__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./validateUrlDomain */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDomain.js");
+/* harmony import */ var _validateUrlDomainSegment__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./validateUrlDomainSegment */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDomainSegment.js");
+/* harmony import */ var _validateUrlDomainTld__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./validateUrlDomainTld */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDomainTld.js");
+/* harmony import */ var _validateUrlFragment__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./validateUrlFragment */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlFragment.js");
+/* harmony import */ var _validateUrlHost__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./validateUrlHost */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlHost.js");
+/* harmony import */ var _validateUrlIp__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./validateUrlIp */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlIp.js");
+/* harmony import */ var _validateUrlIpv4__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./validateUrlIpv4 */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlIpv4.js");
+/* harmony import */ var _validateUrlIpv6__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./validateUrlIpv6 */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlIpv6.js");
+/* harmony import */ var _validateUrlPath__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./validateUrlPath */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPath.js");
+/* harmony import */ var _validateUrlPchar__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./validateUrlPchar */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPchar.js");
+/* harmony import */ var _validateUrlPctEncoded__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./validateUrlPctEncoded */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPctEncoded.js");
+/* harmony import */ var _validateUrlPort__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./validateUrlPort */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPort.js");
+/* harmony import */ var _validateUrlQuery__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./validateUrlQuery */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlQuery.js");
+/* harmony import */ var _validateUrlScheme__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./validateUrlScheme */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlScheme.js");
+/* harmony import */ var _validateUrlSubDelims__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./validateUrlSubDelims */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlSubDelims.js");
+/* harmony import */ var _validateUrlSubDomainSegment__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./validateUrlSubDomainSegment */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlSubDomainSegment.js");
+/* harmony import */ var _validateUrlUnencoded__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./validateUrlUnencoded */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnencoded.js");
+/* harmony import */ var _validateUrlUnicodeAuthority__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./validateUrlUnicodeAuthority */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeAuthority.js");
+/* harmony import */ var _validateUrlUnicodeDomain__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./validateUrlUnicodeDomain */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomain.js");
+/* harmony import */ var _validateUrlUnicodeDomainSegment__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./validateUrlUnicodeDomainSegment */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomainSegment.js");
+/* harmony import */ var _validateUrlUnicodeDomainTld__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./validateUrlUnicodeDomainTld */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomainTld.js");
+/* harmony import */ var _validateUrlUnicodeHost__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./validateUrlUnicodeHost */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeHost.js");
+/* harmony import */ var _validateUrlUnicodeSubDomainSegment__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./validateUrlUnicodeSubDomainSegment */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeSubDomainSegment.js");
+/* harmony import */ var _validateUrlUnreserved__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./validateUrlUnreserved */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnreserved.js");
+/* harmony import */ var _validateUrlUserinfo__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./validateUrlUserinfo */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUserinfo.js");
+/* harmony import */ var _validCashtag__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./validCashtag */ "./node_modules/twitter-text/dist/esm/regexp/validCashtag.js");
+/* harmony import */ var _validCCTLD__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./validCCTLD */ "./node_modules/twitter-text/dist/esm/regexp/validCCTLD.js");
+/* harmony import */ var _validDomain__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./validDomain */ "./node_modules/twitter-text/dist/esm/regexp/validDomain.js");
+/* harmony import */ var _validDomainChars__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./validDomainChars */ "./node_modules/twitter-text/dist/esm/regexp/validDomainChars.js");
+/* harmony import */ var _validDomainName__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./validDomainName */ "./node_modules/twitter-text/dist/esm/regexp/validDomainName.js");
+/* harmony import */ var _validGeneralUrlPathChars__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./validGeneralUrlPathChars */ "./node_modules/twitter-text/dist/esm/regexp/validGeneralUrlPathChars.js");
+/* harmony import */ var _validGTLD__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./validGTLD */ "./node_modules/twitter-text/dist/esm/regexp/validGTLD.js");
+/* harmony import */ var _validHashtag__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./validHashtag */ "./node_modules/twitter-text/dist/esm/regexp/validHashtag.js");
+/* harmony import */ var _validMentionOrList__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./validMentionOrList */ "./node_modules/twitter-text/dist/esm/regexp/validMentionOrList.js");
+/* harmony import */ var _validMentionPrecedingChars__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./validMentionPrecedingChars */ "./node_modules/twitter-text/dist/esm/regexp/validMentionPrecedingChars.js");
+/* harmony import */ var _validPortNumber__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./validPortNumber */ "./node_modules/twitter-text/dist/esm/regexp/validPortNumber.js");
+/* harmony import */ var _validPunycode__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./validPunycode */ "./node_modules/twitter-text/dist/esm/regexp/validPunycode.js");
+/* harmony import */ var _validReply__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./validReply */ "./node_modules/twitter-text/dist/esm/regexp/validReply.js");
+/* harmony import */ var _validSubdomain__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./validSubdomain */ "./node_modules/twitter-text/dist/esm/regexp/validSubdomain.js");
+/* harmony import */ var _validTcoUrl__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./validTcoUrl */ "./node_modules/twitter-text/dist/esm/regexp/validTcoUrl.js");
+/* harmony import */ var _validUrlBalancedParens__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./validUrlBalancedParens */ "./node_modules/twitter-text/dist/esm/regexp/validUrlBalancedParens.js");
+/* harmony import */ var _validUrlPath__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./validUrlPath */ "./node_modules/twitter-text/dist/esm/regexp/validUrlPath.js");
+/* harmony import */ var _validUrlPathEndingChars__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./validUrlPathEndingChars */ "./node_modules/twitter-text/dist/esm/regexp/validUrlPathEndingChars.js");
+/* harmony import */ var _validUrlPrecedingChars__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./validUrlPrecedingChars */ "./node_modules/twitter-text/dist/esm/regexp/validUrlPrecedingChars.js");
+/* harmony import */ var _validUrlQueryChars__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./validUrlQueryChars */ "./node_modules/twitter-text/dist/esm/regexp/validUrlQueryChars.js");
+/* harmony import */ var _validUrlQueryEndingChars__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./validUrlQueryEndingChars */ "./node_modules/twitter-text/dist/esm/regexp/validUrlQueryEndingChars.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  astralLetterAndMarks: _astralLetterAndMarks__WEBPACK_IMPORTED_MODULE_0__["default"],
+  astralNumerals: _astralNumerals__WEBPACK_IMPORTED_MODULE_1__["default"],
+  atSigns: _atSigns__WEBPACK_IMPORTED_MODULE_2__["default"],
+  bmpLetterAndMarks: _bmpLetterAndMarks__WEBPACK_IMPORTED_MODULE_3__["default"],
+  bmpNumerals: _bmpNumerals__WEBPACK_IMPORTED_MODULE_4__["default"],
+  cashtag: _cashtag__WEBPACK_IMPORTED_MODULE_5__["default"],
+  codePoint: _codePoint__WEBPACK_IMPORTED_MODULE_6__["default"],
+  cyrillicLettersAndMarks: _cyrillicLettersAndMarks__WEBPACK_IMPORTED_MODULE_7__["default"],
+  endHashtagMatch: _endHashtagMatch__WEBPACK_IMPORTED_MODULE_8__["default"],
+  endMentionMatch: _endMentionMatch__WEBPACK_IMPORTED_MODULE_9__["default"],
+  extractUrl: _extractUrl__WEBPACK_IMPORTED_MODULE_10__["default"],
+  hashSigns: _hashSigns__WEBPACK_IMPORTED_MODULE_11__["default"],
+  hashtagAlpha: _hashtagAlpha__WEBPACK_IMPORTED_MODULE_12__["default"],
+  hashtagAlphaNumeric: _hashtagAlphaNumeric__WEBPACK_IMPORTED_MODULE_13__["default"],
+  hashtagBoundary: _hashtagBoundary__WEBPACK_IMPORTED_MODULE_14__["default"],
+  hashtagSpecialChars: _hashtagSpecialChars__WEBPACK_IMPORTED_MODULE_15__["default"],
+  invalidChars: _invalidChars__WEBPACK_IMPORTED_MODULE_16__["default"],
+  invalidCharsGroup: _invalidCharsGroup__WEBPACK_IMPORTED_MODULE_17__["default"],
+  invalidDomainChars: _invalidDomainChars__WEBPACK_IMPORTED_MODULE_18__["default"],
+  invalidUrlWithoutProtocolPrecedingChars: _invalidUrlWithoutProtocolPrecedingChars__WEBPACK_IMPORTED_MODULE_19__["default"],
+  latinAccentChars: _latinAccentChars__WEBPACK_IMPORTED_MODULE_20__["default"],
+  nonBmpCodePairs: _nonBmpCodePairs__WEBPACK_IMPORTED_MODULE_21__["default"],
+  punct: _punct__WEBPACK_IMPORTED_MODULE_22__["default"],
+  rtlChars: _rtlChars__WEBPACK_IMPORTED_MODULE_23__["default"],
+  spaces: _spaces__WEBPACK_IMPORTED_MODULE_24__["default"],
+  spacesGroup: _spacesGroup__WEBPACK_IMPORTED_MODULE_25__["default"],
+  urlHasHttps: _urlHasHttps__WEBPACK_IMPORTED_MODULE_26__["default"],
+  urlHasProtocol: _urlHasProtocol__WEBPACK_IMPORTED_MODULE_27__["default"],
+  validAsciiDomain: _validAsciiDomain__WEBPACK_IMPORTED_MODULE_28__["default"],
+  validateUrlAuthority: _validateUrlAuthority__WEBPACK_IMPORTED_MODULE_29__["default"],
+  validateUrlDecOctet: _validateUrlDecOctet__WEBPACK_IMPORTED_MODULE_30__["default"],
+  validateUrlDomain: _validateUrlDomain__WEBPACK_IMPORTED_MODULE_31__["default"],
+  validateUrlDomainSegment: _validateUrlDomainSegment__WEBPACK_IMPORTED_MODULE_32__["default"],
+  validateUrlDomainTld: _validateUrlDomainTld__WEBPACK_IMPORTED_MODULE_33__["default"],
+  validateUrlFragment: _validateUrlFragment__WEBPACK_IMPORTED_MODULE_34__["default"],
+  validateUrlHost: _validateUrlHost__WEBPACK_IMPORTED_MODULE_35__["default"],
+  validateUrlIp: _validateUrlIp__WEBPACK_IMPORTED_MODULE_36__["default"],
+  validateUrlIpv4: _validateUrlIpv4__WEBPACK_IMPORTED_MODULE_37__["default"],
+  validateUrlIpv6: _validateUrlIpv6__WEBPACK_IMPORTED_MODULE_38__["default"],
+  validateUrlPath: _validateUrlPath__WEBPACK_IMPORTED_MODULE_39__["default"],
+  validateUrlPchar: _validateUrlPchar__WEBPACK_IMPORTED_MODULE_40__["default"],
+  validateUrlPctEncoded: _validateUrlPctEncoded__WEBPACK_IMPORTED_MODULE_41__["default"],
+  validateUrlPort: _validateUrlPort__WEBPACK_IMPORTED_MODULE_42__["default"],
+  validateUrlQuery: _validateUrlQuery__WEBPACK_IMPORTED_MODULE_43__["default"],
+  validateUrlScheme: _validateUrlScheme__WEBPACK_IMPORTED_MODULE_44__["default"],
+  validateUrlSubDelims: _validateUrlSubDelims__WEBPACK_IMPORTED_MODULE_45__["default"],
+  validateUrlSubDomainSegment: _validateUrlSubDomainSegment__WEBPACK_IMPORTED_MODULE_46__["default"],
+  validateUrlUnencoded: _validateUrlUnencoded__WEBPACK_IMPORTED_MODULE_47__["default"],
+  validateUrlUnicodeAuthority: _validateUrlUnicodeAuthority__WEBPACK_IMPORTED_MODULE_48__["default"],
+  validateUrlUnicodeDomain: _validateUrlUnicodeDomain__WEBPACK_IMPORTED_MODULE_49__["default"],
+  validateUrlUnicodeDomainSegment: _validateUrlUnicodeDomainSegment__WEBPACK_IMPORTED_MODULE_50__["default"],
+  validateUrlUnicodeDomainTld: _validateUrlUnicodeDomainTld__WEBPACK_IMPORTED_MODULE_51__["default"],
+  validateUrlUnicodeHost: _validateUrlUnicodeHost__WEBPACK_IMPORTED_MODULE_52__["default"],
+  validateUrlUnicodeSubDomainSegment: _validateUrlUnicodeSubDomainSegment__WEBPACK_IMPORTED_MODULE_53__["default"],
+  validateUrlUnreserved: _validateUrlUnreserved__WEBPACK_IMPORTED_MODULE_54__["default"],
+  validateUrlUserinfo: _validateUrlUserinfo__WEBPACK_IMPORTED_MODULE_55__["default"],
+  validCashtag: _validCashtag__WEBPACK_IMPORTED_MODULE_56__["default"],
+  validCCTLD: _validCCTLD__WEBPACK_IMPORTED_MODULE_57__["default"],
+  validDomain: _validDomain__WEBPACK_IMPORTED_MODULE_58__["default"],
+  validDomainChars: _validDomainChars__WEBPACK_IMPORTED_MODULE_59__["default"],
+  validDomainName: _validDomainName__WEBPACK_IMPORTED_MODULE_60__["default"],
+  validGeneralUrlPathChars: _validGeneralUrlPathChars__WEBPACK_IMPORTED_MODULE_61__["default"],
+  validGTLD: _validGTLD__WEBPACK_IMPORTED_MODULE_62__["default"],
+  validHashtag: _validHashtag__WEBPACK_IMPORTED_MODULE_63__["default"],
+  validMentionOrList: _validMentionOrList__WEBPACK_IMPORTED_MODULE_64__["default"],
+  validMentionPrecedingChars: _validMentionPrecedingChars__WEBPACK_IMPORTED_MODULE_65__["default"],
+  validPortNumber: _validPortNumber__WEBPACK_IMPORTED_MODULE_66__["default"],
+  validPunycode: _validPunycode__WEBPACK_IMPORTED_MODULE_67__["default"],
+  validReply: _validReply__WEBPACK_IMPORTED_MODULE_68__["default"],
+  validSubdomain: _validSubdomain__WEBPACK_IMPORTED_MODULE_69__["default"],
+  validTcoUrl: _validTcoUrl__WEBPACK_IMPORTED_MODULE_70__["default"],
+  validUrlBalancedParens: _validUrlBalancedParens__WEBPACK_IMPORTED_MODULE_71__["default"],
+  validUrlPath: _validUrlPath__WEBPACK_IMPORTED_MODULE_72__["default"],
+  validUrlPathEndingChars: _validUrlPathEndingChars__WEBPACK_IMPORTED_MODULE_73__["default"],
+  validUrlPrecedingChars: _validUrlPrecedingChars__WEBPACK_IMPORTED_MODULE_74__["default"],
+  validUrlQueryChars: _validUrlQueryChars__WEBPACK_IMPORTED_MODULE_75__["default"],
+  validUrlQueryEndingChars: _validUrlQueryEndingChars__WEBPACK_IMPORTED_MODULE_76__["default"]
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/invalidChars.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/invalidChars.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _invalidCharsGroup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./invalidCharsGroup */ "./node_modules/twitter-text/dist/esm/regexp/invalidCharsGroup.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+var invalidChars = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__["default"])(/[#{invalidCharsGroup}]/, {
+  invalidCharsGroup: _invalidCharsGroup__WEBPACK_IMPORTED_MODULE_0__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (invalidChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/invalidCharsGroup.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/invalidCharsGroup.js ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var invalidCharsGroup = /\uFFFE\uFEFF\uFFFF/;
+/* harmony default export */ __webpack_exports__["default"] = (invalidCharsGroup);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/invalidDomainChars.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/invalidDomainChars.js ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _directionalMarkersGroup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./directionalMarkersGroup */ "./node_modules/twitter-text/dist/esm/regexp/directionalMarkersGroup.js");
+/* harmony import */ var _invalidCharsGroup__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./invalidCharsGroup */ "./node_modules/twitter-text/dist/esm/regexp/invalidCharsGroup.js");
+/* harmony import */ var _punct__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./punct */ "./node_modules/twitter-text/dist/esm/regexp/punct.js");
+/* harmony import */ var _spacesGroup__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./spacesGroup */ "./node_modules/twitter-text/dist/esm/regexp/spacesGroup.js");
+/* harmony import */ var _lib_stringSupplant__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/stringSupplant */ "./node_modules/twitter-text/dist/esm/lib/stringSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+var invalidDomainChars = Object(_lib_stringSupplant__WEBPACK_IMPORTED_MODULE_4__["default"])('#{punct}#{spacesGroup}#{invalidCharsGroup}#{directionalMarkersGroup}', {
+  punct: _punct__WEBPACK_IMPORTED_MODULE_2__["default"],
+  spacesGroup: _spacesGroup__WEBPACK_IMPORTED_MODULE_3__["default"],
+  invalidCharsGroup: _invalidCharsGroup__WEBPACK_IMPORTED_MODULE_1__["default"],
+  directionalMarkersGroup: _directionalMarkersGroup__WEBPACK_IMPORTED_MODULE_0__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (invalidDomainChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/invalidUrlWithoutProtocolPrecedingChars.js":
+/*!**********************************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/invalidUrlWithoutProtocolPrecedingChars.js ***!
+  \**********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var invalidUrlWithoutProtocolPrecedingChars = /[-_.\/]$/;
+/* harmony default export */ __webpack_exports__["default"] = (invalidUrlWithoutProtocolPrecedingChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/latinAccentChars.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/latinAccentChars.js ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var latinAccentChars = /\xC0-\xD6\xD8-\xF6\xF8-\xFF\u0100-\u024F\u0253\u0254\u0256\u0257\u0259\u025B\u0263\u0268\u026F\u0272\u0289\u028B\u02BB\u0300-\u036F\u1E00-\u1EFF/;
+/* harmony default export */ __webpack_exports__["default"] = (latinAccentChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/nonBmpCodePairs.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/nonBmpCodePairs.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var nonBmpCodePairs = /[\uD800-\uDBFF][\uDC00-\uDFFF]/gm;
+/* harmony default export */ __webpack_exports__["default"] = (nonBmpCodePairs);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/punct.js":
+/*!************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/punct.js ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var punct = /\!'#%&'\(\)*\+,\\\-\.\/:;<=>\?@\[\]\^_{|}~\$/;
+/* harmony default export */ __webpack_exports__["default"] = (punct);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/rtlChars.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/rtlChars.js ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var rtlChars = /[\u0600-\u06FF]|[\u0750-\u077F]|[\u0590-\u05FF]|[\uFE70-\uFEFF]/gm;
+/* harmony default export */ __webpack_exports__["default"] = (rtlChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/spaces.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/spaces.js ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _spacesGroup__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./spacesGroup */ "./node_modules/twitter-text/dist/esm/regexp/spacesGroup.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])(/[#{spacesGroup}]/, {
+  spacesGroup: _spacesGroup__WEBPACK_IMPORTED_MODULE_1__["default"]
+}));
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/spacesGroup.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/spacesGroup.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var spacesGroup = /\x09-\x0D\x20\x85\xA0\u1680\u180E\u2000-\u200A\u2028\u2029\u202F\u205F\u3000/;
+/* harmony default export */ __webpack_exports__["default"] = (spacesGroup);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/urlHasHttps.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/urlHasHttps.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var urlHasHttps = /^https:\/\//i;
+/* harmony default export */ __webpack_exports__["default"] = (urlHasHttps);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/urlHasProtocol.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/urlHasProtocol.js ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var urlHasProtocol = /^https?:\/\//i;
+/* harmony default export */ __webpack_exports__["default"] = (urlHasProtocol);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validAsciiDomain.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validAsciiDomain.js ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _latinAccentChars__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./latinAccentChars */ "./node_modules/twitter-text/dist/esm/regexp/latinAccentChars.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validCCTLD__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validCCTLD */ "./node_modules/twitter-text/dist/esm/regexp/validCCTLD.js");
+/* harmony import */ var _validGTLD__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validGTLD */ "./node_modules/twitter-text/dist/esm/regexp/validGTLD.js");
+/* harmony import */ var _validPunycode__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./validPunycode */ "./node_modules/twitter-text/dist/esm/regexp/validPunycode.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+var validAsciiDomain = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__["default"])(/(?:(?:[\-a-z0-9#{latinAccentChars}]+)\.)+(?:#{validGTLD}|#{validCCTLD}|#{validPunycode})/gi, {
+  latinAccentChars: _latinAccentChars__WEBPACK_IMPORTED_MODULE_0__["default"],
+  validGTLD: _validGTLD__WEBPACK_IMPORTED_MODULE_3__["default"],
+  validCCTLD: _validCCTLD__WEBPACK_IMPORTED_MODULE_2__["default"],
+  validPunycode: _validPunycode__WEBPACK_IMPORTED_MODULE_4__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validAsciiDomain);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validCCTLD.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validCCTLD.js ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.constructor */ "./node_modules/core-js/modules/es6.regexp.constructor.js");
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+var validCCTLD = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__["default"])(RegExp('(?:(?:' + '한국|香港|澳門|新加坡|台灣|台湾|中國|中国|გე|ລາວ|ไทย|ලංකා|ഭാരതം|ಭಾರತ|భారత్|சிங்கப்பூர்|இலங்கை|இந்தியா|ଭାରତ|' + 'ભારત|ਭਾਰਤ|ভাৰত|ভারত|বাংলা|भारोत|भारतम्|भारत|ڀارت|پاکستان|موريتانيا|مليسيا|مصر|قطر|فلسطين|عمان|' + 'عراق|سورية|سودان|تونس|بھارت|بارت|ایران|امارات|المغرب|السعودية|الجزائر|البحرين|الاردن|հայ|қаз|' + 'укр|срб|рф|мон|мкд|ею|бел|бг|ευ|ελ|zw|zm|za|yt|ye|ws|wf|vu|vn|vi|vg|ve|vc|va|uz|uy|us|um|uk|' + 'ug|ua|tz|tw|tv|tt|tr|tp|to|tn|tm|tl|tk|tj|th|tg|tf|td|tc|sz|sy|sx|sv|su|st|ss|sr|so|sn|sm|sl|' + 'sk|sj|si|sh|sg|se|sd|sc|sb|sa|rw|ru|rs|ro|re|qa|py|pw|pt|ps|pr|pn|pm|pl|pk|ph|pg|pf|pe|pa|om|' + 'nz|nu|nr|np|no|nl|ni|ng|nf|ne|nc|na|mz|my|mx|mw|mv|mu|mt|ms|mr|mq|mp|mo|mn|mm|ml|mk|mh|mg|mf|' + 'me|md|mc|ma|ly|lv|lu|lt|ls|lr|lk|li|lc|lb|la|kz|ky|kw|kr|kp|kn|km|ki|kh|kg|ke|jp|jo|jm|je|it|' + 'is|ir|iq|io|in|im|il|ie|id|hu|ht|hr|hn|hm|hk|gy|gw|gu|gt|gs|gr|gq|gp|gn|gm|gl|gi|gh|gg|gf|ge|' + 'gd|gb|ga|fr|fo|fm|fk|fj|fi|eu|et|es|er|eh|eg|ee|ec|dz|do|dm|dk|dj|de|cz|cy|cx|cw|cv|cu|cr|co|' + 'cn|cm|cl|ck|ci|ch|cg|cf|cd|cc|ca|bz|by|bw|bv|bt|bs|br|bq|bo|bn|bm|bl|bj|bi|bh|bg|bf|be|bd|bb|' + 'ba|az|ax|aw|au|at|as|ar|aq|ao|an|am|al|ai|ag|af|ae|ad|ac' + ')(?=[^0-9a-zA-Z@+-]|$))'));
+/* harmony default export */ __webpack_exports__["default"] = (validCCTLD);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validCashtag.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validCashtag.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _cashtag__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cashtag */ "./node_modules/twitter-text/dist/esm/regexp/cashtag.js");
+/* harmony import */ var _punct__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./punct */ "./node_modules/twitter-text/dist/esm/regexp/punct.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _spaces__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./spaces */ "./node_modules/twitter-text/dist/esm/regexp/spaces.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+var validCashtag = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__["default"])('(^|#{spaces})(\\$)(#{cashtag})(?=$|\\s|[#{punct}])', {
+  cashtag: _cashtag__WEBPACK_IMPORTED_MODULE_0__["default"],
+  spaces: _spaces__WEBPACK_IMPORTED_MODULE_3__["default"],
+  punct: _punct__WEBPACK_IMPORTED_MODULE_1__["default"]
+}, 'gi');
+/* harmony default export */ __webpack_exports__["default"] = (validCashtag);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validDomain.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validDomain.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validCCTLD__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validCCTLD */ "./node_modules/twitter-text/dist/esm/regexp/validCCTLD.js");
+/* harmony import */ var _validDomainName__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validDomainName */ "./node_modules/twitter-text/dist/esm/regexp/validDomainName.js");
+/* harmony import */ var _validGTLD__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validGTLD */ "./node_modules/twitter-text/dist/esm/regexp/validGTLD.js");
+/* harmony import */ var _validPunycode__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./validPunycode */ "./node_modules/twitter-text/dist/esm/regexp/validPunycode.js");
+/* harmony import */ var _validSubdomain__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./validSubdomain */ "./node_modules/twitter-text/dist/esm/regexp/validSubdomain.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+
+var validDomain = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])(/(?:#{validSubdomain}*#{validDomainName}(?:#{validGTLD}|#{validCCTLD}|#{validPunycode}))/, {
+  validDomainName: _validDomainName__WEBPACK_IMPORTED_MODULE_2__["default"],
+  validSubdomain: _validSubdomain__WEBPACK_IMPORTED_MODULE_5__["default"],
+  validGTLD: _validGTLD__WEBPACK_IMPORTED_MODULE_3__["default"],
+  validCCTLD: _validCCTLD__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validPunycode: _validPunycode__WEBPACK_IMPORTED_MODULE_4__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validDomain);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validDomainChars.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validDomainChars.js ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _invalidDomainChars__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./invalidDomainChars */ "./node_modules/twitter-text/dist/esm/regexp/invalidDomainChars.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+var validDomainChars = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__["default"])(/[^#{invalidDomainChars}]/, {
+  invalidDomainChars: _invalidDomainChars__WEBPACK_IMPORTED_MODULE_0__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validDomainChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validDomainName.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validDomainName.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validDomainChars__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validDomainChars */ "./node_modules/twitter-text/dist/esm/regexp/validDomainChars.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+var validDomainName = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])(/(?:(?:#{validDomainChars}(?:-|#{validDomainChars})*)?#{validDomainChars}\.)/, {
+  validDomainChars: _validDomainChars__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validDomainName);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validGTLD.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validGTLD.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.constructor */ "./node_modules/core-js/modules/es6.regexp.constructor.js");
+/* harmony import */ var core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_constructor__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+var validGTLD = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__["default"])(RegExp('(?:(?:' + '삼성|닷컴|닷넷|香格里拉|餐厅|食品|飞利浦|電訊盈科|集团|通販|购物|谷歌|诺基亚|联通|网络|网站|网店|网址|组织机构|移动|珠宝|点看|游戏|淡马锡|机构|書籍|时尚|新闻|' + '政府|政务|招聘|手表|手机|我爱你|慈善|微博|广东|工行|家電|娱乐|天主教|大拿|大众汽车|在线|嘉里大酒店|嘉里|商标|商店|商城|公益|公司|八卦|健康|信息|佛山|企业|' + '中文网|中信|世界|ポイント|ファッション|セール|ストア|コム|グーグル|クラウド|みんな|คอม|संगठन|नेट|कॉम|همراه|موقع|موبايلي|كوم|' + 'كاثوليك|عرب|شبكة|بيتك|بازار|العليان|ارامكو|اتصالات|ابوظبي|קום|сайт|рус|орг|онлайн|москва|ком|' + 'католик|дети|zuerich|zone|zippo|zip|zero|zara|zappos|yun|youtube|you|yokohama|yoga|yodobashi|' + 'yandex|yamaxun|yahoo|yachts|xyz|xxx|xperia|xin|xihuan|xfinity|xerox|xbox|wtf|wtc|wow|world|' + 'works|work|woodside|wolterskluwer|wme|winners|wine|windows|win|williamhill|wiki|wien|whoswho|' + 'weir|weibo|wedding|wed|website|weber|webcam|weatherchannel|weather|watches|watch|warman|' + 'wanggou|wang|walter|walmart|wales|vuelos|voyage|voto|voting|vote|volvo|volkswagen|vodka|' + 'vlaanderen|vivo|viva|vistaprint|vista|vision|visa|virgin|vip|vin|villas|viking|vig|video|' + 'viajes|vet|versicherung|vermögensberatung|vermögensberater|verisign|ventures|vegas|vanguard|' + 'vana|vacations|ups|uol|uno|university|unicom|uconnect|ubs|ubank|tvs|tushu|tunes|tui|tube|trv|' + 'trust|travelersinsurance|travelers|travelchannel|travel|training|trading|trade|toys|toyota|' + 'town|tours|total|toshiba|toray|top|tools|tokyo|today|tmall|tkmaxx|tjx|tjmaxx|tirol|tires|tips|' + 'tiffany|tienda|tickets|tiaa|theatre|theater|thd|teva|tennis|temasek|telefonica|telecity|tel|' + 'technology|tech|team|tdk|tci|taxi|tax|tattoo|tatar|tatamotors|target|taobao|talk|taipei|tab|' + 'systems|symantec|sydney|swiss|swiftcover|swatch|suzuki|surgery|surf|support|supply|supplies|' + 'sucks|style|study|studio|stream|store|storage|stockholm|stcgroup|stc|statoil|statefarm|' + 'statebank|starhub|star|staples|stada|srt|srl|spreadbetting|spot|sport|spiegel|space|soy|sony|' + 'song|solutions|solar|sohu|software|softbank|social|soccer|sncf|smile|smart|sling|skype|sky|' + 'skin|ski|site|singles|sina|silk|shriram|showtime|show|shouji|shopping|shop|shoes|shiksha|shia|' + 'shell|shaw|sharp|shangrila|sfr|sexy|sex|sew|seven|ses|services|sener|select|seek|security|' + 'secure|seat|search|scot|scor|scjohnson|science|schwarz|schule|school|scholarships|schmidt|' + 'schaeffler|scb|sca|sbs|sbi|saxo|save|sas|sarl|sapo|sap|sanofi|sandvikcoromant|sandvik|samsung|' + 'samsclub|salon|sale|sakura|safety|safe|saarland|ryukyu|rwe|run|ruhr|rugby|rsvp|room|rogers|' + 'rodeo|rocks|rocher|rmit|rip|rio|ril|rightathome|ricoh|richardli|rich|rexroth|reviews|review|' + 'restaurant|rest|republican|report|repair|rentals|rent|ren|reliance|reit|reisen|reise|rehab|' + 'redumbrella|redstone|red|recipes|realty|realtor|realestate|read|raid|radio|racing|qvc|quest|' + 'quebec|qpon|pwc|pub|prudential|pru|protection|property|properties|promo|progressive|prof|' + 'productions|prod|pro|prime|press|praxi|pramerica|post|porn|politie|poker|pohl|pnc|plus|' + 'plumbing|playstation|play|place|pizza|pioneer|pink|ping|pin|pid|pictures|pictet|pics|piaget|' + 'physio|photos|photography|photo|phone|philips|phd|pharmacy|pfizer|pet|pccw|pay|passagens|' + 'party|parts|partners|pars|paris|panerai|panasonic|pamperedchef|page|ovh|ott|otsuka|osaka|' + 'origins|orientexpress|organic|org|orange|oracle|open|ooo|onyourside|online|onl|ong|one|omega|' + 'ollo|oldnavy|olayangroup|olayan|okinawa|office|off|observer|obi|nyc|ntt|nrw|nra|nowtv|nowruz|' + 'now|norton|northwesternmutual|nokia|nissay|nissan|ninja|nikon|nike|nico|nhk|ngo|nfl|nexus|' + 'nextdirect|next|news|newholland|new|neustar|network|netflix|netbank|net|nec|nba|navy|natura|' + 'nationwide|name|nagoya|nadex|nab|mutuelle|mutual|museum|mtr|mtpc|mtn|msd|movistar|movie|mov|' + 'motorcycles|moto|moscow|mortgage|mormon|mopar|montblanc|monster|money|monash|mom|moi|moe|moda|' + 'mobily|mobile|mobi|mma|mls|mlb|mitsubishi|mit|mint|mini|mil|microsoft|miami|metlife|merckmsd|' + 'meo|menu|men|memorial|meme|melbourne|meet|media|med|mckinsey|mcdonalds|mcd|mba|mattel|' + 'maserati|marshalls|marriott|markets|marketing|market|map|mango|management|man|makeup|maison|' + 'maif|madrid|macys|luxury|luxe|lupin|lundbeck|ltda|ltd|lplfinancial|lpl|love|lotto|lotte|' + 'london|lol|loft|locus|locker|loans|loan|llp|llc|lixil|living|live|lipsy|link|linde|lincoln|' + 'limo|limited|lilly|like|lighting|lifestyle|lifeinsurance|life|lidl|liaison|lgbt|lexus|lego|' + 'legal|lefrak|leclerc|lease|lds|lawyer|law|latrobe|latino|lat|lasalle|lanxess|landrover|land|' + 'lancome|lancia|lancaster|lamer|lamborghini|ladbrokes|lacaixa|kyoto|kuokgroup|kred|krd|kpn|' + 'kpmg|kosher|komatsu|koeln|kiwi|kitchen|kindle|kinder|kim|kia|kfh|kerryproperties|' + 'kerrylogistics|kerryhotels|kddi|kaufen|juniper|juegos|jprs|jpmorgan|joy|jot|joburg|jobs|jnj|' + 'jmp|jll|jlc|jio|jewelry|jetzt|jeep|jcp|jcb|java|jaguar|iwc|iveco|itv|itau|istanbul|ist|' + 'ismaili|iselect|irish|ipiranga|investments|intuit|international|intel|int|insure|insurance|' + 'institute|ink|ing|info|infiniti|industries|inc|immobilien|immo|imdb|imamat|ikano|iinet|ifm|' + 'ieee|icu|ice|icbc|ibm|hyundai|hyatt|hughes|htc|hsbc|how|house|hotmail|hotels|hoteles|hot|' + 'hosting|host|hospital|horse|honeywell|honda|homesense|homes|homegoods|homedepot|holiday|' + 'holdings|hockey|hkt|hiv|hitachi|hisamitsu|hiphop|hgtv|hermes|here|helsinki|help|healthcare|' + 'health|hdfcbank|hdfc|hbo|haus|hangout|hamburg|hair|guru|guitars|guide|guge|gucci|guardian|' + 'group|grocery|gripe|green|gratis|graphics|grainger|gov|got|gop|google|goog|goodyear|goodhands|' + 'goo|golf|goldpoint|gold|godaddy|gmx|gmo|gmbh|gmail|globo|global|gle|glass|glade|giving|gives|' + 'gifts|gift|ggee|george|genting|gent|gea|gdn|gbiz|gay|garden|gap|games|game|gallup|gallo|' + 'gallery|gal|fyi|futbol|furniture|fund|fun|fujixerox|fujitsu|ftr|frontier|frontdoor|frogans|' + 'frl|fresenius|free|fox|foundation|forum|forsale|forex|ford|football|foodnetwork|food|foo|fly|' + 'flsmidth|flowers|florist|flir|flights|flickr|fitness|fit|fishing|fish|firmdale|firestone|fire|' + 'financial|finance|final|film|fido|fidelity|fiat|ferrero|ferrari|feedback|fedex|fast|fashion|' + 'farmers|farm|fans|fan|family|faith|fairwinds|fail|fage|extraspace|express|exposed|expert|' + 'exchange|everbank|events|eus|eurovision|etisalat|esurance|estate|esq|erni|ericsson|equipment|' + 'epson|epost|enterprises|engineering|engineer|energy|emerck|email|education|edu|edeka|eco|eat|' + 'earth|dvr|dvag|durban|dupont|duns|dunlop|duck|dubai|dtv|drive|download|dot|doosan|domains|' + 'doha|dog|dodge|doctor|docs|dnp|diy|dish|discover|discount|directory|direct|digital|diet|' + 'diamonds|dhl|dev|design|desi|dentist|dental|democrat|delta|deloitte|dell|delivery|degree|' + 'deals|dealer|deal|dds|dclk|day|datsun|dating|date|data|dance|dad|dabur|cyou|cymru|cuisinella|' + 'csc|cruises|cruise|crs|crown|cricket|creditunion|creditcard|credit|cpa|courses|coupons|coupon|' + 'country|corsica|coop|cool|cookingchannel|cooking|contractors|contact|consulting|construction|' + 'condos|comsec|computer|compare|company|community|commbank|comcast|com|cologne|college|coffee|' + 'codes|coach|clubmed|club|cloud|clothing|clinique|clinic|click|cleaning|claims|cityeats|city|' + 'citic|citi|citadel|cisco|circle|cipriani|church|chrysler|chrome|christmas|chloe|chintai|cheap|' + 'chat|chase|charity|channel|chanel|cfd|cfa|cern|ceo|center|ceb|cbs|cbre|cbn|cba|catholic|' + 'catering|cat|casino|cash|caseih|case|casa|cartier|cars|careers|career|care|cards|caravan|car|' + 'capitalone|capital|capetown|canon|cancerresearch|camp|camera|cam|calvinklein|call|cal|cafe|' + 'cab|bzh|buzz|buy|business|builders|build|bugatti|budapest|brussels|brother|broker|broadway|' + 'bridgestone|bradesco|box|boutique|bot|boston|bostik|bosch|boots|booking|book|boo|bond|bom|' + 'bofa|boehringer|boats|bnpparibas|bnl|bmw|bms|blue|bloomberg|blog|blockbuster|blanco|' + 'blackfriday|black|biz|bio|bingo|bing|bike|bid|bible|bharti|bet|bestbuy|best|berlin|bentley|' + 'beer|beauty|beats|bcn|bcg|bbva|bbt|bbc|bayern|bauhaus|basketball|baseball|bargains|barefoot|' + 'barclays|barclaycard|barcelona|bar|bank|band|bananarepublic|banamex|baidu|baby|azure|axa|aws|' + 'avianca|autos|auto|author|auspost|audio|audible|audi|auction|attorney|athleta|associates|asia|' + 'asda|arte|art|arpa|army|archi|aramco|arab|aquarelle|apple|app|apartments|aol|anz|anquan|' + 'android|analytics|amsterdam|amica|amfam|amex|americanfamily|americanexpress|alstom|alsace|' + 'ally|allstate|allfinanz|alipay|alibaba|alfaromeo|akdn|airtel|airforce|airbus|aigo|aig|agency|' + 'agakhan|africa|afl|afamilycompany|aetna|aero|aeg|adult|ads|adac|actor|active|aco|accountants|' + 'accountant|accenture|academy|abudhabi|abogado|able|abc|abbvie|abbott|abb|abarth|aarp|aaa|' + 'onion' + ')(?=[^0-9a-zA-Z@+-]|$))'));
+/* harmony default export */ __webpack_exports__["default"] = (validGTLD);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validGeneralUrlPathChars.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validGeneralUrlPathChars.js ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _cyrillicLettersAndMarks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cyrillicLettersAndMarks */ "./node_modules/twitter-text/dist/esm/regexp/cyrillicLettersAndMarks.js");
+/* harmony import */ var _latinAccentChars__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./latinAccentChars */ "./node_modules/twitter-text/dist/esm/regexp/latinAccentChars.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+var validGeneralUrlPathChars = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__["default"])(/[a-z#{cyrillicLettersAndMarks}0-9!\*';:=\+,\.\$\/%#\[\]\-\u2013_~@\|&#{latinAccentChars}]/i, {
+  cyrillicLettersAndMarks: _cyrillicLettersAndMarks__WEBPACK_IMPORTED_MODULE_0__["default"],
+  latinAccentChars: _latinAccentChars__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validGeneralUrlPathChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validHashtag.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validHashtag.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _hashSigns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hashSigns */ "./node_modules/twitter-text/dist/esm/regexp/hashSigns.js");
+/* harmony import */ var _hashtagAlpha__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hashtagAlpha */ "./node_modules/twitter-text/dist/esm/regexp/hashtagAlpha.js");
+/* harmony import */ var _hashtagAlphaNumeric__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hashtagAlphaNumeric */ "./node_modules/twitter-text/dist/esm/regexp/hashtagAlphaNumeric.js");
+/* harmony import */ var _hashtagBoundary__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./hashtagBoundary */ "./node_modules/twitter-text/dist/esm/regexp/hashtagBoundary.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+
+var validHashtag = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_4__["default"])(/(#{hashtagBoundary})(#{hashSigns})(?!\uFE0F|\u20E3)(#{hashtagAlphaNumeric}*#{hashtagAlpha}#{hashtagAlphaNumeric}*)/gi, {
+  hashtagBoundary: _hashtagBoundary__WEBPACK_IMPORTED_MODULE_3__["default"],
+  hashSigns: _hashSigns__WEBPACK_IMPORTED_MODULE_0__["default"],
+  hashtagAlphaNumeric: _hashtagAlphaNumeric__WEBPACK_IMPORTED_MODULE_2__["default"],
+  hashtagAlpha: _hashtagAlpha__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validHashtag);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validMentionOrList.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validMentionOrList.js ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _atSigns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./atSigns */ "./node_modules/twitter-text/dist/esm/regexp/atSigns.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validMentionPrecedingChars__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validMentionPrecedingChars */ "./node_modules/twitter-text/dist/esm/regexp/validMentionPrecedingChars.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+var validMentionOrList = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__["default"])('(#{validMentionPrecedingChars})' + // $1: Preceding character
+'(#{atSigns})' + // $2: At mark
+'([a-zA-Z0-9_]{1,20})' + // $3: Screen name
+'(/[a-zA-Z][a-zA-Z0-9_-]{0,24})?', // $4: List (optional)
+{
+  validMentionPrecedingChars: _validMentionPrecedingChars__WEBPACK_IMPORTED_MODULE_2__["default"],
+  atSigns: _atSigns__WEBPACK_IMPORTED_MODULE_0__["default"]
+}, 'g');
+/* harmony default export */ __webpack_exports__["default"] = (validMentionOrList);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validMentionPrecedingChars.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validMentionPrecedingChars.js ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validMentionPrecedingChars = /(?:^|[^a-zA-Z0-9_!#$%&*@＠]|(?:^|[^a-zA-Z0-9_+~.-])(?:rt|RT|rT|Rt):?)/;
+/* harmony default export */ __webpack_exports__["default"] = (validMentionPrecedingChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validPortNumber.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validPortNumber.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validPortNumber = /[0-9]+/;
+/* harmony default export */ __webpack_exports__["default"] = (validPortNumber);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validPunycode.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validPunycode.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validPunycode = /(?:xn--[\-0-9a-z]+)/;
+/* harmony default export */ __webpack_exports__["default"] = (validPunycode);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validReply.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validReply.js ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _atSigns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./atSigns */ "./node_modules/twitter-text/dist/esm/regexp/atSigns.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _spaces__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./spaces */ "./node_modules/twitter-text/dist/esm/regexp/spaces.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+var validReply = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_1__["default"])(/^(?:#{spaces})*#{atSigns}([a-zA-Z0-9_]{1,20})/, {
+  atSigns: _atSigns__WEBPACK_IMPORTED_MODULE_0__["default"],
+  spaces: _spaces__WEBPACK_IMPORTED_MODULE_2__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validReply);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validSubdomain.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validSubdomain.js ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validDomainChars__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validDomainChars */ "./node_modules/twitter-text/dist/esm/regexp/validDomainChars.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+var validSubdomain = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])(/(?:(?:#{validDomainChars}(?:[_-]|#{validDomainChars})*)?#{validDomainChars}\.)/, {
+  validDomainChars: _validDomainChars__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validSubdomain);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validTcoUrl.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validTcoUrl.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validUrlQueryChars__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validUrlQueryChars */ "./node_modules/twitter-text/dist/esm/regexp/validUrlQueryChars.js");
+/* harmony import */ var _validUrlQueryEndingChars__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validUrlQueryEndingChars */ "./node_modules/twitter-text/dist/esm/regexp/validUrlQueryEndingChars.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+var validTcoUrl = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])(/^https?:\/\/t\.co\/([a-z0-9]+)(?:\?#{validUrlQueryChars}*#{validUrlQueryEndingChars})?/, {
+  validUrlQueryChars: _validUrlQueryChars__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validUrlQueryEndingChars: _validUrlQueryEndingChars__WEBPACK_IMPORTED_MODULE_2__["default"]
+}, 'i');
+/* harmony default export */ __webpack_exports__["default"] = (validTcoUrl);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validUrlBalancedParens.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validUrlBalancedParens.js ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validGeneralUrlPathChars__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validGeneralUrlPathChars */ "./node_modules/twitter-text/dist/esm/regexp/validGeneralUrlPathChars.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+ // Allow URL paths to contain up to two nested levels of balanced parens
+//  1. Used in Wikipedia URLs like /Primer_(film)
+//  2. Used in IIS sessions like /S(dfd346)/
+//  3. Used in Rdio URLs like /track/We_Up_(Album_Version_(Edited))/
+
+var validUrlBalancedParens = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])('\\(' + '(?:' + '#{validGeneralUrlPathChars}+' + '|' + // allow one nested level of balanced parentheses
+'(?:' + '#{validGeneralUrlPathChars}*' + '\\(' + '#{validGeneralUrlPathChars}+' + '\\)' + '#{validGeneralUrlPathChars}*' + ')' + ')' + '\\)', {
+  validGeneralUrlPathChars: _validGeneralUrlPathChars__WEBPACK_IMPORTED_MODULE_1__["default"]
+}, 'i');
+/* harmony default export */ __webpack_exports__["default"] = (validUrlBalancedParens);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validUrlPath.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validUrlPath.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validGeneralUrlPathChars__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validGeneralUrlPathChars */ "./node_modules/twitter-text/dist/esm/regexp/validGeneralUrlPathChars.js");
+/* harmony import */ var _validUrlBalancedParens__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validUrlBalancedParens */ "./node_modules/twitter-text/dist/esm/regexp/validUrlBalancedParens.js");
+/* harmony import */ var _validUrlPathEndingChars__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validUrlPathEndingChars */ "./node_modules/twitter-text/dist/esm/regexp/validUrlPathEndingChars.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+ // Allow @ in a url, but only in the middle. Catch things like http://example.com/@user/
+
+var validUrlPath = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])('(?:' + '(?:' + '#{validGeneralUrlPathChars}*' + '(?:#{validUrlBalancedParens}#{validGeneralUrlPathChars}*)*' + '#{validUrlPathEndingChars}' + ')|(?:@#{validGeneralUrlPathChars}+/)' + ')', {
+  validGeneralUrlPathChars: _validGeneralUrlPathChars__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validUrlBalancedParens: _validUrlBalancedParens__WEBPACK_IMPORTED_MODULE_2__["default"],
+  validUrlPathEndingChars: _validUrlPathEndingChars__WEBPACK_IMPORTED_MODULE_3__["default"]
+}, 'i');
+/* harmony default export */ __webpack_exports__["default"] = (validUrlPath);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validUrlPathEndingChars.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validUrlPathEndingChars.js ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _cyrillicLettersAndMarks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cyrillicLettersAndMarks */ "./node_modules/twitter-text/dist/esm/regexp/cyrillicLettersAndMarks.js");
+/* harmony import */ var _latinAccentChars__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./latinAccentChars */ "./node_modules/twitter-text/dist/esm/regexp/latinAccentChars.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validUrlBalancedParens__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validUrlBalancedParens */ "./node_modules/twitter-text/dist/esm/regexp/validUrlBalancedParens.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+ // Valid end-of-path chracters (so /foo. does not gobble the period).
+// 1. Allow =&# for empty URL parameters and other URL-join artifacts
+
+var validUrlPathEndingChars = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__["default"])(/[\+\-a-z#{cyrillicLettersAndMarks}0-9=_#\/#{latinAccentChars}]|(?:#{validUrlBalancedParens})/i, {
+  cyrillicLettersAndMarks: _cyrillicLettersAndMarks__WEBPACK_IMPORTED_MODULE_0__["default"],
+  latinAccentChars: _latinAccentChars__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validUrlBalancedParens: _validUrlBalancedParens__WEBPACK_IMPORTED_MODULE_3__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validUrlPathEndingChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validUrlPrecedingChars.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validUrlPrecedingChars.js ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _directionalMarkersGroup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./directionalMarkersGroup */ "./node_modules/twitter-text/dist/esm/regexp/directionalMarkersGroup.js");
+/* harmony import */ var _invalidCharsGroup__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./invalidCharsGroup */ "./node_modules/twitter-text/dist/esm/regexp/invalidCharsGroup.js");
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+var validUrlPrecedingChars = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_2__["default"])(/(?:[^A-Za-z0-9@＠$#＃#{invalidCharsGroup}]|[#{directionalMarkersGroup}]|^)/, {
+  invalidCharsGroup: _invalidCharsGroup__WEBPACK_IMPORTED_MODULE_1__["default"],
+  directionalMarkersGroup: _directionalMarkersGroup__WEBPACK_IMPORTED_MODULE_0__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validUrlPrecedingChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validUrlQueryChars.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validUrlQueryChars.js ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validUrlQueryChars = /[a-z0-9!?\*'@\(\);:&=\+\$\/%#\[\]\-_\.,~|]/i;
+/* harmony default export */ __webpack_exports__["default"] = (validUrlQueryChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validUrlQueryEndingChars.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validUrlQueryEndingChars.js ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validUrlQueryEndingChars = /[a-z0-9\-_&=#\/]/i;
+/* harmony default export */ __webpack_exports__["default"] = (validUrlQueryEndingChars);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlAuthority.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlAuthority.js ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlUserinfo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlUserinfo */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUserinfo.js");
+/* harmony import */ var _validateUrlHost__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validateUrlHost */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlHost.js");
+/* harmony import */ var _validateUrlPort__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validateUrlPort */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPort.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+var validateUrlAuthority = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])( // $1 userinfo
+'(?:(#{validateUrlUserinfo})@)?' + // $2 host
+'(#{validateUrlHost})' + // $3 port
+'(?::(#{validateUrlPort}))?', {
+  validateUrlUserinfo: _validateUrlUserinfo__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validateUrlHost: _validateUrlHost__WEBPACK_IMPORTED_MODULE_2__["default"],
+  validateUrlPort: _validateUrlPort__WEBPACK_IMPORTED_MODULE_3__["default"]
+}, 'i');
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlAuthority);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDecOctet.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlDecOctet.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validateUrlDecOctet = /(?:[0-9]|(?:[1-9][0-9])|(?:1[0-9]{2})|(?:2[0-4][0-9])|(?:25[0-5]))/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlDecOctet);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDomain.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlDomain.js ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlDomainSegment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlDomainSegment */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDomainSegment.js");
+/* harmony import */ var _validateUrlDomainTld__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validateUrlDomainTld */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDomainTld.js");
+/* harmony import */ var _validateUrlSubDomainSegment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validateUrlSubDomainSegment */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlSubDomainSegment.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+var validateUrlDomain = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])(/(?:(?:#{validateUrlSubDomainSegment}\.)*(?:#{validateUrlDomainSegment}\.)#{validateUrlDomainTld})/i, {
+  validateUrlSubDomainSegment: _validateUrlSubDomainSegment__WEBPACK_IMPORTED_MODULE_3__["default"],
+  validateUrlDomainSegment: _validateUrlDomainSegment__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validateUrlDomainTld: _validateUrlDomainTld__WEBPACK_IMPORTED_MODULE_2__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlDomain);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDomainSegment.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlDomainSegment.js ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validateUrlDomainSegment = /(?:[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?)/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlDomainSegment);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDomainTld.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlDomainTld.js ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validateUrlDomainTld = /(?:[a-z](?:[a-z0-9\-]*[a-z0-9])?)/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlDomainTld);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlFragment.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlFragment.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlPchar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlPchar */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPchar.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+var validateUrlFragment = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])(/(#{validateUrlPchar}|\/|\?)*/i, {
+  validateUrlPchar: _validateUrlPchar__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlFragment);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlHost.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlHost.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlDomain__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlDomain */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDomain.js");
+/* harmony import */ var _validateUrlIp__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validateUrlIp */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlIp.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+var validateUrlHost = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])('(?:' + '#{validateUrlIp}|' + '#{validateUrlDomain}' + ')', {
+  validateUrlIp: _validateUrlIp__WEBPACK_IMPORTED_MODULE_2__["default"],
+  validateUrlDomain: _validateUrlDomain__WEBPACK_IMPORTED_MODULE_1__["default"]
+}, 'i');
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlHost);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlIp.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlIp.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlIpv4__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlIpv4 */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlIpv4.js");
+/* harmony import */ var _validateUrlIpv6__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validateUrlIpv6 */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlIpv6.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+ // Punting on IPvFuture for now
+
+var validateUrlIp = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])('(?:' + '#{validateUrlIpv4}|' + '#{validateUrlIpv6}' + ')', {
+  validateUrlIpv4: _validateUrlIpv4__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validateUrlIpv6: _validateUrlIpv6__WEBPACK_IMPORTED_MODULE_2__["default"]
+}, 'i');
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlIp);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlIpv4.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlIpv4.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlDecOctet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlDecOctet */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlDecOctet.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+var validateUrlIpv4 = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])(/(?:#{validateUrlDecOctet}(?:\.#{validateUrlDecOctet}){3})/i, {
+  validateUrlDecOctet: _validateUrlDecOctet__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlIpv4);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlIpv6.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlIpv6.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+// Punting on real IPv6 validation for now
+var validateUrlIpv6 = /(?:\[[a-f0-9:\.]+\])/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlIpv6);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPath.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlPath.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlPchar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlPchar */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPchar.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+var validateUrlPath = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])(/(\/#{validateUrlPchar}*)*/i, {
+  validateUrlPchar: _validateUrlPchar__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlPath);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPchar.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlPchar.js ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlUnreserved__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlUnreserved */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnreserved.js");
+/* harmony import */ var _validateUrlPctEncoded__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validateUrlPctEncoded */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPctEncoded.js");
+/* harmony import */ var _validateUrlSubDelims__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validateUrlSubDelims */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlSubDelims.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+ // These URL validation pattern strings are based on the ABNF from RFC 3986
+
+var validateUrlPchar = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])('(?:' + '#{validateUrlUnreserved}|' + '#{validateUrlPctEncoded}|' + '#{validateUrlSubDelims}|' + '[:|@]' + ')', {
+  validateUrlUnreserved: _validateUrlUnreserved__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validateUrlPctEncoded: _validateUrlPctEncoded__WEBPACK_IMPORTED_MODULE_2__["default"],
+  validateUrlSubDelims: _validateUrlSubDelims__WEBPACK_IMPORTED_MODULE_3__["default"]
+}, 'i');
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlPchar);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPctEncoded.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlPctEncoded.js ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validateUrlPctEncoded = /(?:%[0-9a-f]{2})/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlPctEncoded);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPort.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlPort.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validateUrlPort = /[0-9]{1,5}/;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlPort);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlQuery.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlQuery.js ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlPchar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlPchar */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPchar.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+var validateUrlQuery = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])(/(#{validateUrlPchar}|\/|\?)*/i, {
+  validateUrlPchar: _validateUrlPchar__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlQuery);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlScheme.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlScheme.js ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validateUrlScheme = /(?:[a-z][a-z0-9+\-.]*)/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlScheme);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlSubDelims.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlSubDelims.js ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validateUrlSubDelims = /[!$&'()*+,;=]/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlSubDelims);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlSubDomainSegment.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlSubDomainSegment.js ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validateUrlSubDomainSegment = /(?:[a-z0-9](?:[a-z0-9_\-]*[a-z0-9])?)/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlSubDomainSegment);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnencoded.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlUnencoded.js ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+ // Modified version of RFC 3986 Appendix B
+
+var validateUrlUnencoded = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])('^' + // Full URL
+'(?:' + '([^:/?#]+):\\/\\/' + // $1 Scheme
+')?' + '([^/?#]*)' + // $2 Authority
+'([^?#]*)' + // $3 Path
+'(?:' + '\\?([^#]*)' + // $4 Query
+')?' + '(?:' + '#(.*)' + // $5 Fragment
+')?$', 'i');
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlUnencoded);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeAuthority.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeAuthority.js ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlUserinfo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlUserinfo */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUserinfo.js");
+/* harmony import */ var _validateUrlUnicodeHost__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validateUrlUnicodeHost */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeHost.js");
+/* harmony import */ var _validateUrlPort__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validateUrlPort */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPort.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+var validateUrlUnicodeAuthority = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])( // $1 userinfo
+'(?:(#{validateUrlUserinfo})@)?' + // $2 host
+'(#{validateUrlUnicodeHost})' + // $3 port
+'(?::(#{validateUrlPort}))?', {
+  validateUrlUserinfo: _validateUrlUserinfo__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validateUrlUnicodeHost: _validateUrlUnicodeHost__WEBPACK_IMPORTED_MODULE_2__["default"],
+  validateUrlPort: _validateUrlPort__WEBPACK_IMPORTED_MODULE_3__["default"]
+}, 'i');
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlUnicodeAuthority);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomain.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomain.js ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlUnicodeSubDomainSegment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlUnicodeSubDomainSegment */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeSubDomainSegment.js");
+/* harmony import */ var _validateUrlUnicodeDomainSegment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validateUrlUnicodeDomainSegment */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomainSegment.js");
+/* harmony import */ var _validateUrlUnicodeDomainTld__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validateUrlUnicodeDomainTld */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomainTld.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+ // Unencoded internationalized domains - this doesn't check for invalid UTF-8 sequences
+
+var validateUrlUnicodeDomain = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])(/(?:(?:#{validateUrlUnicodeSubDomainSegment}\.)*(?:#{validateUrlUnicodeDomainSegment}\.)#{validateUrlUnicodeDomainTld})/i, {
+  validateUrlUnicodeSubDomainSegment: _validateUrlUnicodeSubDomainSegment__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validateUrlUnicodeDomainSegment: _validateUrlUnicodeDomainSegment__WEBPACK_IMPORTED_MODULE_2__["default"],
+  validateUrlUnicodeDomainTld: _validateUrlUnicodeDomainTld__WEBPACK_IMPORTED_MODULE_3__["default"]
+});
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlUnicodeDomain);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomainSegment.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomainSegment.js ***!
+  \**************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validateUrlUnicodeDomainSegment = /(?:(?:[a-z0-9]|[^\u0000-\u007f])(?:(?:[a-z0-9\-]|[^\u0000-\u007f])*(?:[a-z0-9]|[^\u0000-\u007f]))?)/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlUnicodeDomainSegment);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomainTld.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomainTld.js ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+// Unencoded internationalized domains - this doesn't check for invalid UTF-8 sequences
+var validateUrlUnicodeDomainTld = /(?:(?:[a-z]|[^\u0000-\u007f])(?:(?:[a-z0-9\-]|[^\u0000-\u007f])*(?:[a-z0-9]|[^\u0000-\u007f]))?)/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlUnicodeDomainTld);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeHost.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeHost.js ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlIp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlIp */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlIp.js");
+/* harmony import */ var _validateUrlUnicodeDomain__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validateUrlUnicodeDomain */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeDomain.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+var validateUrlUnicodeHost = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])('(?:' + '#{validateUrlIp}|' + '#{validateUrlUnicodeDomain}' + ')', {
+  validateUrlIp: _validateUrlIp__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validateUrlUnicodeDomain: _validateUrlUnicodeDomain__WEBPACK_IMPORTED_MODULE_2__["default"]
+}, 'i');
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlUnicodeHost);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeSubDomainSegment.js":
+/*!*****************************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlUnicodeSubDomainSegment.js ***!
+  \*****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validateUrlUnicodeSubDomainSegment = /(?:(?:[a-z0-9]|[^\u0000-\u007f])(?:(?:[a-z0-9_\-]|[^\u0000-\u007f])*(?:[a-z0-9]|[^\u0000-\u007f]))?)/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlUnicodeSubDomainSegment);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnreserved.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlUnreserved.js ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+var validateUrlUnreserved = /[a-z\u0400-\u04FF0-9\-._~]/i;
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlUnreserved);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUserinfo.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/regexp/validateUrlUserinfo.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/regexSupplant */ "./node_modules/twitter-text/dist/esm/lib/regexSupplant.js");
+/* harmony import */ var _validateUrlUnreserved__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./validateUrlUnreserved */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlUnreserved.js");
+/* harmony import */ var _validateUrlPctEncoded__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validateUrlPctEncoded */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlPctEncoded.js");
+/* harmony import */ var _validateUrlSubDelims__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validateUrlSubDelims */ "./node_modules/twitter-text/dist/esm/regexp/validateUrlSubDelims.js");
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
+var validateUrlUserinfo = Object(_lib_regexSupplant__WEBPACK_IMPORTED_MODULE_0__["default"])('(?:' + '#{validateUrlUnreserved}|' + '#{validateUrlPctEncoded}|' + '#{validateUrlSubDelims}|' + ':' + ')*', {
+  validateUrlUnreserved: _validateUrlUnreserved__WEBPACK_IMPORTED_MODULE_1__["default"],
+  validateUrlPctEncoded: _validateUrlPctEncoded__WEBPACK_IMPORTED_MODULE_2__["default"],
+  validateUrlSubDelims: _validateUrlSubDelims__WEBPACK_IMPORTED_MODULE_3__["default"]
+}, 'i');
+/* harmony default export */ __webpack_exports__["default"] = (validateUrlUserinfo);
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/removeOverlappingEntities.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/removeOverlappingEntities.js ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.sort */ "./node_modules/core-js/modules/es6.array.sort.js");
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0__);
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+/* harmony default export */ __webpack_exports__["default"] = (function (entities) {
+  entities.sort(function (a, b) {
+    return a.indices[0] - b.indices[0];
+  });
+  var prev = entities[0];
+
+  for (var i = 1; i < entities.length; i++) {
+    if (prev.indices[1] > entities[i].indices[0]) {
+      entities.splice(i, 1);
+      i--;
+    } else {
+      prev = entities[i];
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/splitTags.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/splitTags.js ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_split__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.split */ "./node_modules/core-js/modules/es6.regexp.split.js");
+/* harmony import */ var core_js_modules_es6_regexp_split__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_split__WEBPACK_IMPORTED_MODULE_0__);
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+// this essentially does text.split(/<|>/)
+// except that won't work in IE, where empty strings are ommitted
+// so "<>".split(/<|>/) => [] in IE, but is ["", "", ""] in all others
+// but "<<".split("<") => ["", "", ""]
+/* harmony default export */ __webpack_exports__["default"] = (function (text) {
+  var firstSplits = text.split('<'),
+      secondSplits,
+      allSplits = [],
+      split;
+
+  for (var i = 0; i < firstSplits.length; i += 1) {
+    split = firstSplits[i];
+
+    if (!split) {
+      allSplits.push('');
+    } else {
+      secondSplits = split.split('>');
+
+      for (var j = 0; j < secondSplits.length; j += 1) {
+        allSplits.push(secondSplits[j]);
+      }
+    }
+  }
+
+  return allSplits;
+});
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/standardizeIndices.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/standardizeIndices.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return standardizeIndices; });
+/* harmony import */ var core_js_modules_es6_string_iterator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.string.iterator */ "./node_modules/core-js/modules/es6.string.iterator.js");
+/* harmony import */ var core_js_modules_es6_string_iterator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_string_iterator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_array_from__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.array.from */ "./node_modules/core-js/modules/es6.array.from.js");
+/* harmony import */ var core_js_modules_es6_array_from__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_from__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _getUnicodeTextLength__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getUnicodeTextLength */ "./node_modules/twitter-text/dist/esm/getUnicodeTextLength.js");
+
+
+
+function standardizeIndices(text, startIndex, endIndex) {
+  var totalUnicodeTextLength = Object(_getUnicodeTextLength__WEBPACK_IMPORTED_MODULE_2__["default"])(text);
+  var encodingDiff = text.length - totalUnicodeTextLength;
+
+  if (encodingDiff > 0) {
+    // split the string into codepoints which will map to the API's indices
+    var byCodePair = Array.from(text);
+    var beforeText = startIndex === 0 ? '' : byCodePair.slice(0, startIndex).join('');
+    var actualText = byCodePair.slice(startIndex, endIndex).join('');
+    return [beforeText.length, beforeText.length + actualText.length];
+  }
+
+  return [startIndex, endIndex];
+}
+
+/***/ }),
+
+/***/ "./node_modules/twitter-text/dist/esm/tagAttrs.js":
+/*!********************************************************!*\
+  !*** ./node_modules/twitter-text/dist/esm/tagAttrs.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es6_regexp_to_string__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.to-string */ "./node_modules/core-js/modules/es6.regexp.to-string.js");
+/* harmony import */ var core_js_modules_es6_regexp_to_string__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_to_string__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_date_to_string__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.date.to-string */ "./node_modules/core-js/modules/es6.date.to-string.js");
+/* harmony import */ var core_js_modules_es6_date_to_string__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_date_to_string__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es6_object_to_string__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es6.object.to-string */ "./node_modules/core-js/modules/es6.object.to-string.js");
+/* harmony import */ var core_js_modules_es6_object_to_string__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_to_string__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _htmlEscape__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./htmlEscape */ "./node_modules/twitter-text/dist/esm/htmlEscape.js");
+
+
+
+// Copyright 2018 Twitter, Inc.
+// Licensed under the Apache License, Version 2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+
+var BOOLEAN_ATTRIBUTES = {
+  disabled: true,
+  readonly: true,
+  multiple: true,
+  checked: true
+};
+/* harmony default export */ __webpack_exports__["default"] = (function (attributes) {
+  var htmlAttrs = '';
+
+  for (var k in attributes) {
+    var v = attributes[k];
+
+    if (BOOLEAN_ATTRIBUTES[k]) {
+      v = v ? k : null;
+    }
+
+    if (v == null) {
+      continue;
+    }
+
+    htmlAttrs += " ".concat(Object(_htmlEscape__WEBPACK_IMPORTED_MODULE_3__["default"])(k), "=\"").concat(Object(_htmlEscape__WEBPACK_IMPORTED_MODULE_3__["default"])(v.toString()), "\"");
+  }
+
+  return htmlAttrs;
+});
+
+/***/ }),
+
 /***/ "./node_modules/webpack/buildin/global.js":
 /*!***********************************!*\
   !*** (webpack)/buildin/global.js ***!
@@ -37231,9 +45681,8 @@ module.exports = function(module) {
  * building robust, powerful web applications using Vue and Laravel.
  */
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // window.Vue = require('vue');
+// window.$ = require('jquery');
 
-
-window.$ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -37267,6 +45716,12 @@ $(function () {
   // ajax
   $('#tweet').on('click', function () {
     var tweet = $('#text_area').val();
+
+    if (!judge_tweet(tweet)) {
+      alert('長いよ〜');
+      return;
+    }
+
     $.ajax({
       type: 'POST',
       url: '/post',
@@ -37304,8 +45759,28 @@ $(function () {
 
   function set_word_count() {
     var texts = $('#text_area').val();
-    var count = Array.from(texts).length;
-    $('#length').text(count);
+
+    var _twitter$default$pars = twitter['default'].parseTweet(texts),
+        weightedLength = _twitter$default$pars.weightedLength,
+        valid = _twitter$default$pars.valid;
+
+    var lengths = Math.floor(weightedLength / 2);
+    $('#length').text(lengths); // 色変え
+
+    if (weightedLength > 280) {
+      $('#length').css('color', 'red');
+      console.log(valid);
+    } else {
+      $('#length').css('color', 'black');
+    }
+  } // valid判定関数
+
+
+  function judge_tweet(tweet) {
+    var _twitter$default$pars2 = twitter['default'].parseTweet(tweet),
+        valid = _twitter$default$pars2.valid;
+
+    return valid;
   }
 });
 
@@ -37353,6 +45828,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+// twitter-text
+
+window.twitter = __webpack_require__(/*! twitter-text */ "./node_modules/twitter-text/dist/esm/index.js");
 
 /***/ }),
 
