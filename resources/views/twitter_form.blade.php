@@ -1,19 +1,12 @@
 @extends('common.layout')
 
-@section('child')
-  <p>
-    <span class="h4">{{ $data['name'] }}</span>さん  
-    <span><img class="rounded-circle" src="{{ $data['profile'] }}" /></span>
-  </p>
-    <form method="post">
+@section('main-content')
+  <form method="post">
     <!-- @csrf -->
-    <textarea id="text_area" class="form-control" rows="10" cols="60" placeholder="いまどうしてる？"></textarea>
+    <div class="item mb-0"><textarea id="text_area" class="form-control" rows="10" cols="70" placeholder="いまどうしてる？"></textarea></div>
     <div class="text-right"><span id="length" class="h3">0</span> /140</div>
-    <br>
-    <button id="tweet" type="button" class="btn btn-primary">ツイートする</button>
+    <div class="item"><button id="tweet" type="button" class="btn btn-primary">ツイートする</button></div>
   </form>
-  <br>
-  <br>
   <table class="table table-hover">
   @foreach ($data['rank'] as $num => $rank)
     <tr>

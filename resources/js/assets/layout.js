@@ -3,7 +3,7 @@ $(function(){
   $('#tweet').on('click', function(){
     let tweet = $('#text_area').val()
     if (!judge_tweet(tweet)) {
-      alert('長いよ〜')
+      alert('ツイートが長すぎます！')
       return
     }
 
@@ -21,7 +21,7 @@ $(function(){
         return
       }
       $('#text_area').val('')
-      set_word_count()
+      set_words_count()
       alert('ツイートに成功しました')
     }).fail(function(){
       alert('ツイートに失敗しました')
@@ -30,33 +30,28 @@ $(function(){
 
   // テキストエリアの文字数を常にカウント
   $('#text_area').on('input', function(){
-    set_word_count()
+    set_words_count()
   })
 
   // アイコンがクリックされた時にappend
   $('.copy').on('click', function(){
     $(this).css('color', 'red')
-    console.log($(this).prev().prev().find('#hash').text())
     let hash = $(this).prev().prev().find('#hash').text()
     let text = String($('#text_area').val()) + hash
     $('#text_area').val(text)
-    set_word_count()
+    set_words_count()
   })
 
   // 文字数を数える
-  function set_word_count() {
+  let set_words_count = function(){
     let texts = $('#text_area').val()
-    let { weightedLength, valid } = twitter['default'].parseTweet(texts);
+    let { weightedLength } = twitter['default'].parseTweet(texts);
     let lengths = Math.floor(weightedLength / 2)
     $('#length').text(lengths)
 
     // 色変え
-    if (weightedLength > 280 ) {
-      $('#length').css('color', 'red')
-      console.log(valid)
-    } else {
-      $('#length').css('color', 'black')
-    }
+    let color = weightedLength > 280 ? 'red' : 'black'
+    $('#length').css('color', color)
   }
 
   // valid判定関数

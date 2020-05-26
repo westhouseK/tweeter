@@ -17,6 +17,12 @@ class TwitterFormController extends Controller
   public function showForm(Request $request)
   {
     $access_token = $request->session()->get('twAccessToken');
+
+    if(empty($access_token)){
+      echo 'セッション切れかも!!';
+      exit;
+    }
+
     $conection = $this->authenticateAccount($access_token);
     $data = $this->twitter->getTwitterInfo($conection);
 
@@ -28,6 +34,12 @@ class TwitterFormController extends Controller
   {
     $tweet = $_POST['tweet'];
     $access_token = $request->session()->get('twAccessToken');
+
+    if(empty($access_token)){
+      echo 'セッション切れかも!!';
+      exit;
+    }
+    
     $conection = $this->authenticateAccount($access_token);
     $result = $this->twitter->sendTweet($conection, $tweet);
     if (!empty($result->errors)) {
