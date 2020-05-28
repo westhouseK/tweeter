@@ -45722,6 +45722,7 @@ $(function () {
       return;
     }
 
+    $("#overlay").fadeIn(500);
     $.ajax({
       type: 'POST',
       url: '/post',
@@ -45741,6 +45742,8 @@ $(function () {
       alert('ツイートに成功しました');
     }).fail(function () {
       alert('ツイートに失敗しました');
+    }).always(function () {
+      $("#overlay").fadeOut(500);
     });
   }); // テキストエリアの文字数を常にカウント
 

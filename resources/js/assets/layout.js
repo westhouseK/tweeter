@@ -6,13 +6,13 @@ $(function(){
       alert('ツイートが長すぎます！')
       return
     }
+    
+    $("#overlay").fadeIn(500);
 
     $.ajax({
       type: 'POST',
       url: '/post',
-      data: {
-        tweet
-      }
+      data: { tweet }
     }).done(function(data, textStatus, jqXHR){
       console.log(data)
 
@@ -25,6 +25,8 @@ $(function(){
       alert('ツイートに成功しました')
     }).fail(function(){
       alert('ツイートに失敗しました')
+    }).always(function(){
+      $("#overlay").fadeOut(500);
     })
   })
 

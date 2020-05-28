@@ -45,7 +45,8 @@ class Twitterapi extends Model
 
   private function postTweet($conection, $tweet)
   {
-    return $conection->post('statuses/update', ['status' => $tweet]);
+    // return $conection->post('statuses/update', ['status' => $tweet]);
+    return 'a';
   }
 
   private function filterHashtags($tweets) {
