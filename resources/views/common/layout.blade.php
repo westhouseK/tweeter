@@ -4,15 +4,7 @@
     @include('parts.head')
     </head>
     <body>
-      <!-- Todo: パーツ化 -->
-      <div id="overlay">
-        <div class="cv-copy">
-          <h2>Now Tweet...</h2>
-        </div>
-        <div class="cv-spinner">
-            <span class="spinner"></span>
-        </div>
-      </div>
+      @include('parts.loading')
       <div class="wrapper">
         <div class="card">
         @include('parts.header')

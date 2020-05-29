@@ -70,10 +70,10 @@ nav {
 
 footer {
   width: 100%;
-  height: 30px;
+  height: 40px;
   min-height: 3vh; 
   text-align: center;
-  padding: 20px 0;
+  justify-content: center;
   background-color: #2b475e;
   margin-top: auto;
 }
@@ -81,9 +81,8 @@ footer {
 .footer-text {
   color: #fff;
   font-size: 12px;
+  
 }
-
-
 
 #overlay{ 
   position: fixed;
@@ -95,24 +94,25 @@ footer {
   display: none;
   background: rgba(0,0,0,0.6);
 }
+
 .cv-copy {
   position:absolute;
   width:100%;
   margin-top:35vh; 
   text-align:center; 
 }
+
 .cv-copy h2 {
   color:#fff;
 }
-.cv-copy p {
-  color:#fff;
-}
+
 .cv-spinner {
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .spinner {
   width: 80px;
   height: 80px;
@@ -124,7 +124,4 @@ footer {
 @keyframes sp-anime {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(359deg); }
-}
-.is-hide{
-  display:none;
 }
