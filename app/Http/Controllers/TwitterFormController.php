@@ -18,10 +18,8 @@ class TwitterFormController extends Controller
   {
     $access_token = $request->session()->get('twAccessToken');
 
-    if(empty($access_token)){
-      echo 'セッション切れかも!!';
-      exit;
-    }
+    // セッション切れ
+    if(empty($access_token)) redirect('/timeout');
 
     $conection = $this->authenticateAccount($access_token);
     $data = $this->twitter->getTwitterInfo($conection);
@@ -32,21 +30,21 @@ class TwitterFormController extends Controller
   // ajax
   public function postTweet(Request $request)
   {
-    $tweet = $_POST['tweet'];
     $access_token = $request->session()->get('twAccessToken');
 
-    if(empty($access_token)){
-      echo 'セッション切れかも!!';
-      exit;
-    }
+    // セッション切れ
+    if(empty($access_token)) redirect('/timeout');
     
+    $tweet = $_POST['tweet'];
     $conection = $this->authenticateAccount($access_token);
     $result = $this->twitter->sendTweet($conection, $tweet);
-    if (!empty($result->errors)) {
-      $msg = $result->errors[0]->message;
-    } else {
-      $msg = 'OK';
-    }
+
+    $msg = !empty($result->errors) ? $result->errors[0]->message : 'OK';
     return $msg;
+  }
+
+  public function showTimeout()
+  {
+    return view('timeout');
   }
 }

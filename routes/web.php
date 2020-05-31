@@ -16,8 +16,10 @@
 // });
 
 Route::get('/', 'AuthController@login');
-Route::get('/callback', 'AuthController@callback');
+Route::get('callback', 'AuthController@callback');
 Route::get('showform', 'TwitterFormController@showForm');
+
+Route::get('timeout', 'TwitterFormController@showTimeout');
 
 // ajax
 Route::post('post', 'TwitterFormController@postTweet');
