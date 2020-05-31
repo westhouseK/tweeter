@@ -42,3 +42,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // twitter-text
 window.twitter = require('twitter-text');
+
+// iziModal
+window.izimodal = require('izimodal');

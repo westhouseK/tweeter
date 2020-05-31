@@ -2,29 +2,35 @@ $(function(){
   // ajax
   $('#tweet').on('click', function(){
     let tweet = $('#text_area').val()
+
+    if (tweet === '') {
+      show_modal("ツイートを入力してください")
+      return
+    }
+
     if (!judge_tweet(tweet)) {
-      alert('ツイートが長すぎます！')
+      show_modal("ツイートが長すぎます")
       return
     }
     
-    $("#overlay").fadeIn(500);
+    $("#overlay").fadeIn(500)
 
     $.ajax({
       type: 'POST',
       url: '/post',
       data: { tweet }
     }).done(function(data, textStatus, jqXHR){
-      console.log(data)
 
       if (jqXHR.status === 200 && data !== 'OK') {
-        alert(data)
+        show_modal(data)
         return
       }
+
       $('#text_area').val('')
       set_words_count()
-      alert('ツイートに成功しました')
+      show_modal("ツイートに成功しました")
     }).fail(function(){
-      alert('ツイートに失敗しました')
+      show_modal("ツイートに失敗しました")
     }).always(function(){
       $("#overlay").fadeOut(500);
     })
@@ -37,7 +43,6 @@ $(function(){
 
   // アイコンがクリックされた時にappend
   $('.copy').on('click', function(){
-    $(this).css('color', 'red')
     let hash = $(this).prev().prev().find('#hash').text()
     let text = String($('#text_area').val()) + hash
     $('#text_area').val(text)
@@ -60,5 +65,11 @@ $(function(){
   function judge_tweet(tweet) {
     let { valid } = twitter['default'].parseTweet(tweet)
     return valid
+  }
+
+  // modalを表示
+  function show_modal(content) {
+    $('#modal-body').html(content)
+    $('#modal').modal('show')
   }
 })
