@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
+  <head>
     @include('parts.head')
+  </head>
+  <body>
     @include('parts.modal')
-    </head>
-    <body>
-      @include('parts.loading')
-      <div class="wrapper">
-        <div class="card">
+    @include('parts.loading')
+    <div class="wrapper">
+      <div class="card">
         @include('parts.header')
-          <div class="main">
-              <div class="content">
-              @yield('main-content')
-              </div>
+        <div class="main">
+          <div class="content">
+            @yield('main-content')
           </div>
-        @include('parts.footer')
         </div>
+        @include('parts.footer')
       </div>
-    </body>
+    </div>
+  </body>
 </html>

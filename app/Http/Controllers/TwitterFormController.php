@@ -5,6 +5,8 @@ require base_path('vendor/autoload.php');
 
 use Illuminate\Http\Request;
 use App\Twitterapi;
+use Illuminate\Support\Facades\Log;
+
 
 class TwitterFormController extends Controller
 {
@@ -17,14 +19,25 @@ class TwitterFormController extends Controller
   public function showForm(Request $request)
   {
     $access_token = $request->session()->get('twAccessToken');
+    Log::debug($access_token);
 
     // セッション切れ
-    if(empty($access_token)) redirect('/timeout');
+    if(empty($access_token)) return redirect('timeout');
 
     $conection = $this->authenticateAccount($access_token);
     $data = $this->twitter->getTwitterInfo($conection);
 
     return view('twitter_form', compact('data'));
+  }
+
+  public function showTimeout()
+  {
+    return view('timeout');
+  }
+
+  public function showAbout()
+  {
+    return view('about');
   }
 
   // ajax
@@ -33,7 +46,7 @@ class TwitterFormController extends Controller
     $access_token = $request->session()->get('twAccessToken');
 
     // セッション切れ
-    if(empty($access_token)) redirect('/timeout');
+    if(empty($access_token)) return redirect('timeout');
     
     $tweet = $_POST['tweet'];
     $conection = $this->authenticateAccount($access_token);
@@ -43,8 +56,5 @@ class TwitterFormController extends Controller
     return $msg;
   }
 
-  public function showTimeout()
-  {
-    return view('timeout');
-  }
+
 }

@@ -19,7 +19,7 @@ class Controller extends BaseController
     $this->api_secret_key    = config('Consts.twitterauth.api_secret_key');
   }
 
-  public function authenticateAccount(array $access_token = [])
+  public function authenticateAccount($access_token = [])
   {
     // リファクタリングしてほしい
     Log::debug($access_token);
