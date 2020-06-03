@@ -45,12 +45,12 @@ class Twitterapi extends Model
 
   private function postTweet($conection, $tweet)
   {
-    // return $conection->post('statuses/update', ['status' => $tweet]);
-    return 'a';
+    return $conection->post('statuses/update', ['status' => $tweet]);
+    // return 'dummy';
   }
 
   private function filterHashtags($tweets) {
-    // Todo: array_filterを使いたい
+
     $user_hashtags = [];
     foreach($tweets as $tweet) {
       // ハッシュタグを変数に格納

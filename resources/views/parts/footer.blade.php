@@ -1,3 +1,3 @@
 <footer>
-  <a href="/about" class="footer-text">このアプリについて</p>
+  <a href="/about" class="footer-text">このアプリについて</a>
 </footer>

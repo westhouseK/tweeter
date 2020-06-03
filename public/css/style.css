@@ -28,7 +28,7 @@ html, body {
   font-size: 40px;
   font-family: 'Lilita One', cursive;
   color: #fff;
-  letter-spacing: 1px;  
+  letter-spacing: 1px;
 }
 
 header {
@@ -59,7 +59,7 @@ nav {
 }
 
 .content {
-    text-align: center;
+  text-align: center;
 }
 
 .content-item {
@@ -83,13 +83,19 @@ footer {
   justify-content: center;
   background-color: #2b475e;
   margin-top: auto;
+  border-radius: 0px 0px 3px 3px;
 }
 
 .footer-text {
   color: #fff;
   font-size: 12px;
-  
+  text-decoration: none;
 }
+
+.footer-text:hover {
+  color: #fff;
+}
+
 
 /* スピナー */
 #overlay{ 

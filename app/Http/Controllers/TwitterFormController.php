@@ -19,7 +19,6 @@ class TwitterFormController extends Controller
   public function showForm(Request $request)
   {
     $access_token = $request->session()->get('twAccessToken');
-    Log::debug($access_token);
 
     // セッション切れ
     if(empty($access_token)) return redirect('timeout');
@@ -46,7 +45,7 @@ class TwitterFormController extends Controller
     $access_token = $request->session()->get('twAccessToken');
 
     // セッション切れ
-    if(empty($access_token)) return redirect('timeout');
+    if(empty($access_token)) return 'セッション切れです';
     
     $tweet = $_POST['tweet'];
     $conection = $this->authenticateAccount($access_token);

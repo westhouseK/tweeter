@@ -2,7 +2,6 @@
 
 @section('main-content')
   <form method="post">
-    <!-- @csrf -->
     <div class="content-item mb-0"><textarea id="text_area" class="form-control" rows="8" cols="60" placeholder="いまどうしてる？"></textarea></div>
     <div class="text-right"><span id="length" class="h3">0</span> /140</div>
     <div class="content-item mt-0"><button id="tweet" type="button" class="btn btn-primary">ツイートする</button></div>
