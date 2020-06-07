@@ -17,8 +17,8 @@ class Twitterapi extends Model
   {
     $twitter_info = [];
 
-    $account_info = $this->getAccountInfo($connection);
-    $twitter_info['name'] = $account_info->name;
+    $account_info            = $this->getAccountInfo($connection);
+    $twitter_info['name']    = $account_info->name;
     $twitter_info['profile'] = $account_info->profile_image_url_https;
 
     $tweets   = $this->getTweet($connection);
@@ -40,6 +40,7 @@ class Twitterapi extends Model
 
   private function getTweet($connection)
   {
+    // 200個のツイートを取得する
     return $connection->get('statuses/user_timeline', ['count' => 200]);
   }
 
@@ -49,6 +50,11 @@ class Twitterapi extends Model
     // return 'dummy';
   }
 
+  /**
+   * ツイートからハッシュタグを抽出
+   *  @param $tweets
+   *  @return $hashtags
+   */
   private function filterHashtags($tweets) {
 
     $user_hashtags = [];
@@ -65,6 +71,12 @@ class Twitterapi extends Model
     return $hashtags;
   }
 
+  /**
+   * ハッシュタグの中から、上位を抽出
+   *  @param $hashtags
+   *  @param $rank
+   *  @return $rank_hashtags
+   */
   private function getTopHashtags($hashtags, $rank = 3) {
     if (empty($hashtags)) return null;
 

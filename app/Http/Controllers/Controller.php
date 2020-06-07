@@ -21,8 +21,7 @@ class Controller extends BaseController
 
   protected function authenticateAccount($access_token = [])
   {
-    // Todo:リファクタ
-    Log::debug($access_token);
+    if (!empty($access_token['screen_name'])) Log::info($access_token['screen_name']);
 
     if (!empty($access_token)) {
       $conection = new TwitterOAuth($this->api_key, $this->api_secret_key, $access_token['oauth_token'], $access_token['oauth_token_secret']);

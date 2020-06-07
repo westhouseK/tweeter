@@ -15,7 +15,7 @@ class TwitterFormController extends Controller
     parent::__construct();
     $this->twitter = new Twitterapi;
   }
-  // main display
+
   public function showForm(Request $request)
   {
     $access_token = $request->session()->get('twAccessToken');
@@ -47,9 +47,9 @@ class TwitterFormController extends Controller
     // セッション切れ
     if(empty($access_token)) return 'セッション切れです';
     
-    $tweet = $_POST['tweet'];
+    $tweet     = $_POST['tweet'];
     $conection = $this->authenticateAccount($access_token);
-    $result = $this->twitter->sendTweet($conection, $tweet);
+    $result    = $this->twitter->sendTweet($conection, $tweet);
 
     $msg = !empty($result->errors) ? $result->errors[0]->message : 'OK';
     return $msg;
