@@ -19,6 +19,11 @@ class Controller extends BaseController
     $this->api_secret_key    = config('Consts.twitterauth.api_secret_key');
   }
 
+  /**
+   *  画面に表示するデータを取得
+   *  @param  array $access_token
+   *  @return object
+   */
   protected function authenticateAccount($access_token = [])
   {
     if (!empty($access_token['screen_name'])) Log::info($access_token['screen_name']);

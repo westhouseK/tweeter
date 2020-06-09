@@ -84,6 +84,9 @@ footer {
   background-color: #2b475e;
   margin-top: auto;
   border-radius: 0px 0px 3px 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .footer-text {

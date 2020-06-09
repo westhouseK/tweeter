@@ -11,10 +11,6 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('twitter_form');
-// });
-
 Route::get('/', 'AuthController@login');
 Route::get('callback', 'AuthController@callback');
 Route::get('showform', 'TwitterFormController@showForm');

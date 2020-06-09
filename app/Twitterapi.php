@@ -9,10 +9,15 @@ class Twitterapi extends Model
 {
   public function __construct()
   {
-    $this->api_key         = config('Consts.twitterauth.api_key');
-    $this->api_secret_key  = config('Consts.twitterauth.api_secret_key');
+    $this->api_key        = config('Consts.twitterauth.api_key');
+    $this->api_secret_key = config('Consts.twitterauth.api_secret_key');
   }
 
+  /**
+   *  画面に表示するデータを取得
+   *  @param  $conection
+   *  @return array
+   */
   public function getTwitterInfo($connection)
   {
     $twitter_info = [];
@@ -21,29 +26,51 @@ class Twitterapi extends Model
     $twitter_info['name']    = $account_info->name;
     $twitter_info['profile'] = $account_info->profile_image_url_https;
 
-    $tweets   = $this->getTweet($connection);
+    $tweets   = $this->getTweet($connection, 200);
     $hashtags = $this->filterHashtags($tweets);
     $twitter_info['rank'] = $this->getTopHashtags($hashtags);
 
     return $twitter_info;
   }
 
+  /**
+   *  Twitter APIを叩く
+   *  @param  $conection
+   *  @param  $tweet
+   *  @return array
+   */
   public function sendTweet($conection, $tweet)
   {
     return $this->postTweet($conection, $tweet); 
   }
 
+  /**
+   *  ユーザ情報の取得
+   *  @param  $conection
+   *  @return object
+   */
   private function getAccountInfo($connection)
   {
     return $connection->get("account/verify_credentials");
   }
 
-  private function getTweet($connection)
+  /**
+   *  ツイートを取得
+   *  @param  $conection
+   *  @param  $count (Max 200)
+   *  @return array
+   */
+  private function getTweet($connection, $count)
   {
-    // 200個のツイートを取得する
-    return $connection->get('statuses/user_timeline', ['count' => 200]);
+    return $connection->get('statuses/user_timeline', ['count' => $count]);
   }
 
+  /**
+   *  ツイートをpostする
+   *  @param  $conection
+   *  @param  $tweet
+   *  @return array
+   */
   private function postTweet($conection, $tweet)
   {
     return $conection->post('statuses/update', ['status' => $tweet]);
@@ -52,7 +79,7 @@ class Twitterapi extends Model
 
   /**
    * ツイートからハッシュタグを抽出
-   *  @param $tweets
+   *  @param  $tweets
    *  @return $hashtags
    */
   private function filterHashtags($tweets) {
@@ -72,12 +99,13 @@ class Twitterapi extends Model
   }
 
   /**
-   * ハッシュタグの中から、上位を抽出
-   *  @param $hashtags
-   *  @param $rank
+   * ハッシュタグの中から、上位のハッシュダグを抽出
+   *  @param  $hashtags
+   *  @param  $rank
    *  @return $rank_hashtags
    */
-  private function getTopHashtags($hashtags, $rank = 3) {
+  private function getTopHashtags($hashtags, $rank = 3) 
+  {
     if (empty($hashtags)) return null;
 
     // ハッシュタグを集計
