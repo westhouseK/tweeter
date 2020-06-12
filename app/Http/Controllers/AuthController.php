@@ -12,6 +12,11 @@ class AuthController extends Controller
     $this->callback_url = config('Consts.twitterinfo.callback_url');
   }
 
+  /**
+   *  ログイン
+   *  @param  $request
+   *  @return
+   */
   public function login(Request $request)
   {
     // TwitterOAuthクラスをインスタンス化
@@ -32,6 +37,11 @@ class AuthController extends Controller
     return redirect()->away($auth_url);
   }
   
+  /**
+   *  Twitterからのcallback
+   *  @param  $request
+   *  @return
+   */
   public function callback(Request $request)
   {
     // session output
