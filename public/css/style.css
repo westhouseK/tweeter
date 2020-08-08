@@ -219,6 +219,19 @@ html, body {
     font-size: 11px;
   }
 
+  /* アバウト */
+  .about-title {
+    font-size: 14px;
+  }
+
+  .about-sub {
+    font-size: 12px;
+  }
+
+  .about-item {
+    font-size: 10px;
+  }
+
   /* フッター */
   footer {
     width: 100%;
